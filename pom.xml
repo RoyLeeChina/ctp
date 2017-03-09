@@ -19,7 +19,7 @@
         <!-- MyMMSC组件 版本设置 -->
         <hotwheel.version>3.1.1</hotwheel.version>
         <!-- Stock 版本设置 -->
-        <jdb.sotck.version>3.0.3</jdb.sotck.version>
+        <hotwheel.sotck.version>3.0.3</hotwheel.sotck.version>
 
         <!-- J2EE 版本 -->
         <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
