@@ -17,7 +17,7 @@
         <javac.version>1.7</javac.version>
         <javac.encoding>UTF-8</javac.encoding>
         <!-- MyMMSC组件 版本设置 -->
-        <hotwheel.version>3.1.1</hotwheel.version>
+        <hotwheel.version>3.1.3</hotwheel.version>
         <!-- Stock 版本设置 -->
         <hotwheel.sotck.version>3.0.3</hotwheel.sotck.version>
 
@@ -89,6 +89,11 @@
         <dependency>
             <groupId>org.mymmsc.hotwheel</groupId>
             <artifactId>hotwheel-json</artifactId>
+            <version>${hotwheel.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mymmsc.hotwheel</groupId>
+            <artifactId>hotwheel-spring</artifactId>
             <version>${hotwheel.version}</version>
         </dependency>
         <!--spring related start -->

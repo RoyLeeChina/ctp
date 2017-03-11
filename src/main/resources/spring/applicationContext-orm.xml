@@ -31,7 +31,7 @@
         <property name="dataSource" ref="ermasDataSource" />
         <property name="configLocation" value="classpath:/mybatis/config.xml" />
         <property name="typeAliasesPackage" value="com.jiedaibao.exchange.model" />
-        <property name="mapperLocations" value="classpath*:mybatis/stock/*.xml" />
+        <property name="mapperLocations" value="classpath*:mybatis/ermas/*.xml" />
     </bean>
 
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
