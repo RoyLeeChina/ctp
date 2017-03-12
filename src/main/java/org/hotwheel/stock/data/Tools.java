@@ -32,9 +32,7 @@ import org.mymmsc.api.assembly.Api;
 
 /**
  * 提供一些工具方法
- * @author yilihjy Email:yilihjy@gmail.com
  * @version 1.0.0
- *
  */
 public class Tools {
 	/**
@@ -93,13 +91,13 @@ public class Tools {
 	}
 	
 	/**
-	 * 从{@link readExcel2JSON}方法生成的文件中读取指定属性
+	 * 从方法生成的文件中读取指定属性
 	 * @param file 文件路径
 	 * @param key 关键词
 	 * @return 一个{@link List}
 	 * @throws Exception 错误
 	 */
-	public static List<String> getValueFromJSONFile(String file,String key) throws  Exception{
+	public static List<String> getValueFromJSONFile(String file, String key) throws  Exception{
 		List<String> result = new ArrayList<>();
 		InputStream inp = new FileInputStream(file);
 		JSONArray jsonarray = new JSONArray(Tools.InputStreamToString(inp, "UTF-8"));
@@ -116,7 +114,7 @@ public class Tools {
 	}
 	
 	/**
-	 * 读取excel文件，生成一个json文件，文件格式见项目根目录的.xlsx文件，<a href="https://github.com/yilihjy/SaveSinaStockData">项目主页</a>
+	 * 读取excel文件，生成一个json文件，文件格式见项目根目录的.xlsx文件
 	 * @param inFileName excel文件文件路径
 	 * @param outFileName 输出文件路径
 	 */
