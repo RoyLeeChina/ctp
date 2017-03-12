@@ -12,8 +12,6 @@ import java.util.regex.Pattern;
 /**
  * 对新浪财经查询股票实时数据API的封装<br>
  * API：http://hq.sinajs.cn/<br>
- * 封装的参数：list<br>
- * @author yilihjy Email:yilihjy@gmail.com
  * @version 1.0.0
  *
  */
