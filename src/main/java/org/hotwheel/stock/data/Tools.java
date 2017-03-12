@@ -81,7 +81,7 @@ public class Tools {
 	 * @throws UnsupportedEncodingException 不支持的编码
 	 * @throws IOException io错误
 	 */
-	public static String InputStreamToString(InputStream in,String charsetName) throws UnsupportedEncodingException, IOException{
+	public static String InputStreamToString(InputStream in, String charsetName) throws UnsupportedEncodingException, IOException{
 		StringBuffer sb = new StringBuffer();
 		byte[] b = new byte[1024];
 		int len = 0;
