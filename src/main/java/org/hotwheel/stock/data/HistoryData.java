@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hotwheel.stock.StockOptions;
+import org.hotwheel.stock.model.StockHistory;
 import org.json.JSONArray;
 import org.json.JSONObject;
 /**
@@ -40,13 +41,13 @@ public class HistoryData {
 	 * @param code 股票代码
 	 * @param scale 时间跨度 可选[FIVE_MINUTES,FIFTEEN_MINUTES,THIRTY_MINUTES,ONE_HOUR,ONE_DAY,ONE_WEEK]
 	 * @param datalen 数据量
-	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
+	 * @return 一个{@link List}，里面是{@link StockHistory}对象
 	 */
-	public static List<HistoryDataPOJO> getKLineDataObjects(String code, String scale, String datalen){
+	public static List<StockHistory> getKLineDataObjects(String code, String scale, String datalen){
 		String jsonText = getKLineData(code, scale, datalen);
 		JSONArray jsonarray = new JSONArray(jsonText);
 		int lengh = jsonarray.length();
-		List<HistoryDataPOJO> result = new ArrayList<>();
+		List<StockHistory> result = new ArrayList<>();
 		for(int i =0;i<lengh;i++){
 			JSONObject jsonobject = jsonarray.getJSONObject(i);
 			String dayString = jsonobject.getString("day");
@@ -62,15 +63,15 @@ public class HistoryData {
 			double MA10Volume = jsonobject.optDouble("ma_volume10");
 			double MA30 = jsonobject.optDouble("ma_price30");
 			double MA30Volume = jsonobject.optDouble("ma_volume30");
-			HistoryDataPOJO pojo;
+			StockHistory pojo;
 			if(!Double.isNaN(MA30) && !Double.isNaN(MA30Volume)){
-				pojo = new HistoryDataPOJO(day,open,high,low,close,volume,MA5,MA5Volume,MA10,MA10Volume,MA30,MA30Volume);
+				pojo = new StockHistory(day,open,high,low,close,volume,MA5,MA5Volume,MA10,MA10Volume,MA30,MA30Volume);
 			}else if(!Double.isNaN(MA10) && !Double.isNaN(MA10Volume)){
-				pojo = new HistoryDataPOJO(day,open,high,low,close,volume,MA5,MA5Volume,MA10,MA10Volume);
+				pojo = new StockHistory(day,open,high,low,close,volume,MA5,MA5Volume,MA10,MA10Volume);
 			}else if(!Double.isNaN(MA5) && !Double.isNaN(MA5Volume)){
-				pojo = new HistoryDataPOJO(day,open,high,low,close,volume,MA5,MA5Volume);
+				pojo = new StockHistory(day,open,high,low,close,volume,MA5,MA5Volume);
 			}else{
-				pojo = new HistoryDataPOJO(day,open,high,low,close,volume);
+				pojo = new StockHistory(day,open,high,low,close,volume);
 			}
 			result.add(pojo);
 		}
@@ -201,111 +202,111 @@ public class HistoryData {
 	 * 实际调用：getKLineDataObjects(code, scale,HistoryData.DEFAULT_DATALEN);
 	 * @param code 股票代码
 	 * @param scale 时间跨度
-	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
+	 * @return 一个{@link List}，里面是{@link StockHistory}对象
 	 */
-	public static List<HistoryDataPOJO> getKLineDataObjects(String code, String scale){
+	public static List<StockHistory> getKLineDataObjects(String code, String scale){
 		return HistoryData.getKLineDataObjects(code, scale, StockOptions.DEFAULT_DATALEN);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.FIVE_MINUTES, datalen);
 	 * @param code 股票代码
 	 * @param datalen 数据量
-	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
+	 * @return 一个{@link List}，里面是{@link StockHistory}对象
 	 */
-	public static List<HistoryDataPOJO> get5MKLineDataObjects(String code, String datalen){
+	public static List<StockHistory> get5MKLineDataObjects(String code, String datalen){
 		return HistoryData.getKLineDataObjects(code, StockOptions.FIVE_MINUTES, datalen);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.FIVE_MINUTES, HistoryData.DEFAULT_DATALEN);
 	 * @param code 股票代码
-	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
+	 * @return 一个{@link List}，里面是{@link StockHistory}对象
 	 */
-	public static List<HistoryDataPOJO> get5MKlineDataObjects(String code){
+	public static List<StockHistory> get5MKlineDataObjects(String code){
 		return HistoryData.getKLineDataObjects(code, StockOptions.FIVE_MINUTES, StockOptions.DEFAULT_DATALEN);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.FIFTEEN_MINUTES, datalen);
 	 * @param code 股票代码
 	 * @param datalen 数据量
-	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
+	 * @return 一个{@link List}，里面是{@link StockHistory}对象
 	 */
-	public static List<HistoryDataPOJO> get15MKlineDataObjects(String code, String datalen){
+	public static List<StockHistory> get15MKlineDataObjects(String code, String datalen){
 		return HistoryData.getKLineDataObjects(code, StockOptions.FIFTEEN_MINUTES, datalen);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.FIFTEEN_MINUTES, HistoryData.DEFAULT_DATALEN);
 	 * @param code 股票代码
-	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
+	 * @return 一个{@link List}，里面是{@link StockHistory}对象
 	 */
-	public static List<HistoryDataPOJO> get15MKlineDataObjects(String code){
+	public static List<StockHistory> get15MKlineDataObjects(String code){
 		return HistoryData.getKLineDataObjects(code, StockOptions.FIFTEEN_MINUTES, StockOptions.DEFAULT_DATALEN);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.THIRTY_MINUTES, datalen);
 	 * @param code 股票代码
 	 * @param datalen 数据量
-	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
+	 * @return 一个{@link List}，里面是{@link StockHistory}对象
 	 */
-	public static List<HistoryDataPOJO> get30MKlineDataObjects(String code, String datalen){
+	public static List<StockHistory> get30MKlineDataObjects(String code, String datalen){
 		return HistoryData.getKLineDataObjects(code, StockOptions.THIRTY_MINUTES, datalen);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.THIRTY_MINUTES, HistoryData.DEFAULT_DATALEN);
 	 * @param code 股票代码
-	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
+	 * @return 一个{@link List}，里面是{@link StockHistory}对象
 	 */
-	public static List<HistoryDataPOJO> get30MKlineDataObjects(String code){
+	public static List<StockHistory> get30MKlineDataObjects(String code){
 		return HistoryData.getKLineDataObjects(code, StockOptions.THIRTY_MINUTES, StockOptions.DEFAULT_DATALEN);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.ONE_HOUR, datalen);
 	 * @param code 股票代码
 	 * @param datalen 数据量
-	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
+	 * @return 一个{@link List}，里面是{@link StockHistory}对象
 	 */
-	public static List<HistoryDataPOJO> get1HKlineDataObjects(String code, String datalen){
+	public static List<StockHistory> get1HKlineDataObjects(String code, String datalen){
 		return HistoryData.getKLineDataObjects(code, StockOptions.ONE_HOUR, datalen);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.ONE_HOUR, HistoryData.DEFAULT_DATALEN);
 	 * @param code 股票代码
-	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
+	 * @return 一个{@link List}，里面是{@link StockHistory}对象
 	 */
-	public static List<HistoryDataPOJO> get1HKlineDataObjects(String code){
+	public static List<StockHistory> get1HKlineDataObjects(String code){
 		return HistoryData.getKLineDataObjects(code, StockOptions.ONE_HOUR, StockOptions.DEFAULT_DATALEN);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.ONE_DAY, datalen);
 	 * @param code 股票代码
 	 * @param datalen 数据量
-	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
+	 * @return 一个{@link List}，里面是{@link StockHistory}对象
 	 */
-	public static List<HistoryDataPOJO> get1DKlineDataObjects(String code, String datalen){
+	public static List<StockHistory> get1DKlineDataObjects(String code, String datalen){
 		return HistoryData.getKLineDataObjects(code, StockOptions.ONE_DAY, datalen);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.ONE_DAY, HistoryData.DEFAULT_DATALEN);
 	 * @param code 股票代码
-	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
+	 * @return 一个{@link List}，里面是{@link StockHistory}对象
 	 */
-	public static List<HistoryDataPOJO> get1DKlineDataObjects(String code){
+	public static List<StockHistory> get1DKlineDataObjects(String code){
 		return HistoryData.getKLineDataObjects(code, StockOptions.ONE_DAY, StockOptions.DEFAULT_DATALEN);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.ONE_WEEK, datalen);
 	 * @param code 股票代码
 	 * @param datalen 数据量
-	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
+	 * @return 一个{@link List}，里面是{@link StockHistory}对象
 	 */
-	public static List<HistoryDataPOJO> get1WKlineDataObjects(String code, String datalen){
+	public static List<StockHistory> get1WKlineDataObjects(String code, String datalen){
 		return HistoryData.getKLineDataObjects(code, StockOptions.ONE_WEEK, datalen);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.ONE_WEEK, HistoryData.DEFAULT_DATALEN);
 	 * @param code 股票代码
-	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
+	 * @return 一个{@link List}，里面是{@link StockHistory}对象
 	 */
-	public static List<HistoryDataPOJO> get1WKlineDataObjects(String code){
+	public static List<StockHistory> get1WKlineDataObjects(String code){
 		return HistoryData.getKLineDataObjects(code, StockOptions.ONE_WEEK, StockOptions.DEFAULT_DATALEN);
 	}
 }

@@ -1,14 +1,12 @@
-package org.hotwheel.stock.data;
+package org.hotwheel.stock.model;
 
 import java.util.Date;
 
 /**
- * 负责储存实时数据的对象
- * @author yilihjy Email:yilihjy@gmail.com
+ * 实时数据的对象
  * @version 1.0.0
- *
  */
-public class RealTimeDataPOJO {
+public class StockRealTime {
 	/**
 	 * 数据类型为指数
 	 */
@@ -58,7 +56,7 @@ public class RealTimeDataPOJO {
 	/**
 	 * 无参数构造方法
 	 */
-	public RealTimeDataPOJO(){
+	public StockRealTime(){
 		super();
 	}
 	
@@ -73,8 +71,8 @@ public class RealTimeDataPOJO {
 	 * @param riseAndFall 涨跌额
 	 * @param riseAndFallPercent 涨跌百分比
 	 */
-	public RealTimeDataPOJO(int type, String fullCode, String name, double now, double volume, double volumePrice,
-			double riseAndFall, double riseAndFallPercent) {
+	public StockRealTime(int type, String fullCode, String name, double now, double volume, double volumePrice,
+                         double riseAndFall, double riseAndFallPercent) {
 		super();
 		this.type = type;
 		this.fullCode = fullCode;
@@ -122,12 +120,12 @@ public class RealTimeDataPOJO {
 	 * @param date 日期
 	 * @param time 时间
 	 */
-	public RealTimeDataPOJO(int type, String fullCode, String name, double open, double close, double now, double high,
-			double low, double buyPrice, double sellPrice, double volume, double volumePrice, double buy1Num,
-			double buy1Pricae, double buy2Num, double buy2Pricae, double buy3Num, double buy3Pricae, double buy4Num,
-			double buy4Pricae, double buy5Num, double buy5Pricae, double sell1Num, double sell1Pricae, double sell2Num,
-			double sell2Pricae, double sell3Num, double sell3Pricae, double sell4Num, double sell4Pricae,
-			double sell5Num, double sell5Pricae, Date date, Date time) {
+	public StockRealTime(int type, String fullCode, String name, double open, double close, double now, double high,
+                         double low, double buyPrice, double sellPrice, double volume, double volumePrice, double buy1Num,
+                         double buy1Pricae, double buy2Num, double buy2Pricae, double buy3Num, double buy3Pricae, double buy4Num,
+                         double buy4Pricae, double buy5Num, double buy5Pricae, double sell1Num, double sell1Pricae, double sell2Num,
+                         double sell2Pricae, double sell3Num, double sell3Pricae, double sell4Num, double sell4Pricae,
+                         double sell5Num, double sell5Pricae, Date date, Date time) {
 		super();
 		this.type = type;
 		this.fullCode = fullCode;
