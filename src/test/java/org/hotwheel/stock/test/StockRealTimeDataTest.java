@@ -1,7 +1,7 @@
 package org.hotwheel.stock.test;
 
 import org.hotwheel.stock.data.RealTimeData;
-import org.hotwheel.stock.data.RealTimeDataPOJO;
+import org.hotwheel.stock.model.StockRealTime;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
@@ -15,19 +15,19 @@ import static org.junit.Assert.*;
  * @version 1.0.0
  *
  */
-public class RealTimeDataTest {
+public class StockRealTimeDataTest {
 
 	@Test
 	public void testGetRealTimeDataObjectsMethod() throws UnsupportedEncodingException {
 		String[] li ={"s_sh000001","s_sz399001","sz000002","sh603377","sz300443"};
-		List<RealTimeDataPOJO> list = RealTimeData.getRealTimeDataObjects(li);
+		List<StockRealTime> list = RealTimeData.getRealTimeDataObjects(li);
 		assertEquals("上证指数",list.get(0).getName());
 		assertEquals(0.0,list.get(0).getOpen(),0.0);
-		assertEquals(RealTimeDataPOJO.INDEX,list.get(0).getType());
+		assertEquals(StockRealTime.INDEX,list.get(0).getType());
 		assertEquals("深证成指",list.get(1).getName());
 		assertEquals("万 科Ａ",list.get(2).getName());
-		assertNotEquals(RealTimeDataPOJO.INDEX,list.get(2).getType());
-		assertEquals(RealTimeDataPOJO.STOCK,list.get(2).getType());
+		assertNotEquals(StockRealTime.INDEX,list.get(2).getType());
+		assertEquals(StockRealTime.STOCK,list.get(2).getType());
 		assertEquals("东方时尚",list.get(3).getName());
 		assertEquals("金雷风电",list.get(4).getName());
 	}

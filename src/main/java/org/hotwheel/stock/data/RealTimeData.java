@@ -1,6 +1,8 @@
 package org.hotwheel.stock.data;
 
 
+import org.hotwheel.stock.model.StockRealTime;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,14 +25,14 @@ public class RealTimeData {
 	 * List&lt;RealTimeDataPOJO&gt; result = RealTimeData.getRealTimeDataObjects(codes);<br>
 	 * 
 	 * @param codes 股票代码数组 例如 {"sz000002","sz000001"}
-	 * @return 一个{@link List}，里面是{@link RealTimeDataPOJO}对象
+	 * @return 一个{@link List}，里面是{@link StockRealTime}对象
 	 */
-	public static List<RealTimeDataPOJO> getRealTimeDataObjects(String[] codes){
+	public static List<StockRealTime> getRealTimeDataObjects(String[] codes){
 		String indexPatternString = "var hq_str_s_(\\w{8})=\"(.+)\"";
 		String stockPatterString = "var hq_str_(\\w{8})=\"(.+)\"";
 		Pattern indexPatter = Pattern.compile(indexPatternString);
 		Pattern stockPatter = Pattern.compile(stockPatterString);
-		List<RealTimeDataPOJO> result =new ArrayList<>();
+		List<StockRealTime> result =new ArrayList<>();
 		String url = createURL(codes);
 		String response = Tools.sendHTTPGET(url,"GBK");
 		String[] responses = response.split(";");
@@ -38,8 +40,8 @@ public class RealTimeData {
 			String reresponseString = responses[i];
 			Matcher stockMatcher = stockPatter.matcher(reresponseString);
 			if(stockMatcher.find()){
-				RealTimeDataPOJO obj = new RealTimeDataPOJO();
-				obj.setType(RealTimeDataPOJO.STOCK);
+				StockRealTime obj = new StockRealTime();
+				obj.setType(StockRealTime.STOCK);
 				obj.setFullCode(stockMatcher.group(1));
 				String[] array = stockMatcher.group(2).split(",");
 				obj.setName(array[0]);
@@ -79,8 +81,8 @@ public class RealTimeData {
 			}else{
 				Matcher indexMatcher = indexPatter.matcher(reresponseString);
 				if(indexMatcher.find()){
-					RealTimeDataPOJO obj = new RealTimeDataPOJO();
-					obj.setType(RealTimeDataPOJO.INDEX);
+					StockRealTime obj = new StockRealTime();
+					obj.setType(StockRealTime.INDEX);
 					obj.setFullCode(indexMatcher.group(1));
 					String[] array = indexMatcher.group(2).split(",");
 					obj.setName(array[0]);
