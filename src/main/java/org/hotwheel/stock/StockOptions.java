@@ -5,7 +5,7 @@ package org.hotwheel.stock;
  *
  * Created by wangfeng on 2017/3/12.
  */
-public final class Stock {
+public final class StockOptions {
     /**
      * 五分钟，字符串"5"
      */

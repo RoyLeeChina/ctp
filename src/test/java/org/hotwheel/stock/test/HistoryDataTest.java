@@ -1,6 +1,6 @@
 package org.hotwheel.stock.test;
 
-import org.hotwheel.stock.Stock;
+import org.hotwheel.stock.StockOptions;
 import org.hotwheel.stock.data.HistoryData;
 import org.hotwheel.stock.data.HistoryDataPOJO;
 import org.junit.Test;
@@ -41,7 +41,7 @@ public class HistoryDataTest {
 	
 	@Test
 	public void testGetKLineDataObjectsMethod(){
-		List<HistoryDataPOJO> result = HistoryData.getKLineDataObjects("sz000002", Stock.ONE_DAY);
+		List<HistoryDataPOJO> result = HistoryData.getKLineDataObjects("sz000002", StockOptions.ONE_DAY);
 		HistoryDataPOJO h1 = result.get(0);
 		HistoryDataPOJO h5 = result.get(4);
 		HistoryDataPOJO h10 = result.get(9);
