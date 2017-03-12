@@ -78,7 +78,7 @@ public class RealTimeData {
 				obj.setDate(ldt);
 				obj.setTime(ldt);
 			    result.add(obj);
-			}else{
+			} else {
 				Matcher indexMatcher = indexPatter.matcher(reresponseString);
 				if(indexMatcher.find()){
 					StockRealTime obj = new StockRealTime();
