@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.hotwheel.stock.Stock;
+import org.hotwheel.stock.StockOptions;
 import org.json.JSONArray;
 import org.json.JSONObject;
 /**
@@ -93,7 +93,7 @@ public class HistoryData {
 	 * @return json字符串
 	 */
 	public static String getKLineData(String code, String scale){
-		return HistoryData.getKLineData(code, scale, Stock.DEFAULT_DATALEN);
+		return HistoryData.getKLineData(code, scale, StockOptions.DEFAULT_DATALEN);
 	}
 	/**
 	 * 实际调用：getKLineData(code, HistoryData.FIVE_MINUTES, datalen)
@@ -102,7 +102,7 @@ public class HistoryData {
 	 * @return json字符串
 	 */
 	public static String get5MKlineData(String code, String datalen){
-		return HistoryData.getKLineData(code, Stock.FIVE_MINUTES, datalen);
+		return HistoryData.getKLineData(code, StockOptions.FIVE_MINUTES, datalen);
 	}
 	/**
 	 * 实际调用：getKLineData(code, HistoryData.FIVE_MINUTES, HistoryData.DEFAULT_DATALEN);
@@ -110,7 +110,7 @@ public class HistoryData {
 	 * @return json字符串
 	 */
 	public static String get5MKlineData(String code){
-		return HistoryData.getKLineData(code, Stock.FIVE_MINUTES, Stock.DEFAULT_DATALEN);
+		return HistoryData.getKLineData(code, StockOptions.FIVE_MINUTES, StockOptions.DEFAULT_DATALEN);
 	}
 	/**
 	 *实际调用：getKLineData(code, HistoryData.FIFTEEN_MINUTES, datalen)
@@ -119,7 +119,7 @@ public class HistoryData {
 	 * @return json字符串
 	 */
 	public static String get15MKlineData(String code, String datalen){
-		return HistoryData.getKLineData(code, Stock.FIFTEEN_MINUTES, datalen);
+		return HistoryData.getKLineData(code, StockOptions.FIFTEEN_MINUTES, datalen);
 	}
 	/**
 	 * 实际调用：getKLineData(code, HistoryData.FIFTEEN_MINUTES, HistoryData.DEFAULT_DATALEN);
@@ -127,7 +127,7 @@ public class HistoryData {
 	 * @return json字符串
 	 */
 	public static String get15MKlineData(String code){
-		return HistoryData.getKLineData(code, Stock.FIFTEEN_MINUTES, Stock.DEFAULT_DATALEN);
+		return HistoryData.getKLineData(code, StockOptions.FIFTEEN_MINUTES, StockOptions.DEFAULT_DATALEN);
 	}
 	/**
 	 * 实际调用：getKLineData(code, HistoryData.THIRTY_MINUTES, datalen);
@@ -136,7 +136,7 @@ public class HistoryData {
 	 * @return json字符串
 	 */
 	public static String get30MKlineData(String code, String datalen){
-		return HistoryData.getKLineData(code, Stock.THIRTY_MINUTES, datalen);
+		return HistoryData.getKLineData(code, StockOptions.THIRTY_MINUTES, datalen);
 	}
 	/**
 	 * 实际调用：getKLineData(code, HistoryData.THIRTY_MINUTES, HistoryData.DEFAULT_DATALEN);
@@ -144,7 +144,7 @@ public class HistoryData {
 	 * @return json字符串
 	 */
 	public static String get30MKlineData(String code){
-		return HistoryData.getKLineData(code, Stock.THIRTY_MINUTES, Stock.DEFAULT_DATALEN);
+		return HistoryData.getKLineData(code, StockOptions.THIRTY_MINUTES, StockOptions.DEFAULT_DATALEN);
 	}
 	/**
 	 * 实际调用：getKLineData(code, HistoryData.ONE_HOUR, datalen);
@@ -153,7 +153,7 @@ public class HistoryData {
 	 * @return json字符串
 	 */
 	public static String get1HKlineData(String code, String datalen){
-		return HistoryData.getKLineData(code, Stock.ONE_HOUR, datalen);
+		return HistoryData.getKLineData(code, StockOptions.ONE_HOUR, datalen);
 	}
 	/**
 	 * 实际调用：getKLineData(code, HistoryData.ONE_HOUR, HistoryData.DEFAULT_DATALEN);
@@ -161,7 +161,7 @@ public class HistoryData {
 	 * @return json字符串
 	 */
 	public static String get1HKlineData(String code){
-		return HistoryData.getKLineData(code, Stock.ONE_HOUR, Stock.DEFAULT_DATALEN);
+		return HistoryData.getKLineData(code, StockOptions.ONE_HOUR, StockOptions.DEFAULT_DATALEN);
 	}
 	/**
 	 *  实际调用：getKLineData(code, HistoryData.ONE_DAY, datalen);
@@ -170,7 +170,7 @@ public class HistoryData {
 	 * @return json字符串
 	 */
 	public static String get1DKlineData(String code, String datalen){
-		return HistoryData.getKLineData(code, Stock.ONE_DAY, datalen);
+		return HistoryData.getKLineData(code, StockOptions.ONE_DAY, datalen);
 	}
 	/**
 	 * 实际调用：getKLineData(code, HistoryData.ONE_DAY, HistoryData.DEFAULT_DATALEN);
@@ -178,7 +178,7 @@ public class HistoryData {
 	 * @return json字符串
 	 */
 	public static String get1DKlineData(String code){
-		return HistoryData.getKLineData(code, Stock.ONE_DAY, Stock.DEFAULT_DATALEN);
+		return HistoryData.getKLineData(code, StockOptions.ONE_DAY, StockOptions.DEFAULT_DATALEN);
 	}
 	/**
 	 * 实际调用：getKLineData(code, HistoryData.ONE_WEEK, datalen);
@@ -187,7 +187,7 @@ public class HistoryData {
 	 * @return json字符串
 	 */
 	public static String get1WKlineData(String code, String datalen){
-		return HistoryData.getKLineData(code, Stock.ONE_WEEK, datalen);
+		return HistoryData.getKLineData(code, StockOptions.ONE_WEEK, datalen);
 	}
 	/**
 	 * 实际调用：getKLineData(code, HistoryData.ONE_WEEK, HistoryData.DEFAULT_DATALEN);
@@ -195,7 +195,7 @@ public class HistoryData {
 	 * @return json字符串
 	 */
 	public static String get1WKlineData(String code){
-		return HistoryData.getKLineData(code, Stock.ONE_WEEK, Stock.DEFAULT_DATALEN);
+		return HistoryData.getKLineData(code, StockOptions.ONE_WEEK, StockOptions.DEFAULT_DATALEN);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, scale,HistoryData.DEFAULT_DATALEN);
@@ -204,7 +204,7 @@ public class HistoryData {
 	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
 	 */
 	public static List<HistoryDataPOJO> getKLineDataObjects(String code, String scale){
-		return HistoryData.getKLineDataObjects(code, scale,Stock.DEFAULT_DATALEN);
+		return HistoryData.getKLineDataObjects(code, scale, StockOptions.DEFAULT_DATALEN);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.FIVE_MINUTES, datalen);
@@ -213,7 +213,7 @@ public class HistoryData {
 	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
 	 */
 	public static List<HistoryDataPOJO> get5MKLineDataObjects(String code, String datalen){
-		return HistoryData.getKLineDataObjects(code, Stock.FIVE_MINUTES, datalen);
+		return HistoryData.getKLineDataObjects(code, StockOptions.FIVE_MINUTES, datalen);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.FIVE_MINUTES, HistoryData.DEFAULT_DATALEN);
@@ -221,7 +221,7 @@ public class HistoryData {
 	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
 	 */
 	public static List<HistoryDataPOJO> get5MKlineDataObjects(String code){
-		return HistoryData.getKLineDataObjects(code, Stock.FIVE_MINUTES, Stock.DEFAULT_DATALEN);
+		return HistoryData.getKLineDataObjects(code, StockOptions.FIVE_MINUTES, StockOptions.DEFAULT_DATALEN);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.FIFTEEN_MINUTES, datalen);
@@ -230,7 +230,7 @@ public class HistoryData {
 	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
 	 */
 	public static List<HistoryDataPOJO> get15MKlineDataObjects(String code, String datalen){
-		return HistoryData.getKLineDataObjects(code, Stock.FIFTEEN_MINUTES, datalen);
+		return HistoryData.getKLineDataObjects(code, StockOptions.FIFTEEN_MINUTES, datalen);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.FIFTEEN_MINUTES, HistoryData.DEFAULT_DATALEN);
@@ -238,7 +238,7 @@ public class HistoryData {
 	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
 	 */
 	public static List<HistoryDataPOJO> get15MKlineDataObjects(String code){
-		return HistoryData.getKLineDataObjects(code, Stock.FIFTEEN_MINUTES, Stock.DEFAULT_DATALEN);
+		return HistoryData.getKLineDataObjects(code, StockOptions.FIFTEEN_MINUTES, StockOptions.DEFAULT_DATALEN);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.THIRTY_MINUTES, datalen);
@@ -247,7 +247,7 @@ public class HistoryData {
 	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
 	 */
 	public static List<HistoryDataPOJO> get30MKlineDataObjects(String code, String datalen){
-		return HistoryData.getKLineDataObjects(code, Stock.THIRTY_MINUTES, datalen);
+		return HistoryData.getKLineDataObjects(code, StockOptions.THIRTY_MINUTES, datalen);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.THIRTY_MINUTES, HistoryData.DEFAULT_DATALEN);
@@ -255,7 +255,7 @@ public class HistoryData {
 	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
 	 */
 	public static List<HistoryDataPOJO> get30MKlineDataObjects(String code){
-		return HistoryData.getKLineDataObjects(code, Stock.THIRTY_MINUTES, Stock.DEFAULT_DATALEN);
+		return HistoryData.getKLineDataObjects(code, StockOptions.THIRTY_MINUTES, StockOptions.DEFAULT_DATALEN);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.ONE_HOUR, datalen);
@@ -264,7 +264,7 @@ public class HistoryData {
 	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
 	 */
 	public static List<HistoryDataPOJO> get1HKlineDataObjects(String code, String datalen){
-		return HistoryData.getKLineDataObjects(code, Stock.ONE_HOUR, datalen);
+		return HistoryData.getKLineDataObjects(code, StockOptions.ONE_HOUR, datalen);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.ONE_HOUR, HistoryData.DEFAULT_DATALEN);
@@ -272,7 +272,7 @@ public class HistoryData {
 	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
 	 */
 	public static List<HistoryDataPOJO> get1HKlineDataObjects(String code){
-		return HistoryData.getKLineDataObjects(code, Stock.ONE_HOUR, Stock.DEFAULT_DATALEN);
+		return HistoryData.getKLineDataObjects(code, StockOptions.ONE_HOUR, StockOptions.DEFAULT_DATALEN);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.ONE_DAY, datalen);
@@ -281,7 +281,7 @@ public class HistoryData {
 	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
 	 */
 	public static List<HistoryDataPOJO> get1DKlineDataObjects(String code, String datalen){
-		return HistoryData.getKLineDataObjects(code, Stock.ONE_DAY, datalen);
+		return HistoryData.getKLineDataObjects(code, StockOptions.ONE_DAY, datalen);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.ONE_DAY, HistoryData.DEFAULT_DATALEN);
@@ -289,7 +289,7 @@ public class HistoryData {
 	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
 	 */
 	public static List<HistoryDataPOJO> get1DKlineDataObjects(String code){
-		return HistoryData.getKLineDataObjects(code, Stock.ONE_DAY, Stock.DEFAULT_DATALEN);
+		return HistoryData.getKLineDataObjects(code, StockOptions.ONE_DAY, StockOptions.DEFAULT_DATALEN);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.ONE_WEEK, datalen);
@@ -298,7 +298,7 @@ public class HistoryData {
 	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
 	 */
 	public static List<HistoryDataPOJO> get1WKlineDataObjects(String code, String datalen){
-		return HistoryData.getKLineDataObjects(code, Stock.ONE_WEEK, datalen);
+		return HistoryData.getKLineDataObjects(code, StockOptions.ONE_WEEK, datalen);
 	}
 	/**
 	 * 实际调用：getKLineDataObjects(code, HistoryData.ONE_WEEK, HistoryData.DEFAULT_DATALEN);
@@ -306,6 +306,6 @@ public class HistoryData {
 	 * @return 一个{@link List}，里面是{@link HistoryDataPOJO}对象
 	 */
 	public static List<HistoryDataPOJO> get1WKlineDataObjects(String code){
-		return HistoryData.getKLineDataObjects(code, Stock.ONE_WEEK, Stock.DEFAULT_DATALEN);
+		return HistoryData.getKLineDataObjects(code, StockOptions.ONE_WEEK, StockOptions.DEFAULT_DATALEN);
 	}
 }

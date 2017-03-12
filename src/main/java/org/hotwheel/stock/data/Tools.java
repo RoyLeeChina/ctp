@@ -24,7 +24,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.hotwheel.stock.Stock;
+import org.hotwheel.stock.StockOptions;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONWriter;
@@ -68,9 +68,9 @@ public class Tools {
 	public static Date string2LocalDateTime(String time){
 		Date result;
 		if (time.length() > 10) {
-			result = Api.toDate(time, Stock.TimeFormat);
+			result = Api.toDate(time, StockOptions.TimeFormat);
 		} else {
-			result = Api.toDate(time, Stock.DateFormat);
+			result = Api.toDate(time, StockOptions.DateFormat);
 		}
 		return result;
 	}
