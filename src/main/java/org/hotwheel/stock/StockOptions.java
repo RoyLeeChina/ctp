@@ -5,7 +5,7 @@ import java.util.TreeMap;
 
 /**
  * 股票数据常亮
- *
+ * <p>
  * Created by wangfeng on 2017/3/12.
  */
 public final class StockOptions {
@@ -38,9 +38,13 @@ public final class StockOptions {
      */
     public static final String DEFAULT_DATALEN = "1000000";
 
-    /** 时间格式 */
+    /**
+     * 时间格式
+     */
     public final static String TimeFormat = "yyyy-MM-dd HH:mm:ss";
-    /** 日期格式 */
+    /**
+     * 日期格式
+     */
     public final static String DateFormat = "yyyy-MM-dd";
     public final static String DateFormat2 = "yyyyMMdd";
 

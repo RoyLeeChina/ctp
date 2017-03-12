@@ -1,6 +1,7 @@
 package org.hotwheel.stock.test;
 
 import org.hotwheel.stock.model.StockHistory;
+import org.hotwheel.stock.model.StockRealTime;
 import org.hotwheel.stock.util.StockApi;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class TestHistoryData {
         String code = "sz000088";
 
         List<StockHistory> sh = StockApi.getHistory(code);
-
+        List<StockRealTime> srl = StockApi.getRealTime(code);
         System.out.println(sh);
 
     }
