@@ -1,5 +1,8 @@
 package org.hotwheel.stock;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 /**
  * 股票数据常亮
  *
@@ -40,4 +43,15 @@ public final class StockOptions {
     /** 日期格式 */
     public final static String DateFormat = "yyyy-MM-dd";
     public final static String DateFormat2 = "yyyyMMdd";
+
+    public final static String urlHistory = "http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData";
+
+    public static Map<String, Object> historyParams(final String code) {
+        TreeMap<String, Object> params = new TreeMap<>();
+        params.put("symbol", code);
+        params.put("scale", ONE_DAY);
+        params.put("datalen", DEFAULT_DATALEN);
+
+        return params;
+    }
 }
