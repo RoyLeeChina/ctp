@@ -28,7 +28,7 @@ import org.hotwheel.stock.StockOptions;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONWriter;
-import org.mymmsc.api.assembly.Api;
+import org.hotwheel.assembly.Api;
 
 /**
  * 提供一些工具方法
@@ -42,7 +42,7 @@ public class Tools {
 	 * @return 响应内容字符串
 	 */
 	public static String sendHTTPGET(String url,String charsetName){
-		String result =null;
+		String result = null;
 		HttpGet httpGet = new HttpGet(url);
 		try (
 			CloseableHttpClient httpclient = HttpClients.createDefault();
