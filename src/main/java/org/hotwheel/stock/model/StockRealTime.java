@@ -17,7 +17,6 @@ public class StockRealTime {
      */
     public static final int STOCK = 2;
 
-
     private int type;
     private String fullCode;
     private String name;
@@ -59,7 +58,7 @@ public class StockRealTime {
      * 无参数构造方法
      */
     public StockRealTime() {
-        super();
+        //
     }
 
     /**
@@ -76,7 +75,6 @@ public class StockRealTime {
      */
     public StockRealTime(int type, String fullCode, String name, double now, double volume, double volumePrice,
                          double riseAndFall, double riseAndFallPercent) {
-        super();
         this.type = type;
         this.fullCode = fullCode;
         this.name = name;
@@ -131,7 +129,6 @@ public class StockRealTime {
                          double buy4Pricae, double buy5Num, double buy5Pricae, double sell1Num, double sell1Pricae, double sell2Num,
                          double sell2Pricae, double sell3Num, double sell3Pricae, double sell4Num, double sell4Pricae,
                          double sell5Num, double sell5Pricae, Date date, Date time) {
-        super();
         this.type = type;
         this.fullCode = fullCode;
         this.name = name;

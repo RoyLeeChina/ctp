@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="org.hotwheel.stock.dao.IStockRealTime">
+    <resultMap id="stockRealTime" type="org.hotwheel.stock.model.StockRealTime">
+        <result column="type"         property="type"         jdbcType="TINYINT" />
+        <result column="date"         property="date"         jdbcType="DATE"/>
+        <result column="time"         property="time"         jdbcType="TIME"/>
+        <result column="code"         property="fullCode"     jdbcType="VARCHAR" />
+        <result column="open"         property="open"         jdbcType="VARCHAR" />
+        <result column="close"        property="close"        jdbcType="VARCHAR" />
+        <result column="now"          property="now"          jdbcType="VARCHAR" />
+        <result column="high"         property="high"         jdbcType="VARCHAR"/>
+        <result column="low"          property="low"          jdbcType="VARCHAR"/>
+
+        <result column="buy_price"    property="buyPrice"     jdbcType="VARCHAR"/>
+        <result column="sell_price"   property="sellPrice"    jdbcType="VARCHAR"/>
+        <result column="volume"       property="volume"       jdbcType="VARCHAR"/>
+        <result column="volume_price" property="volumePrice"  jdbcType="VARCHAR"/>
+
+        <result column="buy_1_num"    property="buy1Num"      jdbcType="VARCHAR"/>
+        <result column="buy_1_price"  property="buy1Pricae"   jdbcType="VARCHAR"/>
+        <result column="buy_2_num"    property="buy2Num"      jdbcType="VARCHAR"/>
+        <result column="buy_2_price"  property="buy2Pricae"   jdbcType="VARCHAR"/>
+        <result column="buy_3_num"    property="buy3Num"      jdbcType="VARCHAR"/>
+        <result column="buy_3_price"  property="buy3Pricae"   jdbcType="VARCHAR"/>
+        <result column="buy_4_num"    property="buy4Num"      jdbcType="VARCHAR"/>
+        <result column="buy_4_price"  property="buy4Pricae"   jdbcType="VARCHAR"/>
+        <result column="buy_5_num"    property="buy5Num"      jdbcType="VARCHAR"/>
+        <result column="buy_5_price"  property="buy5Pricae"   jdbcType="VARCHAR"/>
+
+        <result column="sell_1_num"    property="sell1Num"      jdbcType="VARCHAR"/>
+        <result column="sell_1_price"  property="sell1Pricae"   jdbcType="VARCHAR"/>
+        <result column="sell_2_num"    property="sell2Num"      jdbcType="VARCHAR"/>
+        <result column="sell_2_price"  property="sell2Pricae"   jdbcType="VARCHAR"/>
+        <result column="sell_3_num"    property="sell3Num"      jdbcType="VARCHAR"/>
+        <result column="sell_3_price"  property="sell3Pricae"   jdbcType="VARCHAR"/>
+        <result column="sell_4_num"    property="sell4Num"      jdbcType="VARCHAR"/>
+        <result column="sell_4_price"  property="sell4Pricae"   jdbcType="VARCHAR"/>
+        <result column="sell_5_num"    property="sell5Num"      jdbcType="VARCHAR"/>
+        <result column="sell_5_price"  property="sell5Pricae"   jdbcType="VARCHAR"/>
+
+        <result column="rise_fall"         property="riseAndFall"        jdbcType="VARCHAR"/>
+        <result column="rise_fall_percent" property="riseAndFallPercent" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="select" resultMap="stockRealTime">
+        SELECT `type`,`date`,`time`,`code`,`name`,`open`,`close`,`now`,`high`,`low`,`buy_price`,`sell_price`,`volume`,`volume_price`,`buy_1_num`,`buy_1_price`,`buy_2_num`,`buy_2_price`,`buy_3_num`,`buy_3_price`,`buy_4_num`,`buy_4_price`,`buy_5_num`,`buy_5_price`,`sell_1_num`,`sell_1_price`,`sell_2_num`,`sell_2_price`,`sell_3_num`,`sell_3_price`,`sell_4_num`,`sell_4_price`,`sell_5_num`,`sell_5_price`,`rise_fall`,`rise_fall_percen`
+        FROM stock_realtime
+        WHERE `code`=#{code}
+    </select>
+    <insert id="insert" parameterType="org.hotwheel.stock.model.StockRealTime">
+        INSERT INTO stock_realtime (`type`,`date`,`time`,`code`,`name`,`open`,`close`,`now`,`high`,`low`,`buy_price`,`sell_price`,`volume`,`volume_price`,`buy_1_num`,`buy_1_price`,`buy_2_num`,`buy_2_price`,`buy_3_num`,`buy_3_price`,`buy_4_num`,`buy_4_price`,`buy_5_num`,`buy_5_price`,`sell_1_num`,`sell_1_price`,`sell_2_num`,`sell_2_price`,`sell_3_num`,`sell_3_price`,`sell_4_num`,`sell_4_price`,`sell_5_num`,`sell_5_price`,`rise_fall`,`rise_fall_percen`)
+        VALUES (#{type},#{date},#{time},#{fullCode},#{name},#{open},#{close},#{now},#{high},#{low},
+                #{buyPrice},#{sellPrice},#{volume},#{volumePrice},
+                #{buy1Num},#{buy1Price},#{buy2Num},#{buy2Price},#{buy3Num},#{buy3Price},#{buy4Num},#{buy4Price},#{buy5Num},#{buy5Price},
+                #{sell1Num},#{sell1Price},#{sell2Num},#{sell2Price},#{sell3Num},#{sell3Price},#{sell4Num},#{sell4Price},#{sell5Num},#{sell5Price},
+                #{riseAndFall},#{riseAndFallPercent})
+    </insert>
+
+    <update id="update" parameterType="org.hotwheel.stock.model.StockRealTime">
+        UPDATE stock_realtime
+        SET `type`=#{type},
+            `date`=#{date},
+            `time`=#{time},
+            `code`=#{fullCode},
+            `name`=#{name},
+            `open`=#{open},
+            `close`=#{close},
+            `now`=#{now},
+            `high`=#{high},
+            `low`=#{low},
+            `buy_price`=#{buyPrice},
+            `sell_price`=#{sellPrice},
+            `volume`=#{volume},
+            `volume_price`=#{volumePrice},
+            `buy_1_num`=#{buy1Num},
+            `buy_1_price`=#{buy1Price},
+            `buy_2_num`=#{buy2Num},
+            `buy_2_price`=#{buy2Price},
+            `buy_3_num`=#{buy3Num},
+            `buy_3_price`=#{buy3Price},
+            `buy_4_num`=#{buy4Num},
+            `buy_4_price`=#{buy4Price},
+            `buy_5_num`=#{buy5Num},
+            `buy_5_price`=#{buy_5_price},
+            `sell_1_num`=#{sell1Num},
+            `sell_1_price`=#{sell1Price},
+            `sell_2_num`=#{sell2Num},
+            `sell_2_price`=#{sell2Price},
+            `sell_3_num`=#{sell3Num},
+            `sell_3_price`=#{sell3Price},
+            `sell_4_num`=#{sell4Num},
+            `sell_4_price`=#{sell4Price},
+            `sell_5_num`=#{sell5Num},
+            `sell_5_price`=#{sell5Price},
+            `rise_fall`=#{riseAndFall},
+            `rise_fall_percen`=#{riseAndFallPercent}
+        WHERE `code` = #{fullCode}
+    </update>
+</mapper>

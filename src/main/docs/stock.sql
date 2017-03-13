@@ -102,11 +102,11 @@ DROP TABLE IF EXISTS `stock`.`stock_user`;
 CREATE TABLE `stock`.`stock_user`
 (
 	`Flag`         CHAR    (2)    BINARY DEFAULT '00'     COMMENT '标志($): 00-禁止,01-正常',
-	`MemberId`     CHAR    (128)  BINARY NOT NULL         COMMENT '客户ID',
-	`MemberName`   CHAR    (128)  BINARY NOT NULL         COMMENT '客户姓名',
+	`MemberId`     CHAR    (128)  BINARY DEFAULT ''       COMMENT '客户ID',
+	`MemberName`   CHAR    (128)  BINARY DEFAULT ''       COMMENT '客户姓名',
 	`Phone`        CHAR    (32)   BINARY NOT NULL         COMMENT '手机号码(?$)',
-	`weixin`       CHAR    (128)  BINARY NOT NULL         COMMENT '微信id(?$)',
-	`email`        CHAR    (128)  BINARY NOT NULL         COMMENT '邮箱(?$)',
+	`weixin`       CHAR    (128)  BINARY DEFAULT ''       COMMENT '微信id(?$)',
+	`email`        CHAR    (128)  BINARY DEFAULT ''       COMMENT '邮箱(?$)',
 	`CreateTime`   DATETIME          DEFAULT NULL         COMMENT '创建时间($)',
 	`SendDate`     DATE              DEFAULT NULL         COMMENT '发送日期',
 	`Operator`     VARCHAR (50)   BINARY DEFAULT 'system' COMMENT '操作人(?$)',
@@ -134,7 +134,7 @@ ALTER TABLE `stock`.`stock_subscribe` ADD INDEX (`code`);
 DROP TABLE IF EXISTS `stock`.`stock_realtime`;
 CREATE TABLE `stock`.`stock_realtime`
 (
-	`flag`              CHAR    (2)    BINARY DEFAULT '00'     COMMENT '标志($): 00-禁止发送,01-正常发送',
+	`type`              TINYINT               DEFAULT 2        COMMENT '类型: 1-指数,2-股票',
 	`date`              DATE                  DEFAULT NULL     COMMENT '日期',
 	`time`              TIME                  DEFAULT NULL     COMMENT '时间',
 	`code`              CHAR    (32)   BINARY NOT NULL         COMMENT '证券代码',
@@ -169,9 +169,7 @@ CREATE TABLE `stock`.`stock_realtime`
   `sell_5_num`        VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '委托卖五量',
   `sell_5_price`      VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '委托买五价',
   `rise_fall`         VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '涨跌价',
-  `rise_fall_percent` VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '涨跌幅',
-	`Operator`          VARCHAR (50)   BINARY DEFAULT 'system' COMMENT '操作人(?$)',
-	`ID`                INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY  /* 记录标号 */
+  `rise_fall_percent` VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '涨跌幅'
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='个股实时行情表';
 ALTER TABLE `stock`.`stock_realtime` ADD INDEX (`code`);
 
