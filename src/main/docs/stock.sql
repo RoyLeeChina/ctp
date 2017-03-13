@@ -105,7 +105,7 @@ CREATE TABLE `stock`.`stock_user`
 	`MemberId`     CHAR    (128)  BINARY NOT NULL         COMMENT '客户ID',
 	`MemberName`   CHAR    (128)  BINARY NOT NULL         COMMENT '客户姓名',
 	`Phone`        CHAR    (32)   BINARY NOT NULL         COMMENT '手机号码(?$)',
-	`wexin`        CHAR    (128)  BINARY NOT NULL         COMMENT '微信id(?$)',
+	`weixin`       CHAR    (128)  BINARY NOT NULL         COMMENT '微信id(?$)',
 	`email`        CHAR    (128)  BINARY NOT NULL         COMMENT '邮箱(?$)',
 	`CreateTime`   DATETIME          DEFAULT NULL         COMMENT '创建时间($)',
 	`SendDate`     DATE              DEFAULT NULL         COMMENT '发送日期',

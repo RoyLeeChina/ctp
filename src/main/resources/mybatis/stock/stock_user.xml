@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="org.hotwheel.stock.dao.IStockUser">
+    <!-- 插入一个用户 -->
+    <insert id="insert" parameterType="org.hotwheel.stock.model.User">
+        insert into stock_user(flag,memberId,memberName,phone,weixin,email,createTime)
+        values (#{flag},#{memberId},#{memberName},#{phone},#{weixin},#{email},#{createTime})
+    </insert>
+</mapper>
