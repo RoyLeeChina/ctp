@@ -8,7 +8,7 @@ import java.util.Date;
  * @version 1.0.0
  */
 public class User {
-    private String flag;
+    private String flag = "01";
     private String memberId;
     private String memberName;
     private String phone;
