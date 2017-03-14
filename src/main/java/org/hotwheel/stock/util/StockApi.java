@@ -47,13 +47,16 @@ public final class StockApi {
      * @param fullcode
      * @return 不合规范的代码 返回null
      */
-    public static String getCode(final String fullcode) {
-        String code = fullcode.toLowerCase();
+    public static String fixCode(final String fullcode) {
+        String code = fullcode.toLowerCase().trim();
         if (code.startsWith("sh") || code.startsWith("sz")) {
             // 代码前缀正确
             code = code.substring(2);
+        } else if (code.length() == 6) {
+            // 6位数字
         } else {
-            // 非sh或sz开头
+            // 非sh或sz开头或长度不等于6
+            code = null;
         }
 
         if (!Api.isInteger(code)) {

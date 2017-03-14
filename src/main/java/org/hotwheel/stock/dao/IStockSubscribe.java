@@ -1,10 +1,11 @@
 package org.hotwheel.stock.dao;
 
 import org.apache.ibatis.annotations.Param;
-import org.hotwheel.stock.model.StockRealTime;
 import org.hotwheel.stock.model.StockSubscribe;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 股票订阅
@@ -14,6 +15,13 @@ import org.springframework.stereotype.Service;
  */
 @Service("stockSubscribe")
 public interface IStockSubscribe {
+
+    /**
+     * 捡出全部有效的订阅
+     * @return
+     */
+    public List<StockSubscribe> queryAll();
+
     /**
      * 查询订阅
      * @param code

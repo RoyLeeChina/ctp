@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.hotwheel.stock.dao.IStockMonitor">
+
+    <select id="queryAll" resultType="org.hotwheel.stock.model.StockMonitor">
+        SELECT * FROM stock_monitor WHERE flag='01'
+    </select>
+
+</mapper>
