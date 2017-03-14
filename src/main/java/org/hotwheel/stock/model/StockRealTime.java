@@ -27,28 +27,28 @@ public class StockRealTime {
     private double low;
     private double buyPrice;
     private double sellPrice;
-    private double volume;
+    private long volume;
     private double volumePrice;
-    private double buy1Num;
-    private double buy1Pricae;
-    private double buy2Num;
-    private double buy2Pricae;
-    private double buy3Num;
-    private double buy3Pricae;
-    private double buy4Num;
-    private double buy4Pricae;
-    private double buy5Num;
-    private double buy5Pricae;
-    private double sell1Num;
-    private double sell1Pricae;
-    private double sell2Num;
-    private double sell2Pricae;
-    private double sell3Num;
-    private double sell3Pricae;
-    private double sell4Num;
-    private double sell4Pricae;
-    private double sell5Num;
-    private double sell5Pricae;
+    private long buy1Num;
+    private double buy1Price;
+    private long buy2Num;
+    private double buy2Price;
+    private long buy3Num;
+    private double buy3Price;
+    private long buy4Num;
+    private double buy4Price;
+    private long buy5Num;
+    private double buy5Price;
+    private long sell1Num;
+    private double sell1Price;
+    private long sell2Num;
+    private double sell2Price;
+    private long sell3Num;
+    private double sell3Price;
+    private long sell4Num;
+    private double sell4Price;
+    private long sell5Num;
+    private double sell5Price;
     private Date date;
     private Date time;
     private double riseAndFall;
@@ -73,7 +73,7 @@ public class StockRealTime {
      * @param riseAndFall        涨跌额
      * @param riseAndFallPercent 涨跌百分比
      */
-    public StockRealTime(int type, String fullCode, String name, double now, double volume, double volumePrice,
+    public StockRealTime(int type, String fullCode, String name, double now, long volume, double volumePrice,
                          double riseAndFall, double riseAndFallPercent) {
         this.type = type;
         this.fullCode = fullCode;
@@ -101,34 +101,40 @@ public class StockRealTime {
      * @param volume      成交量
      * @param volumePrice 成交总金额
      * @param buy1Num     买一申请数
-     * @param buy1Pricae  买一报价
+     * @param buy1Price  买一报价
      * @param buy2Num     买二申请数
-     * @param buy2Pricae  买二报价
+     * @param buy2Price  买二报价
      * @param buy3Num     买三申请数
-     * @param buy3Pricae  买三报价
+     * @param buy3Price  买三报价
      * @param buy4Num     买四申请数
-     * @param buy4Pricae  买四报价
+     * @param buy4Price  买四报价
      * @param buy5Num     买五申请数
-     * @param buy5Pricae  买五报价
+     * @param buy5Price  买五报价
      * @param sell1Num    卖一申请数
-     * @param sell1Pricae 卖一报价
+     * @param sell1Price 卖一报价
      * @param sell2Num    卖二申请数
-     * @param sell2Pricae 卖二报价
+     * @param sell2Price 卖二报价
      * @param sell3Num    卖三申请数
-     * @param sell3Pricae 卖三报价
+     * @param sell3Price 卖三报价
      * @param sell4Num    卖四申请数
-     * @param sell4Pricae 卖四报价
+     * @param sell4Price 卖四报价
      * @param sell5Num    卖五申请数
-     * @param sell5Pricae 卖五报价
+     * @param sell5Price 卖五报价
      * @param date        日期
      * @param time        时间
      */
-    public StockRealTime(int type, String fullCode, String name, double open, double close, double now, double high,
-                         double low, double buyPrice, double sellPrice, double volume, double volumePrice, double buy1Num,
-                         double buy1Pricae, double buy2Num, double buy2Pricae, double buy3Num, double buy3Pricae, double buy4Num,
-                         double buy4Pricae, double buy5Num, double buy5Pricae, double sell1Num, double sell1Pricae, double sell2Num,
-                         double sell2Pricae, double sell3Num, double sell3Pricae, double sell4Num, double sell4Pricae,
-                         double sell5Num, double sell5Pricae, Date date, Date time) {
+    public StockRealTime(int type, String fullCode, String name, double open, double close, double now, double high, double low,
+                         double buyPrice, double sellPrice, long volume, double volumePrice,
+                         long buy1Num, double buy1Price,
+                         long buy2Num, double buy2Price,
+                         long buy3Num, double buy3Price,
+                         long buy4Num, double buy4Price,
+                         long buy5Num, double buy5Price,
+                         long sell1Num, double sell1Price,
+                         long sell2Num, double sell2Price,
+                         long sell3Num, double sell3Price,
+                         long sell4Num, double sell4Price,
+                         long sell5Num, double sell5Price, Date date, Date time) {
         this.type = type;
         this.fullCode = fullCode;
         this.name = name;
@@ -142,25 +148,25 @@ public class StockRealTime {
         this.volume = volume;
         this.volumePrice = volumePrice;
         this.buy1Num = buy1Num;
-        this.buy1Pricae = buy1Pricae;
+        this.buy1Price = buy1Price;
         this.buy2Num = buy2Num;
-        this.buy2Pricae = buy2Pricae;
+        this.buy2Price = buy2Price;
         this.buy3Num = buy3Num;
-        this.buy3Pricae = buy3Pricae;
+        this.buy3Price = buy3Price;
         this.buy4Num = buy4Num;
-        this.buy4Pricae = buy4Pricae;
+        this.buy4Price = buy4Price;
         this.buy5Num = buy5Num;
-        this.buy5Pricae = buy5Pricae;
+        this.buy5Price = buy5Price;
         this.sell1Num = sell1Num;
-        this.sell1Pricae = sell1Pricae;
+        this.sell1Price = sell1Price;
         this.sell2Num = sell2Num;
-        this.sell2Pricae = sell2Pricae;
+        this.sell2Price = sell2Price;
         this.sell3Num = sell3Num;
-        this.sell3Pricae = sell3Pricae;
+        this.sell3Price = sell3Price;
         this.sell4Num = sell4Num;
-        this.sell4Pricae = sell4Pricae;
+        this.sell4Price = sell4Price;
         this.sell5Num = sell5Num;
-        this.sell5Pricae = sell5Pricae;
+        this.sell5Price = sell5Price;
         this.date = date;
         this.time = time;
     }
@@ -336,14 +342,14 @@ public class StockRealTime {
     /**
      * @return the volume
      */
-    public double getVolume() {
+    public long getVolume() {
         return volume;
     }
 
     /**
      * @param volume the volume to set
      */
-    public void setVolume(double volume) {
+    public void setVolume(long volume) {
         this.volume = volume;
     }
 
@@ -364,281 +370,281 @@ public class StockRealTime {
     /**
      * @return the buy1Num
      */
-    public double getBuy1Num() {
+    public long getBuy1Num() {
         return buy1Num;
     }
 
     /**
      * @param buy1Num the buy1Num to set
      */
-    public void setBuy1Num(double buy1Num) {
+    public void setBuy1Num(long buy1Num) {
         this.buy1Num = buy1Num;
     }
 
     /**
-     * @return the buy1Pricae
+     * @return the buy1Price
      */
-    public double getBuy1Pricae() {
-        return buy1Pricae;
+    public double getBuy1Price() {
+        return buy1Price;
     }
 
     /**
-     * @param buy1Pricae the buy1Pricae to set
+     * @param buy1Price the buy1Price to set
      */
-    public void setBuy1Pricae(double buy1Pricae) {
-        this.buy1Pricae = buy1Pricae;
+    public void setBuy1Price(double buy1Price) {
+        this.buy1Price = buy1Price;
     }
 
     /**
      * @return the buy2Num
      */
-    public double getBuy2Num() {
+    public long getBuy2Num() {
         return buy2Num;
     }
 
     /**
      * @param buy2Num the buy2Num to set
      */
-    public void setBuy2Num(double buy2Num) {
+    public void setBuy2Num(long buy2Num) {
         this.buy2Num = buy2Num;
     }
 
     /**
-     * @return the buy2Pricae
+     * @return the buy2Price
      */
-    public double getBuy2Pricae() {
-        return buy2Pricae;
+    public double getBuy2Price() {
+        return buy2Price;
     }
 
     /**
-     * @param buy2Pricae the buy2Pricae to set
+     * @param buy2Price the buy2Price to set
      */
-    public void setBuy2Pricae(double buy2Pricae) {
-        this.buy2Pricae = buy2Pricae;
+    public void setBuy2Price(double buy2Price) {
+        this.buy2Price = buy2Price;
     }
 
     /**
      * @return the buy3Num
      */
-    public double getBuy3Num() {
+    public long getBuy3Num() {
         return buy3Num;
     }
 
     /**
      * @param buy3Num the buy3Num to set
      */
-    public void setBuy3Num(double buy3Num) {
+    public void setBuy3Num(long buy3Num) {
         this.buy3Num = buy3Num;
     }
 
     /**
-     * @return the buy3Pricae
+     * @return the buy3Price
      */
-    public double getBuy3Pricae() {
-        return buy3Pricae;
+    public double getBuy3Price() {
+        return buy3Price;
     }
 
     /**
-     * @param buy3Pricae the buy3Pricae to set
+     * @param buy3Price the buy3Price to set
      */
-    public void setBuy3Pricae(double buy3Pricae) {
-        this.buy3Pricae = buy3Pricae;
+    public void setBuy3Price(double buy3Price) {
+        this.buy3Price = buy3Price;
     }
 
     /**
      * @return the buy4Num
      */
-    public double getBuy4Num() {
+    public long getBuy4Num() {
         return buy4Num;
     }
 
     /**
      * @param buy4Num the buy4Num to set
      */
-    public void setBuy4Num(double buy4Num) {
+    public void setBuy4Num(long buy4Num) {
         this.buy4Num = buy4Num;
     }
 
     /**
-     * @return the buy4Pricae
+     * @return the buy4Price
      */
-    public double getBuy4Pricae() {
-        return buy4Pricae;
+    public double getBuy4Price() {
+        return buy4Price;
     }
 
     /**
-     * @param buy4Pricae the buy4Pricae to set
+     * @param buy4Price the buy4Price to set
      */
-    public void setBuy4Pricae(double buy4Pricae) {
-        this.buy4Pricae = buy4Pricae;
+    public void setBuy4Price(double buy4Price) {
+        this.buy4Price = buy4Price;
     }
 
     /**
      * @return the buy5Num
      */
-    public double getBuy5Num() {
+    public long getBuy5Num() {
         return buy5Num;
     }
 
     /**
      * @param buy5Num the buy5Num to set
      */
-    public void setBuy5Num(double buy5Num) {
+    public void setBuy5Num(long buy5Num) {
         this.buy5Num = buy5Num;
     }
 
     /**
-     * @return the buy5Pricae
+     * @return the buy5Price
      */
-    public double getBuy5Pricae() {
-        return buy5Pricae;
+    public double getBuy5Price() {
+        return buy5Price;
     }
 
     /**
-     * @param buy5Pricae the buy5Pricae to set
+     * @param buy5Price the buy5Price to set
      */
-    public void setBuy5Pricae(double buy5Pricae) {
-        this.buy5Pricae = buy5Pricae;
+    public void setBuy5Price(double buy5Price) {
+        this.buy5Price = buy5Price;
     }
 
     /**
      * @return the sell1Num
      */
-    public double getSell1Num() {
+    public long getSell1Num() {
         return sell1Num;
     }
 
     /**
      * @param sell1Num the sell1Num to set
      */
-    public void setSell1Num(double sell1Num) {
+    public void setSell1Num(long sell1Num) {
         this.sell1Num = sell1Num;
     }
 
     /**
-     * @return the sell1Pricae
+     * @return the sell1Price
      */
-    public double getSell1Pricae() {
-        return sell1Pricae;
+    public double getSell1Price() {
+        return sell1Price;
     }
 
     /**
-     * @param sell1Pricae the sell1Pricae to set
+     * @param sell1Price the sell1Price to set
      */
-    public void setSell1Pricae(double sell1Pricae) {
-        this.sell1Pricae = sell1Pricae;
+    public void setSell1Price(double sell1Price) {
+        this.sell1Price = sell1Price;
     }
 
     /**
      * @return the sell2Num
      */
-    public double getSell2Num() {
+    public long getSell2Num() {
         return sell2Num;
     }
 
     /**
      * @param sell2Num the sell2Num to set
      */
-    public void setSell2Num(double sell2Num) {
+    public void setSell2Num(long sell2Num) {
         this.sell2Num = sell2Num;
     }
 
     /**
-     * @return the sell2Pricae
+     * @return the sell2Price
      */
-    public double getSell2Pricae() {
-        return sell2Pricae;
+    public double getSell2Price() {
+        return sell2Price;
     }
 
     /**
-     * @param sell2Pricae the sell2Pricae to set
+     * @param sell2Price the sell2Price to set
      */
-    public void setSell2Pricae(double sell2Pricae) {
-        this.sell2Pricae = sell2Pricae;
+    public void setSell2Price(double sell2Price) {
+        this.sell2Price = sell2Price;
     }
 
     /**
      * @return the sell3Num
      */
-    public double getSell3Num() {
+    public long getSell3Num() {
         return sell3Num;
     }
 
     /**
      * @param sell3Num the sell3Num to set
      */
-    public void setSell3Num(double sell3Num) {
+    public void setSell3Num(long sell3Num) {
         this.sell3Num = sell3Num;
     }
 
     /**
-     * @return the sell3Pricae
+     * @return the sell3Price
      */
-    public double getSell3Pricae() {
-        return sell3Pricae;
+    public double getSell3Price() {
+        return sell3Price;
     }
 
     /**
-     * @param sell3Pricae the sell3Pricae to set
+     * @param sell3Price the sell3Price to set
      */
-    public void setSell3Pricae(double sell3Pricae) {
-        this.sell3Pricae = sell3Pricae;
+    public void setSell3Price(double sell3Price) {
+        this.sell3Price = sell3Price;
     }
 
     /**
      * @return the sell4Num
      */
-    public double getSell4Num() {
+    public long getSell4Num() {
         return sell4Num;
     }
 
     /**
      * @param sell4Num the sell4Num to set
      */
-    public void setSell4Num(double sell4Num) {
+    public void setSell4Num(long sell4Num) {
         this.sell4Num = sell4Num;
     }
 
     /**
-     * @return the sell4Pricae
+     * @return the sell4Price
      */
-    public double getSell4Pricae() {
-        return sell4Pricae;
+    public double getSell4Price() {
+        return sell4Price;
     }
 
     /**
-     * @param sell4Pricae the sell4Pricae to set
+     * @param sell4Price the sell4Price to set
      */
-    public void setSell4Pricae(double sell4Pricae) {
-        this.sell4Pricae = sell4Pricae;
+    public void setSell4Price(double sell4Price) {
+        this.sell4Price = sell4Price;
     }
 
     /**
      * @return the sell5Num
      */
-    public double getSell5Num() {
+    public long getSell5Num() {
         return sell5Num;
     }
 
     /**
      * @param sell5Num the sell5Num to set
      */
-    public void setSell5Num(double sell5Num) {
+    public void setSell5Num(long sell5Num) {
         this.sell5Num = sell5Num;
     }
 
     /**
-     * @return the sell5Pricae
+     * @return the sell5Price
      */
-    public double getSell5Pricae() {
-        return sell5Pricae;
+    public double getSell5Price() {
+        return sell5Price;
     }
 
     /**
-     * @param sell5Pricae the sell5Pricae to set
+     * @param sell5Price the sell5Price to set
      */
-    public void setSell5Pricae(double sell5Pricae) {
-        this.sell5Pricae = sell5Pricae;
+    public void setSell5Price(double sell5Price) {
+        this.sell5Price = sell5Price;
     }
 
     /**

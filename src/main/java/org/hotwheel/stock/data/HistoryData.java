@@ -15,6 +15,7 @@ import java.util.List;
  * API：http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData<br>
  * 封装的参数：symbol，scale，datalen<br>
  *
+
  * @version 1.0.0
  */
 public class HistoryData {

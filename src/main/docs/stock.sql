@@ -146,27 +146,27 @@ CREATE TABLE `stock`.`stock_realtime`
   `low`               VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '最低价',
   `buy_price`         VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '买入价',
   `sell_price`        VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '卖出价',
-  `volume`            VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '成交量',
+  `volume`            VARCHAR (20)   BINARY DEFAULT '0'      COMMENT '成交量',
   `volume_price`      VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '成交额',
-  `buy_1_num`         VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '委托买一量',
+  `buy_1_num`         VARCHAR (20)   BINARY DEFAULT '0'      COMMENT '委托买一量',
   `buy_1_price`       VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '委托买一价',
-  `buy_2_num`         VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '委托买二量',
+  `buy_2_num`         VARCHAR (20)   BINARY DEFAULT '0'      COMMENT '委托买二量',
   `buy_2_price`       VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '委托买二价',
-  `buy_3_num`         VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '委托买三量',
+  `buy_3_num`         VARCHAR (20)   BINARY DEFAULT '0'      COMMENT '委托买三量',
   `buy_3_price`       VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '委托买三价',
-  `buy_4_num`         VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '委托买四量',
+  `buy_4_num`         VARCHAR (20)   BINARY DEFAULT '0'      COMMENT '委托买四量',
   `buy_4_price`       VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '委托买四价',
-  `buy_5_num`         VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '委托买五量',
+  `buy_5_num`         VARCHAR (20)   BINARY DEFAULT '0'      COMMENT '委托买五量',
   `buy_5_price`       VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '委托买五价',
-  `sell_1_num`        VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '委托卖一量',
+  `sell_1_num`        VARCHAR (20)   BINARY DEFAULT '0'      COMMENT '委托卖一量',
   `sell_1_price`      VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '委托卖一价',
-  `sell_2_num`        VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '委托卖二量',
+  `sell_2_num`        VARCHAR (20)   BINARY DEFAULT '0'      COMMENT '委托卖二量',
   `sell_2_price`      VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '委托卖二价',
-  `sell_3_num`        VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '委托卖三量',
+  `sell_3_num`        VARCHAR (20)   BINARY DEFAULT '0'      COMMENT '委托卖三量',
   `sell_3_price`      VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '委托卖三价',
-  `sell_4_num`        VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '委托卖四量',
+  `sell_4_num`        VARCHAR (20)   BINARY DEFAULT '0'      COMMENT '委托卖四量',
   `sell_4_price`      VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '委托卖四价',
-  `sell_5_num`        VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '委托卖五量',
+  `sell_5_num`        VARCHAR (20)   BINARY DEFAULT '0'      COMMENT '委托卖五量',
   `sell_5_price`      VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '委托买五价',
   `rise_fall`         VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '涨跌价',
   `rise_fall_percent` VARCHAR (20)   BINARY DEFAULT '0.000'  COMMENT '涨跌幅'
@@ -177,7 +177,6 @@ ALTER TABLE `stock`.`stock_realtime` ADD INDEX (`code`);
 DROP TABLE IF EXISTS `stock`.`stock_history`;
 CREATE TABLE `stock`.`stock_history`
 (
-	`flag`        CHAR  (2)    BINARY DEFAULT '01'                  COMMENT '标志($): 00-禁止,01-正常',
 	`day`         TIMESTAMP  NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '日期',
 	`code`        VARCHAR(20)  BINARY NOT NULL                      COMMENT '股票代码',
 	`open`        VARCHAR(20)  BINARY NOT NULL                      COMMENT '开盘价',
@@ -190,8 +189,6 @@ CREATE TABLE `stock`.`stock_history`
 	`MA10`        VARCHAR(20)  BINARY NOT NULL                      COMMENT 'MA10价',
 	`MA10_volume` VARCHAR(20)  BINARY NOT NULL                      COMMENT 'MA10量',
 	`MA30`        VARCHAR(20)  BINARY NOT NULL                      COMMENT 'MA30价',
-	`MA30_volume` VARCHAR(20)  BINARY NOT NULL                      COMMENT 'MA30量',
-	`Operator`    VARCHAR(50)  BINARY DEFAULT 'system'              COMMENT '操作人(?$)',
-	`id`          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY  /* 记录标号 */
+	`MA30_volume` VARCHAR(20)  BINARY NOT NULL                      COMMENT 'MA30量'
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='历史行情数据';
 ALTER TABLE `stock`.`stock_history` ADD INDEX (`code`);
