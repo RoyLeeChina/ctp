@@ -16,8 +16,8 @@ import org.hotwheel.io.HttpClient;
 import org.hotwheel.io.HttpResult;
 import org.hotwheel.json.JsonAdapter;
 import org.hotwheel.stock.StockOptions;
-import org.hotwheel.stock.data.HistoryData;
-import org.hotwheel.stock.data.RealTimeData;
+import org.hotwheel.stock.data.HistoryUtils;
+import org.hotwheel.stock.data.RealTimeUtils;
 import org.hotwheel.stock.model.StockHistory;
 import org.hotwheel.stock.model.StockRealTime;
 import org.json.JSONArray;
@@ -102,7 +102,7 @@ public final class StockApi {
     public static List<StockHistory> getHistory(final String code) {
         List<StockHistory> result;
         //result = request(StockOptions.urlHistory, null, StockOptions.historyParams(code), List.class, StockHistory.class);
-        result = HistoryData.getKLineDataObjects(code, StockOptions.ONE_DAY);
+        result = HistoryUtils.getKLineDataObjects(code, StockOptions.ONE_DAY);
         return result;
     }
 
@@ -110,7 +110,7 @@ public final class StockApi {
         List<StockRealTime> result = null;
         String[] codes = new String[1];
         codes[0] = code;
-        result = RealTimeData.getRealTimeDataObjects(codes);
+        result = RealTimeUtils.getRealTimeDataObjects(codes);
 
         return result;
     }

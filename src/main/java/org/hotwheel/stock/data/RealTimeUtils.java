@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  *
  * @version 1.0.0
  */
-public class RealTimeData {
+public class RealTimeUtils {
     /**
      * 获取股票历史数据
      * 例子：<br>

@@ -1,7 +1,7 @@
 package org.hotwheel.stock.test;
 
 import org.hotwheel.stock.StockOptions;
-import org.hotwheel.stock.data.HistoryData;
+import org.hotwheel.stock.data.HistoryUtils;
 import org.hotwheel.stock.model.StockHistory;
 import org.junit.Test;
 
@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
  * @version 1.0.0
  *
  */
-public class StockHistoryDataTest {
+public class StockHistoryUtilsTest {
 	
 	@Test
 	public void testGetKLineDataMethod() {
@@ -34,14 +34,14 @@ public class StockHistoryDataTest {
 				+ "ma_price30:\\d+\\.?\\d{0,3},"
 				+ "ma_volume30:\\d+\\},{0,1}){50}\\]";
 		Pattern r = Pattern.compile(pattern);
-		String result = HistoryData.getKLineData("sz000002", "5","50");
+		String result = HistoryUtils.getKLineData("sz000002", "5","50");
 		Matcher m = r.matcher(result);
 		assertTrue(m.find());
 	}
 	
 	@Test
 	public void testGetKLineDataObjectsMethod(){
-		List<StockHistory> result = HistoryData.getKLineDataObjects("sz000002", StockOptions.ONE_DAY);
+		List<StockHistory> result = HistoryUtils.getKLineDataObjects("sz000002", StockOptions.ONE_DAY);
 		StockHistory h1 = result.get(0);
 		StockHistory h5 = result.get(4);
 		StockHistory h10 = result.get(9);
