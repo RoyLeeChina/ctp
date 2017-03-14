@@ -121,7 +121,7 @@ CREATE TABLE `stock`.`stock_subscribe`
 (
 	`flag`         CHAR    (2)    BINARY DEFAULT '00'     COMMENT '标志($): 00-禁止订阅,01-正常订阅',
 	`phone`        CHAR    (32)   BINARY NOT NULL         COMMENT '客户ID',
-	`code`         CHAR    (32)   BINARY NOT NULL         COMMENT '客户ID',
+	`code`         CHAR    (32)   BINARY NOT NULL         COMMENT '股票代码',
 	`CreateTime`   DATETIME          DEFAULT NULL         COMMENT '创建时间($)',
 	`SendDate`     DATE              DEFAULT NULL         COMMENT '发送日期',
 	`Operator`     VARCHAR (50)   BINARY DEFAULT 'system' COMMENT '操作人(?$)',
