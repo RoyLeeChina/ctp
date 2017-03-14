@@ -21,4 +21,6 @@ public interface IStockUser {
      * @return
      */
     public int insert(User user);
+
+    public int update(User user);
 }

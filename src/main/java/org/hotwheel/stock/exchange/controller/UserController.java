@@ -1,5 +1,6 @@
 package org.hotwheel.stock.exchange.controller;
 
+import org.hotwheel.assembly.Api;
 import org.hotwheel.io.ActionStatus;
 import org.hotwheel.stock.dao.IStockUser;
 import org.hotwheel.stock.model.User;
@@ -23,17 +24,21 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping("/add")
-    public ActionStatus add(String phone, String weixin) {
+    public ActionStatus add(String phone, String name, String weixin, String email) {
         ActionStatus resp = new ActionStatus();
         int errno = 10000;
         String message = "用户已经存在";
+        if (Api.isEmpty(name)) {
+            name = phone;
+        }
         User user = stockUser.select(phone);
         if (user == null) {
             user = new User();
-            user.setMemberId("");
-            user.setMemberName("wangfeng");
+            user.setMemberId(phone);
+            user.setMemberName(name);
             user.setPhone(phone);
             user.setWeixin(weixin);
+            user.setEmail(email);
             int result = stockUser.insert(user);
             if (result == 1) {
                 resp.set(0, "SUCCESS");
@@ -41,6 +46,10 @@ public class UserController {
                 resp.set(errno + 1, "添加用户失败");
             }
         } else {
+            user.setMemberName(name);
+            user.setWeixin(weixin);
+            user.setEmail(email);
+            stockUser.update(user);
             resp.set(errno, message);
         }
 
