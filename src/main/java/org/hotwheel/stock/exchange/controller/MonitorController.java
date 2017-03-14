@@ -3,7 +3,9 @@ package org.hotwheel.stock.exchange.controller;
 import org.hotwheel.assembly.Api;
 import org.hotwheel.io.ActionStatus;
 import org.hotwheel.stock.StockOptions;
+import org.hotwheel.stock.dao.IStockMonitor;
 import org.hotwheel.stock.dao.IStockSubscribe;
+import org.hotwheel.stock.model.StockMonitor;
 import org.hotwheel.stock.model.StockSubscribe;
 import org.hotwheel.stock.util.StockApi;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +20,18 @@ import java.util.Date;
  * Created by wangfeng on 2017/3/14.
  */
 @Controller
-@RequestMapping("/monitor")
+@RequestMapping("/strategy")
 public class MonitorController {
 
     @Autowired
     private IStockSubscribe stockSubscribe;
 
+    @Autowired
+    private IStockMonitor stockMonitor;
+
     @ResponseBody
-    @RequestMapping("/add")
-    public ActionStatus add(String phone, String code) {
+    @RequestMapping("/subscribe/add")
+    public ActionStatus addSubscribe(String phone, String code) {
         ActionStatus resp = new ActionStatus();
         int errno = 10000;
         String message = "订阅已经存在";
@@ -41,13 +46,13 @@ public class MonitorController {
             // 代码为空
             resp.set(errno + 3, "股票代码无效");
         } else {
-            StockSubscribe info = stockSubscribe.select(phone, code);
+            StockSubscribe info = stockSubscribe.select(phone, fullCode);
             int result = -1;
             if (info == null) {
                 info = new StockSubscribe();
                 info.setFlag(StockOptions.kNormalState);
                 info.setPhone(phone);
-                info.setCode(code);
+                info.setCode(fullCode);
                 result = stockSubscribe.insert(info);
                 if (result == 1) {
                     resp.set(0, "SUCCESS");
@@ -55,13 +60,81 @@ public class MonitorController {
                     resp.set(errno + 1, "添加订阅失败");
                 }
             } else {
-                info.setCode(code);
+                info.setCode(fullCode);
                 info.setCreateTime(new Date());
                 result = stockSubscribe.update(info);
                 if (result == 1) {
                     resp.set(0, "SUCCESS");
                 } else {
                     resp.set(errno, message);
+                }
+            }
+        }
+
+        return resp;
+    }
+
+    /**
+     * 插入一个监控数据
+     * @param code
+     * @param range 格式"第一支撑,第一压力,第二支撑,第二压力,止损位,阻力位"
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/monitor/add")
+    public ActionStatus add(String code, String range) {
+        ActionStatus resp = new ActionStatus();
+        int errno = 10000;
+        Date today = new Date();
+        String message = "策略已经存在";
+        String fullCode = StockApi.fixCode(code);
+        if (Api.isEmpty(code)) {
+            // 代码为空
+            resp.set(errno + 2, "股票代码不能为空");
+        } else if (Api.isEmpty(fullCode)) {
+            // 代码为空
+            resp.set(errno + 3, "股票代码无效");
+        } else if (Api.isEmpty(range)) {
+            // 价格范围
+            resp.set(errno + 4, "策略价格范围");
+        } else {
+            String[] array = range.split(",");
+            if (array.length < 6) {
+                resp.set(errno + 4, "策略价格范围不完整");
+            } else {
+                double support1 = Api.valueOf(double.class, array[0]);
+                double support2 = Api.valueOf(double.class, array[2]);
+                double pressure1 = Api.valueOf(double.class, array[1]);
+                double pressure2 = Api.valueOf(double.class, array[3]);
+                double stop = Api.valueOf(double.class, array[4]);
+                double resistance = Api.valueOf(double.class, array[5]);
+
+                StockMonitor info = stockMonitor.query(fullCode);
+                int result = -1;
+                if (info == null) {
+                    info = new StockMonitor();
+                    info.setFlag(StockOptions.kNormalState);
+                    info.setCode(fullCode);
+                    info.setCreateTime(today);
+                    info.setPressure1(Api.toString(pressure1));
+                    info.setSupport1(Api.toString(support1));
+                    info.setPressure2(Api.toString(pressure2));
+                    info.setSupport2(Api.toString(support2));
+                    info.setStop(Api.toString(stop));
+                    info.setResistance(Api.toString(resistance));
+                    result = stockMonitor.insert(info);
+                    if (result == 1) {
+                        resp.set(0, "SUCCESS");
+                    } else {
+                        resp.set(errno + 1, "添加策略价格范围失败");
+                    }
+                } else {
+                    result = stockMonitor.update(info);
+                    if (result == 1) {
+                        resp.set(0, "SUCCESS");
+                    } else {
+                        resp.set(errno, message);
+                    }
                 }
             }
         }

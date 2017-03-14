@@ -3,8 +3,44 @@
 
 <mapper namespace="org.hotwheel.stock.dao.IStockMonitor">
 
+    <!-- 捡出全部的监控 -->
     <select id="queryAll" resultType="org.hotwheel.stock.model.StockMonitor">
-        SELECT * FROM stock_monitor WHERE flag='01'
+        SELECT * FROM stock_monitor
+        WHERE flag='01'
+        AND
+          <![CDATA[
+            createTime>=current_date() AND createTime < DATE_ADD(curdate(), INTERVAL 1 DAY)
+          ]]>
     </select>
+
+    <!-- 查找某个代码的策略 -->
+    <select id="query" resultType="org.hotwheel.stock.model.StockMonitor">
+        SELECT * FROM stock_monitor
+        WHERE flag='01' AND code=#{code}
+          AND
+          <![CDATA[
+            createTime>=current_date() AND createTime < DATE_ADD(curdate(), INTERVAL 1 DAY)
+          ]]>
+    </select>
+
+    <!-- 插入一条新策略 -->
+    <insert id="insert" parameterType="org.hotwheel.stock.model.StockMonitor">
+        INSERT INTO stock_monitor (`flag`,`code`,`support1`,`support2`,`pressure1`,`pressure2`,`stop`,`resistance`,`createTime`)
+        VALUES ('01',#{code},#{support1},#{support2},#{pressure1},#{pressure2},#{stop},#{resistance},now())
+    </insert>
+
+    <update id="update" parameterType="org.hotwheel.stock.model.StockMonitor">
+        UPDATE stock_monitor
+        SET `flag`=#{flag},
+           `support1`=#{support1},`pressure1`=#{pressure1},
+           `support2`=#{support2},`pressure2`=#{pressure2},
+           `stop`=#{stop},`resistance`=#{resistance},
+           `createTime`=now()
+        WHERE code=#{code}
+        AND
+          <![CDATA[
+            createTime>=current_date() AND createTime < DATE_ADD(curdate(), INTERVAL 1 DAY)
+          ]]>
+    </update>
 
 </mapper>
