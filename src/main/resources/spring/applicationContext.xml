@@ -9,6 +9,8 @@
 
     <context:annotation-config/>
 
+    <bean id="exceptionHandler" class="org.hotwheel.spring.handler.DefaultExceptionHandler" />
+
     <context:component-scan base-package="org.hotwheel.stock">
         <context:exclude-filter  type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
