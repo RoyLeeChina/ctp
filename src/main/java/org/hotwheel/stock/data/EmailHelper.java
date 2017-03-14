@@ -4,7 +4,11 @@ import org.hotwheel.assembly.ResourceApi;
 
 import java.util.ResourceBundle;
 
-public class SendMail {
+/**
+ * 邮件工具类
+ * @version 1.0.0
+ */
+public class EmailHelper {
 	private static String hostName = "smtp.sina.cn";
 	private static String fromAddress = "StockExchange@sina.cn";
 	private static String fromAPass = "********";
