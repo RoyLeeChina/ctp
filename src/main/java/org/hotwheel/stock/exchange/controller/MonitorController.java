@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Date;
+
 /**
  * 监控接口
  * Created by wangfeng on 2017/3/14.
@@ -27,19 +29,28 @@ public class MonitorController {
         int errno = 10000;
         String message = "订阅已经存在";
         StockSubscribe info = stockSubscribe.select(phone, code);
+        int result = -1;
         if (info == null) {
             info = new StockSubscribe();
             info.setFlag(StockOptions.kNormalState);
             info.setPhone(phone);
             info.setCode(code);
-            int result = stockSubscribe.insert(info);
+            result = stockSubscribe.insert(info);
             if (result == 1) {
                 resp.set(0, "SUCCESS");
             } else {
                 resp.set(errno + 1, "添加订阅失败");
             }
         } else {
-            resp.set(errno, message);
+            info.setCode(code);
+            info.setCreateTime(new Date());
+            result = stockSubscribe.update(info);
+            if (result == 1) {
+                resp.set(0, "SUCCESS");
+            } else {
+                resp.set(errno, message);
+            }
+
         }
 
         return resp;
