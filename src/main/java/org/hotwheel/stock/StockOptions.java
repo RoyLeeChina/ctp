@@ -11,6 +11,11 @@ import java.util.TreeMap;
 public final class StockOptions {
 
     /**
+     * 实时数据间隔时间, 单位毫秒
+     */
+    public final static long kRealTimenterval = 5 * 1000;
+
+    /**
      * 五分钟，字符串"5"
      */
     public static final String FIVE_MINUTES = "5";

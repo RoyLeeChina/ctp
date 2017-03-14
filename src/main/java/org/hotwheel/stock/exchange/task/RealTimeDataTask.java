@@ -1,6 +1,8 @@
 package org.hotwheel.stock.exchange.task;
 
+import org.hotwheel.assembly.Api;
 import org.hotwheel.spring.scheduler.SchedulerContext;
+import org.hotwheel.stock.StockOptions;
 import org.hotwheel.stock.dao.IStockRealTime;
 import org.hotwheel.stock.model.StockRealTime;
 import org.hotwheel.stock.util.StockApi;
@@ -28,13 +30,13 @@ public class RealTimeDataTask extends SchedulerContext {
     protected void service() {
         String code = "sz000088";
         while (true) {
-            List<StockRealTime> srl = StockApi.getRealTime(code);
-            if (srl != null && srl.size() > 0) {
-                for (StockRealTime realTime : srl) {
+            List<StockRealTime> stockRealTimeList = StockApi.getRealTime(code);
+            if (stockRealTimeList != null && stockRealTimeList.size() > 0) {
+                for (StockRealTime realTime : stockRealTimeList) {
                     try {
-                        StockRealTime tmp = stockRealTime.select(realTime.getFullCode());
-                        if (tmp != null) {
-                            stockRealTime.update(tmp);
+                        StockRealTime old = stockRealTime.select(realTime.getFullCode());
+                        if (old != null) {
+                            stockRealTime.update(realTime);
                         } else {
                             stockRealTime.insert(realTime);
                         }
@@ -43,6 +45,7 @@ public class RealTimeDataTask extends SchedulerContext {
                     }
                 }
             }
+            Api.sleep(StockOptions.kRealTimenterval);
         }
     }
 }
