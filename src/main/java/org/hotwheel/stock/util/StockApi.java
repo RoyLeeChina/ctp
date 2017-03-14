@@ -41,6 +41,35 @@ public final class StockApi {
 
     private static Logger logger = LoggerFactory.getLogger(StockApi.class);
 
+    /**
+     * 规范 代码
+     *
+     * @param fullcode
+     * @return 不合规范的代码 返回null
+     */
+    public static String getCode(final String fullcode) {
+        String code = fullcode.toLowerCase();
+        if (code.startsWith("sh") || code.startsWith("sz")) {
+            // 代码前缀正确
+            code = code.substring(2);
+        } else {
+            // 非sh或sz开头
+        }
+
+        if (!Api.isInteger(code)) {
+            // 非数字
+            code = null;
+        } else {
+            // 如果是纯数字
+            if (code.startsWith("6")) {
+                code = "sh" + code;
+            } else {
+                code = "sz" + code;
+            }
+        }
+        return code;
+    }
+
     public static <T> T request(String url, Map headers, Map object, Class<T> clazz, Class subClass) {
         T obj = null;
         ActionStatus as = new ActionStatus();
