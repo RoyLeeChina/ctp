@@ -2,6 +2,7 @@ package org.hotwheel.stock.dao;
 
 import org.apache.ibatis.annotations.Param;
 import org.hotwheel.stock.model.StockRealTime;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -18,19 +19,19 @@ public interface IStockRealTime {
      * @param code
      * @return
      */
-    public StockRealTime select(@Param("code") String code);
+    public StockRealTime select(@Param("code") String code) throws DataAccessException;
 
     /**
      * 插入实时行情
      * @param srt
      * @return
      */
-    public int insert(StockRealTime srt);
+    public int insert(StockRealTime srt) throws DataAccessException;
 
     /**
      * 更新实时行情
      * @param srt
      * @return
      */
-    public int update(StockRealTime srt);
+    public int update(StockRealTime srt) throws DataAccessException;
 }

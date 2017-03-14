@@ -15,12 +15,21 @@
         </property>
     </bean>
 
-    <!-- ==================== 业务数据 =========================== -->
-    <bean id="historyDataTask" class="org.hotwheel.stock.task.HistoryDataTask">
-        <property name="taskSwitch" value="${task.history}"/>
+    <!-- ==================== 历史数据 =========================== -->
+    <bean id="historyDataTask" class="org.hotwheel.stock.exchange.task.HistoryDataTask">
+        <property name="taskSwitch" value="${task.history.switch}"/>
         <property name="taskName" value="${task.history.name}"/>
     </bean>
     <task:scheduled-tasks>
-        <task:scheduled ref="historyDataTask" method="doTask" cron="${batch.cron}" />
+        <task:scheduled ref="historyDataTask" method="doTask" cron="${task.history.cron}" />
+    </task:scheduled-tasks>
+
+    <!-- ==================== 实时数据 =========================== -->
+    <bean id="realTimeDataTask" class="org.hotwheel.stock.exchange.task.RealTimeDataTask">
+        <property name="taskSwitch" value="${task.realtime.switch}"/>
+        <property name="taskName" value="${task.realtime.name}"/>
+    </bean>
+    <task:scheduled-tasks>
+        <task:scheduled ref="realTimeDataTask" method="doTask" cron="${task.realtime.cron}" />
     </task:scheduled-tasks>
 </beans>
