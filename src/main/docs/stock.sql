@@ -82,7 +82,7 @@ ALTER TABLE `stock`.`stock_code` ADD INDEX (`code`);
 DROP TABLE IF EXISTS `stock`.`stock_monitor`;
 CREATE TABLE `stock`.`stock_monitor`
 (
-	`Flag`         CHAR    (2)    BINARY DEFAULT '00'     COMMENT '标志($): 00-禁止检测,01-正常检测',
+	`flag`         CHAR    (2)    BINARY DEFAULT '00'     COMMENT '标志($): 00-禁止检测,01-正常检测',
 	`code`         CHAR    (32)   BINARY NOT NULL         COMMENT '股票代码',
 	`support1`     CHAR    (20)   BINARY NOT NULL         COMMENT '第一支撑位',
 	`support2`     CHAR    (20)   BINARY NOT NULL         COMMENT '第二支撑位',
@@ -90,9 +90,9 @@ CREATE TABLE `stock`.`stock_monitor`
 	`pressure2`    CHAR    (20)   BINARY NOT NULL         COMMENT '第二压力位',
 	`stop`         CHAR    (20)   BINARY NOT NULL         COMMENT '止损位',
 	`resistance`   CHAR    (20)   BINARY NOT NULL         COMMENT '压力位',
-	`CreateTime`   DATETIME          DEFAULT NULL         COMMENT '创建时间($)',
-	`Operator`     VARCHAR (50)   BINARY DEFAULT 'system' COMMENT '操作人(?$)',
-	`ID`           INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY  /* 记录标号 */
+	`createTime`   DATETIME          DEFAULT NULL         COMMENT '创建时间($)',
+	`operator`     VARCHAR (50)   BINARY DEFAULT 'system' COMMENT '操作人(?$)',
+	`id`           INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY  /* 记录标号 */
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='监控个股列表';
 ALTER TABLE `stock`.`stock_monitor` ADD INDEX (`code`);
 ALTER TABLE `stock`.`stock_monitor` ADD INDEX (`CreateTime`);
@@ -101,16 +101,16 @@ ALTER TABLE `stock`.`stock_monitor` ADD INDEX (`CreateTime`);
 DROP TABLE IF EXISTS `stock`.`stock_user`;
 CREATE TABLE `stock`.`stock_user`
 (
-	`Flag`         CHAR    (2)    BINARY DEFAULT '00'     COMMENT '标志($): 00-禁止,01-正常',
-	`MemberId`     CHAR    (128)  BINARY DEFAULT ''       COMMENT '客户ID',
-	`MemberName`   CHAR    (128)  BINARY DEFAULT ''       COMMENT '客户姓名',
-	`Phone`        CHAR    (32)   BINARY NOT NULL         COMMENT '手机号码(?$)',
+	`flag`         CHAR    (2)    BINARY DEFAULT '00'     COMMENT '标志($): 00-禁止,01-正常',
+	`memberId`     CHAR    (128)  BINARY DEFAULT ''       COMMENT '客户ID',
+	`memberName`   CHAR    (128)  BINARY DEFAULT ''       COMMENT '客户姓名',
+	`phone`        CHAR    (32)   BINARY NOT NULL         COMMENT '手机号码(?$)',
 	`weixin`       CHAR    (128)  BINARY DEFAULT ''       COMMENT '微信id(?$)',
 	`email`        CHAR    (128)  BINARY DEFAULT ''       COMMENT '邮箱(?$)',
-	`CreateTime`   DATETIME          DEFAULT NULL         COMMENT '创建时间($)',
-	`SendDate`     DATE              DEFAULT NULL         COMMENT '发送日期',
-	`Operator`     VARCHAR (50)   BINARY DEFAULT 'system' COMMENT '操作人(?$)',
-	`ID`           INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY  /* 记录标号 */
+	`createTime`   DATETIME          DEFAULT NULL         COMMENT '创建时间($)',
+	`sendDate`     DATE              DEFAULT NULL         COMMENT '发送日期',
+	`operator`     VARCHAR (50)   BINARY DEFAULT 'system' COMMENT '操作人(?$)',
+	`id`           INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY  /* 记录标号 */
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
 ALTER TABLE `stock`.`stock_user` ADD INDEX (`memberId`);
 ALTER TABLE `stock`.`stock_user` ADD INDEX (`phone`);
@@ -122,10 +122,10 @@ CREATE TABLE `stock`.`stock_subscribe`
 	`flag`         CHAR    (2)    BINARY DEFAULT '00'     COMMENT '标志($): 00-禁止订阅,01-正常订阅',
 	`phone`        CHAR    (32)   BINARY NOT NULL         COMMENT '客户ID',
 	`code`         CHAR    (32)   BINARY NOT NULL         COMMENT '股票代码',
-	`CreateTime`   DATETIME          DEFAULT NULL         COMMENT '创建时间($)',
-	`SendDate`     DATE              DEFAULT NULL         COMMENT '发送日期',
-	`Operator`     VARCHAR (50)   BINARY DEFAULT 'system' COMMENT '操作人(?$)',
-	`ID`           INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY  /* 记录标号 */
+	`createTime`   DATETIME          DEFAULT NULL         COMMENT '创建时间($)',
+	`sendDate`     DATE              DEFAULT NULL         COMMENT '发送日期',
+	`operator`     VARCHAR (50)   BINARY DEFAULT 'system' COMMENT '操作人(?$)',
+	`id`           INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY  /* 记录标号 */
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户订阅表';
 ALTER TABLE `stock`.`stock_subscribe` ADD INDEX (`phone`);
 ALTER TABLE `stock`.`stock_subscribe` ADD INDEX (`code`);
