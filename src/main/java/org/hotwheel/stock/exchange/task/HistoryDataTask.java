@@ -1,9 +1,10 @@
 package org.hotwheel.stock.exchange.task;
 
+import org.hotwheel.assembly.Api;
 import org.hotwheel.spring.scheduler.SchedulerContext;
+import org.hotwheel.stock.StockOptions;
 import org.hotwheel.stock.dao.IStockRealTime;
 import org.hotwheel.stock.model.StockHistory;
-import org.hotwheel.stock.model.StockRealTime;
 import org.hotwheel.stock.util.StockApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,21 +28,17 @@ public class HistoryDataTask extends SchedulerContext {
     protected void service() {
         String code = "sz000088";
         while (true) {
-            List<StockRealTime> srl = StockApi.getRealTime(code);
-            if (srl != null && srl.size() > 0) {
-                for (StockRealTime realTime : srl) {
+            List<StockHistory> shList = StockApi.getHistory(code);
+            if (shList != null && shList.size() > 0) {
+                for (StockHistory history : shList) {
                     try {
-                        StockRealTime tmp = stockRealTime.select(realTime.getFullCode());
-                        if (tmp != null) {
-                            stockRealTime.update(tmp);
-                        } else {
-                            stockRealTime.insert(realTime);
-                        }
+                        //
                     } catch (Exception e) {
                         logger.error("", e);
                     }
                 }
             }
+            Api.sleep(StockOptions.kRealTimenterval);
         }
     }
 }
