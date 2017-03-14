@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="org.hotwheel.stock.dao.IStockSubscribe">
+
+    <!-- 查询一个订阅是否存在 -->
+    <select id="select" resultType="org.hotwheel.stock.model.StockSubscribe">
+        SELECT * FROM stock_subscribe WHERE phone=#{phone} AND code=#{code} LIMIT 0,1
+    </select>
+
+    <!-- 插入一个订阅 -->
+    <insert id="insert" parameterType="org.hotwheel.stock.model.StockSubscribe">
+        INSERT INTO stock_subscribe (flag,phone,code,phone,CreateTime,)
+        VALUES (#{flag},#{phone},#{code},#{phone},now())
+    </insert>
+
+    <!-- 更新一个订阅 -->
+    <update id="update" parameterType="org.hotwheel.stock.model.StockSubscribe">
+        UPDATE stock_realtime SET flag=#{flag},phone=#{phone},code=#{code},createTime=#{createTime},operator=#{operator}
+        WHERE phone=#{phone} AND code=#{code}
+    </update>
+</mapper>
