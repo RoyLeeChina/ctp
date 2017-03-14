@@ -41,7 +41,6 @@ public class MonitorController {
             resp.set(errno, message);
         }
 
-
         return resp;
     }
 }
