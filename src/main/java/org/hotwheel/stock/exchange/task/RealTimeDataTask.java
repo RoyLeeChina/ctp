@@ -12,10 +12,7 @@ import org.hotwheel.stock.model.StockMonitor;
 import org.hotwheel.stock.model.StockRealTime;
 import org.hotwheel.stock.model.StockSubscribe;
 import org.hotwheel.stock.model.User;
-import org.hotwheel.stock.util.EmailApi;
-import org.hotwheel.stock.util.Policy;
-import org.hotwheel.stock.util.PolicyApi;
-import org.hotwheel.stock.util.StockApi;
+import org.hotwheel.stock.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,22 +92,22 @@ public class RealTimeDataTask extends SchedulerContext {
                             // 策略判断
                             if (tmpPrice > resistance) {
                                 field = "resistance";
-                                keywords = "突破阻力位";
+                                keywords = "突破阻力位" + resistance;
                             } else if (tmpPrice > pressure2) {
                                 field = "pressure2";
-                                keywords = "突破第二压力位";
+                                keywords = "突破第二压力位" + pressure2;
                             } else if (tmpPrice > pressure1) {
                                 field = "pressure1";
-                                keywords = "突破第一压力位";
+                                keywords = "突破第一压力位" + pressure1;
                             } else if (tmpPrice <= support1) {
                                 field = "support1";
-                                keywords = "跌破第一支撑位";
+                                keywords = "跌破第一支撑位" + support1;
                             } else if (tmpPrice <= support2) {
                                 field = "support2";
-                                keywords = "跌破第二支撑位";
+                                keywords = "跌破第二支撑位" + support2;
                             } else if (tmpPrice <= stop) {
                                 field = "stop";
-                                keywords = "触及止损位";
+                                keywords = "触及止损位" + stop;
                             }
                             // 如果命中价格范围监控, 输出策略提醒的关键字
                             if (!Api.isEmpty(keywords)) {
@@ -121,24 +118,34 @@ public class RealTimeDataTask extends SchedulerContext {
                                 } else {
                                     for (StockSubscribe userSubscribe : tmpSubscribe) {
                                         Policy policy = PolicyApi.get(userSubscribe.getRemark());
-                                        boolean isSend = true;
+                                        boolean bSent = true;
                                         if (policy == null) {
-                                            isSend = false;
+                                            bSent = false;
                                             policy = new Policy();
                                         } else {
-                                            isSend = (boolean) Api.getValue(policy, field);
+                                            bSent = (boolean) Api.getValue(policy, field);
                                         }
-                                        if (!isSend) {
+                                        // 判断是否当天发送过
+                                        if (bSent && !Api.isEmpty(userSubscribe.getSendDate())) {
+                                            Date today = DateUtils.getZero(new Date());
+                                            if (today.after(userSubscribe.getSendDate())) {
+                                                bSent = false;
+                                            }
+                                        }
+                                        // 如果没有发送过
+                                        if (!bSent) {
                                             User user = stockUser.select(userSubscribe.getPhone());
                                             if (user == null) {
                                                 logger.info("not found user={}", userSubscribe.getPhone());
                                             } else if (!Api.isEmpty(user.getEmail())){
                                                 // 如果没有发送, 设置发送状态
                                                 Api.setValue(policy, field, true);
-                                                String content = String.format("%s: %s(%s) %s, 现价%.2f, 涨跌幅%s%%.", userSubscribe.getPhone(), stockName, stockCode, keywords, tmpPrice, zf);
+                                                String content = String.format("%s: %s(%s) ,现价%.2f %s, 涨跌幅%s%%.",
+                                                        userSubscribe.getPhone(), stockName, stockCode, tmpPrice, keywords, zf);
                                                 logger.info(content);
                                                 if (EmailApi.send(user.getEmail(), "CTP策略提醒", content)) {
                                                     userSubscribe.setRemark(policy.toString());
+                                                    userSubscribe.setSendDate(new Date());
                                                     stockSubscribe.update(userSubscribe);
                                                 }
                                             }
