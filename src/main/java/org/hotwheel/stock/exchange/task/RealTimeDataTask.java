@@ -1,5 +1,6 @@
 package org.hotwheel.stock.exchange.task;
 
+import com.google.common.collect.Lists;
 import org.hotwheel.assembly.Api;
 import org.hotwheel.spring.scheduler.SchedulerContext;
 import org.hotwheel.stock.StockOptions;
@@ -15,9 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 实时数据
@@ -40,15 +39,19 @@ public class RealTimeDataTask extends SchedulerContext {
 
     @Override
     protected void service() {
-        String code = "sz000088";
         while (true) {
+            // 捡出全部股票的策略
             List<StockMonitor> listMonitor = stockMonitor.queryAll();
             Map<String, StockMonitor> mapMonitor = new HashMap<>();
+            Set<String> allCodes = new HashSet<>();
             if (listMonitor != null) {
                 for (StockMonitor sm : listMonitor) {
-                    mapMonitor.put(sm.getCode(), sm);
+                    String code = sm.getCode();
+                    allCodes.add(code);
+                    mapMonitor.put(code, sm);
                 }
             }
+            // 捡出全部的用户订阅信息
             List<StockSubscribe> listSubscribe = stockSubscribe.queryAll();
             Map<String, StockSubscribe> mapSubscribe = new HashMap<>();
             if (listSubscribe != null) {
@@ -57,7 +60,7 @@ public class RealTimeDataTask extends SchedulerContext {
                 }
             }
 
-            List<StockRealTime> stockRealTimeList = StockApi.getRealTime(code);
+            List<StockRealTime> stockRealTimeList = StockApi.getRealTime(Lists.newArrayList(allCodes));
             if (stockRealTimeList != null && stockRealTimeList.size() > 0) {
                 for (StockRealTime realTime : stockRealTimeList) {
                     try {
@@ -105,7 +108,15 @@ public class RealTimeDataTask extends SchedulerContext {
                             }
                             // 如果命中价格范围监控, 输出策略提醒的关键字
                             if (!Api.isEmpty(keywords)) {
+                                List<StockSubscribe> users = stockSubscribe.queryByCode(stockCode);
                                 logger.info("{}({}) {}, 现价{}, 涨跌幅{}%.", stockName, stockCode, keywords, tmpPrice, zf);
+                                if (users == null) {
+                                    logger.info("{} 暂无用户订阅");
+                                } else {
+                                    for (StockSubscribe ss : users) {
+                                        logger.info("{}: {}({}) {}, 现价{}, 涨跌幅{}%.", ss.getPhone(), stockName, stockCode, keywords, tmpPrice, zf);
+                                    }
+                                }
                             }
                         }
                     } catch (Exception e) {

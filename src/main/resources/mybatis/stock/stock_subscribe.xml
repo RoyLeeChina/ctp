@@ -23,4 +23,9 @@
         UPDATE stock_subscribe SET flag=#{flag},phone=#{phone},code=#{code},createTime=#{createTime},sendDate=#{sendDate},remark=#{remark},operator=#{operator}
         WHERE phone=#{phone} AND code=#{code}
     </update>
+
+    <!-- 查询某只股票的所有订阅用户 -->
+    <select id="queryByCode" resultType="org.hotwheel.stock.model.StockSubscribe">
+        SELECT * FROM stock_subscribe WHERE flag='01' AND code=#{code}
+    </select>
 </mapper>
