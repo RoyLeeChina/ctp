@@ -14,13 +14,13 @@
 
     <!-- 插入一个订阅 -->
     <insert id="insert" parameterType="org.hotwheel.stock.model.StockSubscribe">
-        INSERT INTO stock_subscribe (flag,phone,code,createTime)
-        VALUES (#{flag},#{phone},#{code},now())
+        INSERT INTO stock_subscribe (flag,phone,code,createTime,remark)
+        VALUES (#{flag},#{phone},#{code},now(),#{remark})
     </insert>
 
     <!-- 更新一个订阅 -->
     <update id="update" parameterType="org.hotwheel.stock.model.StockSubscribe">
-        UPDATE stock_subscribe SET flag=#{flag},phone=#{phone},code=#{code},createTime=#{createTime},operator=#{operator}
+        UPDATE stock_subscribe SET flag=#{flag},phone=#{phone},code=#{code},createTime=#{createTime},remark=#{remark},operator=#{operator}
         WHERE phone=#{phone} AND code=#{code}
     </update>
 </mapper>
