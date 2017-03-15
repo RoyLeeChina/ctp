@@ -129,6 +129,15 @@ public class MonitorController {
                         resp.set(errno + 1, "添加策略价格范围失败");
                     }
                 } else {
+                    info.setFlag(StockOptions.kNormalState);
+                    info.setCode(fullCode);
+                    info.setCreateTime(today);
+                    info.setPressure1(Api.toString(pressure1));
+                    info.setSupport1(Api.toString(support1));
+                    info.setPressure2(Api.toString(pressure2));
+                    info.setSupport2(Api.toString(support2));
+                    info.setStop(Api.toString(stop));
+                    info.setResistance(Api.toString(resistance));
                     result = stockMonitor.update(info);
                     if (result == 1) {
                         resp.set(0, "SUCCESS");

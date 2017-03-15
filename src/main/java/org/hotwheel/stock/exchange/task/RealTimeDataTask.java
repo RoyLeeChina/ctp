@@ -103,7 +103,7 @@ public class RealTimeDataTask extends SchedulerContext {
                             } else if (tmpPrice <= stop) {
                                 keywords = "触及止损位";
                             }
-                            // 监控参数命中, 输出策略提醒
+                            // 如果命中价格范围监控, 输出策略提醒的关键字
                             if (!Api.isEmpty(keywords)) {
                                 logger.info("{}({}) {}, 现价{}, 涨跌幅{}%.", stockName, stockCode, keywords, tmpPrice, zf);
                             }
