@@ -87,7 +87,7 @@ public class RealTimeDataTask extends SchedulerContext {
                             double stop = Api.valueOf(double.class, sm.getStop());
                             double resistance = Api.valueOf(double.class, sm.getResistance());
 
-                            String zf = String.format("%,2f", 100 * (tmpPrice - close) / close);
+                            String zf = String.format("%.2f", 100 * (tmpPrice - close) / close);
                             String keywords = null;
                             // 策略判断
                             if (tmpPrice > resistance) {
