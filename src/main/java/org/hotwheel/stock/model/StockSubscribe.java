@@ -14,6 +14,7 @@ public class StockSubscribe {
     private String code;
     private Date createTime;
     private Date sendDate;
+    private String remark;
     private String operator;
     private long id;
 
@@ -55,6 +56,14 @@ public class StockSubscribe {
 
     public void setSendDate(Date sendDate) {
         this.sendDate = sendDate;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public String getOperator() {

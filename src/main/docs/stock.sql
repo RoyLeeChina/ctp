@@ -124,6 +124,7 @@ CREATE TABLE `stock`.`stock_subscribe`
 	`code`         CHAR    (32)   BINARY NOT NULL         COMMENT '股票代码',
 	`createTime`   DATETIME          DEFAULT NULL         COMMENT '创建时间($)',
 	`sendDate`     DATE              DEFAULT NULL         COMMENT '发送日期',
+	`remark`       TEXT           BINARY                  COMMENT '策略命中备注',
 	`operator`     VARCHAR (50)   BINARY DEFAULT 'system' COMMENT '操作人(?$)',
 	`id`           INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY  /* 记录标号 */
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户订阅表';
