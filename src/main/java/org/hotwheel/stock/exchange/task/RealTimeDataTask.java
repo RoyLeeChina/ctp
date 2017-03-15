@@ -7,9 +7,14 @@ import org.hotwheel.stock.StockOptions;
 import org.hotwheel.stock.dao.IStockMonitor;
 import org.hotwheel.stock.dao.IStockRealTime;
 import org.hotwheel.stock.dao.IStockSubscribe;
+import org.hotwheel.stock.dao.IStockUser;
 import org.hotwheel.stock.model.StockMonitor;
 import org.hotwheel.stock.model.StockRealTime;
 import org.hotwheel.stock.model.StockSubscribe;
+import org.hotwheel.stock.model.User;
+import org.hotwheel.stock.util.EmailApi;
+import org.hotwheel.stock.util.Policy;
+import org.hotwheel.stock.util.PolicyApi;
 import org.hotwheel.stock.util.StockApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +34,8 @@ public class RealTimeDataTask extends SchedulerContext {
     private static Logger logger = LoggerFactory.getLogger(RealTimeDataTask.class);
 
     @Autowired
+    private IStockUser stockUser;
+    @Autowired
     private IStockMonitor stockMonitor;
 
     @Autowired
@@ -39,7 +46,7 @@ public class RealTimeDataTask extends SchedulerContext {
 
     @Override
     protected void service() {
-        while (true) {
+        while (isTimerCycle()) {
             // 捡出全部股票的策略
             List<StockMonitor> listMonitor = stockMonitor.queryAll();
             Map<String, StockMonitor> mapMonitor = new HashMap<>();
@@ -49,14 +56,6 @@ public class RealTimeDataTask extends SchedulerContext {
                     String code = sm.getCode();
                     allCodes.add(code);
                     mapMonitor.put(code, sm);
-                }
-            }
-            // 捡出全部的用户订阅信息
-            List<StockSubscribe> listSubscribe = stockSubscribe.queryAll();
-            Map<String, StockSubscribe> mapSubscribe = new HashMap<>();
-            if (listSubscribe != null) {
-                for (StockSubscribe ss : listSubscribe) {
-                    mapSubscribe.put(ss.getCode(), ss);
                 }
             }
 
@@ -92,29 +91,58 @@ public class RealTimeDataTask extends SchedulerContext {
 
                             String zf = String.format("%.2f", 100 * (tmpPrice - close) / close);
                             String keywords = null;
+                            String field = null;
                             // 策略判断
                             if (tmpPrice > resistance) {
+                                field = "resistance";
                                 keywords = "突破阻力位";
                             } else if (tmpPrice > pressure2) {
+                                field = "pressure2";
                                 keywords = "突破第二压力位";
                             } else if (tmpPrice > pressure1) {
+                                field = "pressure1";
                                 keywords = "突破第一压力位";
                             } else if (tmpPrice <= support1) {
+                                field = "support1";
                                 keywords = "跌破第一支撑位";
                             } else if (tmpPrice <= support2) {
+                                field = "support2";
                                 keywords = "跌破第二支撑位";
                             } else if (tmpPrice <= stop) {
+                                field = "stop";
                                 keywords = "触及止损位";
                             }
                             // 如果命中价格范围监控, 输出策略提醒的关键字
                             if (!Api.isEmpty(keywords)) {
-                                List<StockSubscribe> users = stockSubscribe.queryByCode(stockCode);
+                                List<StockSubscribe> tmpSubscribe = stockSubscribe.queryByCode(stockCode);
                                 logger.info("{}({}) {}, 现价{}, 涨跌幅{}%.", stockName, stockCode, keywords, tmpPrice, zf);
-                                if (users == null) {
+                                if (tmpSubscribe == null) {
                                     logger.info("{} 暂无用户订阅");
                                 } else {
-                                    for (StockSubscribe ss : users) {
-                                        logger.info("{}: {}({}) {}, 现价{}, 涨跌幅{}%.", ss.getPhone(), stockName, stockCode, keywords, tmpPrice, zf);
+                                    for (StockSubscribe userSubscribe : tmpSubscribe) {
+                                        Policy policy = PolicyApi.get(userSubscribe.getRemark());
+                                        boolean isSend = true;
+                                        if (policy == null) {
+                                            isSend = false;
+                                            policy = new Policy();
+                                        } else {
+                                            isSend = (boolean) Api.getValue(policy, field);
+                                        }
+                                        if (!isSend) {
+                                            User user = stockUser.select(userSubscribe.getPhone());
+                                            if (user == null) {
+                                                logger.info("not found user={}", userSubscribe.getPhone());
+                                            } else if (!Api.isEmpty(user.getEmail())){
+                                                // 如果没有发送, 设置发送状态
+                                                Api.setValue(policy, field, true);
+                                                String content = String.format("%s: %s(%s) %s, 现价%.2f, 涨跌幅%s%%.", userSubscribe.getPhone(), stockName, stockCode, keywords, tmpPrice, zf);
+                                                logger.info(content);
+                                                if (EmailApi.send(user.getEmail(), "CTP策略提醒", content)) {
+                                                    userSubscribe.setRemark(policy.toString());
+                                                    stockSubscribe.update(userSubscribe);
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
