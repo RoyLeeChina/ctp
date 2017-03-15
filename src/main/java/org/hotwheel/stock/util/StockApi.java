@@ -138,10 +138,9 @@ public final class StockApi {
         return result;
     }
 
-    public static List<StockRealTime> getRealTime(final String code) {
+    public static List<StockRealTime> getRealTime(final List<String> listCode) {
         List<StockRealTime> result = null;
-        String[] codes = new String[1];
-        codes[0] = code;
+        String[] codes = listCode.toArray(new String[]{});
         result = RealTimeUtils.getRealTimeDataObjects(codes);
 
         return result;

@@ -17,8 +17,10 @@
 
     <!-- ==================== 历史数据 =========================== -->
     <bean id="historyDataTask" class="org.hotwheel.stock.exchange.task.HistoryDataTask">
-        <property name="taskSwitch" value="${task.history.switch}"/>
         <property name="taskName" value="${task.history.name}"/>
+        <property name="taskSwitch" value="${task.history.switch}"/>
+        <property name="taskStartTime" value="${task.history.begin}"/>
+        <property name="taskEndTime" value="${task.history.end}"/>
     </bean>
     <task:scheduled-tasks>
         <task:scheduled ref="historyDataTask" method="doTask" cron="${task.history.cron}" />
@@ -26,8 +28,10 @@
 
     <!-- ==================== 实时数据 =========================== -->
     <bean id="realTimeDataTask" class="org.hotwheel.stock.exchange.task.RealTimeDataTask">
-        <property name="taskSwitch" value="${task.realtime.switch}"/>
         <property name="taskName" value="${task.realtime.name}"/>
+        <property name="taskSwitch" value="${task.realtime.switch}"/>
+        <property name="taskStartTime" value="${task.realtime.begin}"/>
+        <property name="taskEndTime" value="${task.realtime.end}"/>
     </bean>
     <task:scheduled-tasks>
         <task:scheduled ref="realTimeDataTask" method="doTask" cron="${task.realtime.cron}" />

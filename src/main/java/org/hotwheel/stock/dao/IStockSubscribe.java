@@ -42,4 +42,12 @@ public interface IStockSubscribe {
      * @return
      */
     public int update(StockSubscribe info) throws DataAccessException;
+
+    /**
+     * 查询一只股票的所有订阅用户
+     * @param code
+     * @return
+     * @throws DataAccessException
+     */
+    public List<StockSubscribe> queryByCode(@Param("code") String code) throws DataAccessException;
 }
