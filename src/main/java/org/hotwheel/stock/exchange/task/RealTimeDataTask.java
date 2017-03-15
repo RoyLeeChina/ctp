@@ -128,7 +128,9 @@ public class RealTimeDataTask extends SchedulerContext {
                                         // 判断是否当天发送过
                                         if (bSent && !Api.isEmpty(userSubscribe.getSendDate())) {
                                             Date today = DateUtils.getZero(new Date());
+                                            // 如果已经是第二天了
                                             if (today.after(userSubscribe.getSendDate())) {
+                                                policy = new Policy();
                                                 bSent = false;
                                             }
                                         }

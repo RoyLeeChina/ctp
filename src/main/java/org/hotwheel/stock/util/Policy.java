@@ -11,29 +11,29 @@ public class Policy {
     /**
      * 第一支撑位
      */
-    private boolean support1;
+    private boolean support1 = false;
     /**
      * 第一压力位
      */
-    private boolean pressure1;
+    private boolean pressure1 = false;
     /**
      * 第二支撑位
      */
-    private boolean support2;
+    private boolean support2 = false;
     /**
      * 第二压力位
      */
-    private boolean pressure2;
+    private boolean pressure2 = false;
 
     /**
      * 止损位
      */
-    private boolean stop;
+    private boolean stop = false;
 
     /**
      * 阻力位
      */
-    private boolean resistance;
+    private boolean resistance = false;
 
     public boolean isSupport1() {
         return support1;
