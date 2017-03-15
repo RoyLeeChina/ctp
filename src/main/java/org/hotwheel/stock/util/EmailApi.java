@@ -42,7 +42,7 @@ public class EmailApi {
 	 * @param content
 	 * @throws Exception
 	 */
-	public static void send(final String toaddress, final String subject, final String content) throws Exception {
+	public static boolean send(final String toaddress, final String subject, final String content) throws Exception {
 		Email mail = new Email(smtpHost);
 		mail.setFrom(smtpUser);
 		mail.setNeedAuth(true);
@@ -51,6 +51,6 @@ public class EmailApi {
 		mail.setTo(toaddress);
 		//emailHandle.addFileAffix("/Users/wangfeng/Downloads/123.csv");// 附件文件路径
 		mail.setNamePass(smtpUser, smtpPswd);
-		mail.send();
+		return mail.send();
 	}
 }
