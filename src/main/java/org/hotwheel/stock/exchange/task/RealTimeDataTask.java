@@ -62,6 +62,7 @@ public class RealTimeDataTask extends SchedulerContext {
                 for (StockRealTime realTime : stockRealTimeList) {
                     try {
                         String stockCode = realTime.getFullCode();
+                        String stockName = realTime.getName();
                         StockRealTime old = stockRealTime.select(realTime.getFullCode());
                         if (old != null) {
                             stockRealTime.update(realTime);
@@ -69,27 +70,43 @@ public class RealTimeDataTask extends SchedulerContext {
                             stockRealTime.insert(realTime);
                         }
                         StockMonitor sm = mapMonitor.get(stockCode);
-                        // 买入价格
-                        double tmpPrice = realTime.getBuyPrice();
-                        // 第一支撑位
-                        double support1 = Api.valueOf(double.class, sm.getSupport1());
-                        double support2 = Api.valueOf(double.class, sm.getSupport2());
-                        double pressure1 = Api.valueOf(double.class, sm.getPressure1());
-                        double pressure2 = Api.valueOf(double.class, sm.getPressure2());
-                        double stop = Api.valueOf(double.class, sm.getStop());
-                        double resistance = Api.valueOf(double.class, sm.getResistance());
-                        if (tmpPrice > resistance) {
-                            // 突破阻力位
-                        } else if (tmpPrice > pressure2) {
-                            // 突破第二压力位
-                        } else if (tmpPrice > pressure1) {
-                            // 突破第二压力位
-                        } else if (tmpPrice <= support1) {
-                            // 跌破第一支撑位
-                        } else if (tmpPrice <= support2) {
-                            // 跌破第二支撑位
-                        } else if (tmpPrice <= stop) {
-                            // 触及止损位
+                        if (sm != null) {
+                            // 买入价格
+                            double tmpPrice = realTime.getBuyPrice();
+                            double open = realTime.getOpen();
+                            // 昨日收盘
+                            double close = realTime.getClose();
+                            double high = realTime.getHigh();
+                            double low = realTime.getLow();
+
+                            // 第一支撑位
+                            double support1 = Api.valueOf(double.class, sm.getSupport1());
+                            double support2 = Api.valueOf(double.class, sm.getSupport2());
+                            double pressure1 = Api.valueOf(double.class, sm.getPressure1());
+                            double pressure2 = Api.valueOf(double.class, sm.getPressure2());
+                            double stop = Api.valueOf(double.class, sm.getStop());
+                            double resistance = Api.valueOf(double.class, sm.getResistance());
+
+                            String zf = String.format("%,2f", 100 * (tmpPrice - close) / close);
+                            String keywords = null;
+                            // 策略判断
+                            if (tmpPrice > resistance) {
+                                keywords = "突破阻力位";
+                            } else if (tmpPrice > pressure2) {
+                                keywords = "突破第二压力位";
+                            } else if (tmpPrice > pressure1) {
+                                keywords = "突破第一压力位";
+                            } else if (tmpPrice <= support1) {
+                                keywords = "跌破第一支撑位";
+                            } else if (tmpPrice <= support2) {
+                                keywords = "跌破第二支撑位";
+                            } else if (tmpPrice <= stop) {
+                                keywords = "触及止损位";
+                            }
+                            // 监控参数命中, 输出策略提醒
+                            if (!Api.isEmpty(keywords)) {
+                                logger.info("{}({}) {}, 现价{}, 涨跌幅{}%.", stockName, stockCode, keywords, tmpPrice, zf);
+                            }
                         }
                     } catch (Exception e) {
                         logger.error("", e);
