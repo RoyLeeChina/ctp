@@ -1,8 +1,7 @@
-package org.hotwheel.stock.test;
+package org.hotwheel.stock.util;
 
 import org.hotwheel.stock.model.StockHistory;
 import org.hotwheel.stock.model.StockRealTime;
-import org.hotwheel.stock.util.StockApi;
 
 import java.util.List;
 
