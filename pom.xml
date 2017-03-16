@@ -17,7 +17,7 @@
         <javac.version>1.7</javac.version>
         <javac.encoding>UTF-8</javac.encoding>
         <!-- MyMMSC组件 版本设置 -->
-        <hotwheel.version>3.2.0</hotwheel.version>
+        <hotwheel.version>3.2.1</hotwheel.version>
         <!-- Stock 版本设置 -->
         <hotwheel.sotck.version>3.0.3</hotwheel.sotck.version>
 
