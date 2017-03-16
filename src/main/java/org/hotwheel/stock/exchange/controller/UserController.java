@@ -31,6 +31,9 @@ public class UserController {
         if (Api.isEmpty(name)) {
             name = phone;
         }
+        if (Api.isEmpty(weixin)) {
+            weixin = phone;
+        }
         User user = stockUser.select(phone);
         if (user == null) {
             user = new User();
