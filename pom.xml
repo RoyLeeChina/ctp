@@ -421,7 +421,7 @@
                         <regexes>
                             <!--通过表达式设定覆盖率伐值-->
                             <regex>
-                                <pattern>org.hotwheel.stock.exchange.*</pattern>
+                                <pattern>org.hotwheel.ctp.exchange.*</pattern>
                                 <branchRate>90</branchRate>
                                 <lineRate>80</lineRate>
                             </regex>

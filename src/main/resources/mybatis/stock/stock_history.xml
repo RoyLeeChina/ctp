@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="org.hotwheel.stock.dao.IStockHistory">
-    <resultMap id="BaseResultMap" type="org.hotwheel.stock.model.StockHistory">
+<mapper namespace="org.hotwheel.ctp.dao.IStockHistory">
+    <resultMap id="BaseResultMap" type="org.hotwheel.ctp.model.StockHistory">
         <result column="date"         property="date"         jdbcType="DATE"/>
         <result column="code"         property="code"         jdbcType="VARCHAR" />
         <result column="open"         property="open"         jdbcType="VARCHAR" />
@@ -24,14 +24,14 @@
         SELECT * FROM stock_history WHERE `code`=#{code} AND `day`=#{day}
     </select>
 
-    <insert id="insert" parameterType="org.hotwheel.stock.model.StockHistory">
+    <insert id="insert" parameterType="org.hotwheel.ctp.model.StockHistory">
         INSERT INTO stock_history
             (`day`,`code`,`open`,`high`,`low`,`close`,`volume`,`MA5`,`MA5_volume`,`MA10`,`MA10_volume`,`MA30`,`MA30_volume`)
         VALUES
             (#{day},#{code},#{open},#{high},#{low},#{close},#{volume},#{MA5},#{MA5Volume},#{MA10},#{MA10Volume},#{MA30},#{MA30Volume})
     </insert>
 
-    <update id="update" parameterType="org.hotwheel.stock.model.StockHistory">
+    <update id="update" parameterType="org.hotwheel.ctp.model.StockHistory">
         UPDATE stock_history
         SET `day`=#{day},`code`=#{code},
              `open`=#{open},`high`=#{high},`low`=#{low},`close`=#{close},`volume`=#{volume},

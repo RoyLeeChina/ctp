@@ -16,7 +16,7 @@
     </bean>
 
     <!-- ==================== 历史数据 =========================== -->
-    <bean id="historyDataTask" class="org.hotwheel.stock.exchange.task.HistoryDataTask">
+    <bean id="historyDataTask" class="org.hotwheel.ctp.exchange.task.HistoryDataTask">
         <property name="taskName" value="${task.history.name}"/>
         <property name="taskSwitch" value="${task.history.switch}"/>
         <property name="taskStartTime" value="${task.history.begin}"/>
@@ -27,7 +27,7 @@
     </task:scheduled-tasks>
 
     <!-- ==================== 实时数据 =========================== -->
-    <bean id="realTimeDataTask" class="org.hotwheel.stock.exchange.task.RealTimeDataTask">
+    <bean id="realTimeDataTask" class="org.hotwheel.ctp.exchange.task.RealTimeDataTask">
         <property name="taskName" value="${task.realtime.name}"/>
         <property name="taskSwitch" value="${task.realtime.switch}"/>
         <property name="taskStartTime" value="${task.realtime.begin}"/>
