@@ -32,6 +32,7 @@ public class RealTimeDataTask extends SchedulerContext {
 
     @Autowired
     private IStockUser stockUser;
+
     @Autowired
     private IStockMonitor stockMonitor;
 
@@ -48,8 +49,8 @@ public class RealTimeDataTask extends SchedulerContext {
                 logger.info("运行时间{}->{}到, 任务退出", taskStartTime, taskEndTime);
                 break;
             }
+            // 时间范围内
             if (isTimerCycle()) {
-                // 时间范围内
                 // 捡出全部股票的策略
                 List<StockMonitor> listMonitor = stockMonitor.queryAll();
                 Map<String, StockMonitor> mapMonitor = new HashMap<>();

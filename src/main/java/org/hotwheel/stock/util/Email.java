@@ -13,29 +13,46 @@ import java.util.List;
 import java.util.Properties;
 
 /**
+ * 邮件
  * Created by wangfeng on 2017/3/16.
+ * @version 1.0.1
  */
 public class Email {
     private static Logger logger = LoggerFactory.getLogger(Email.class);
+    // 发送邮件登录服务器是否使用邮箱地址
+    private static boolean loginByEmail = true;
     /** 邮件对象 */
     private MimeMessage mimeMsg;
     /** 发送邮件的Session会话 */
     private Session session;
     /** 邮件发送时的一些配置信息的一个属性对象 */
     private Properties props;
+    // 发送人
+    private String mailFrom;
+    // smtp 服务器
+    private String smtpHost;
     /** 发件人的用户名 */
-    private String sendUserName;
+    private String smtpUser;
     /** 发件人密码 */
-    private String sendUserPass;
+    private String smtpPassword;
     /** 附件添加的组件 */
     private Multipart mp;
     /** 存放附件文件 */
     private List<FileDataSource> files = new LinkedList<FileDataSource>();
 
     public Email(String smtp) {
-        sendUserName = "";
-        sendUserPass = "";
-        setSmtpHost(smtp);// 设置邮件服务器
+        this(smtp, "", "");
+
+    }
+
+    public Email(final String smtpHost, final String user, final String password) {
+        this.loginByEmail = true;
+        this.smtpHost = smtpHost;
+        this.mailFrom = user;
+        this.smtpUser = user;
+        this.smtpPassword = password;
+
+        setSmtpHost(this.smtpHost);// 设置邮件服务器
         createMimeMessage(); // 创建邮件
     }
 
@@ -46,9 +63,10 @@ public class Email {
      */
     public void setSmtpHost(String hostName) {
         if (props == null) {
-            props = System.getProperties();
+            props = new Properties();
         }
         props.put("mail.smtp.host", hostName);
+        props.put("mail.debug", "true");
     }
 
     public boolean createMimeMessage() {
@@ -60,7 +78,7 @@ public class Email {
             mp = new MimeMultipart();// 生成附件组件的实例
             bRet = true;
         } catch (Exception e) {
-            System.err.println("获取邮件会话对象时发生错误！" + e);
+            logger.error("获取邮件会话对象时发生错误！", e);
         }
         return bRet;
     }
@@ -70,7 +88,7 @@ public class Email {
      */
     public void setNeedAuth(boolean need) {
         if (props == null) {
-            props = System.getProperties();
+            props = new Properties();
         }
         if (need) {
             props.put("mail.smtp.auth", "true");
@@ -82,9 +100,10 @@ public class Email {
     /**
      * 进行用户身份验证时，设置用户名和密码
      */
-    public void setNamePass(String name, String pass) {
-        sendUserName = name;
-        sendUserPass = pass;
+    public void setNamePass(final String name, final String pass) {
+        smtpUser = name.toLowerCase();
+        smtpPassword = pass;
+        mailFrom = smtpUser;
     }
 
     /**
@@ -116,7 +135,7 @@ public class Email {
             // 在组件上添加邮件文本
             mp.addBodyPart(bp);
         } catch (Exception e) {
-            System.err.println("设置邮件正文时发生错误！" + e);
+            logger.error("设置邮件正文时发生错误！", e);
             return false;
         }
         return true;
@@ -138,7 +157,7 @@ public class Email {
             mp.addBodyPart(bp);// 添加附件
             files.add(fileds);
         } catch (Exception e) {
-            System.err.println("增加邮件附件：" + filename + "发生错误！" + e);
+            logger.error("增加邮件附件：" + filename + "发生错误！", e);
             return false;
         }
         return true;
@@ -216,14 +235,37 @@ public class Email {
      */
     public boolean send() throws Exception {
         boolean bRet = false;
+        if (!loginByEmail) {
+            int pos = mailFrom.indexOf('@');
+            if (pos > 0) {
+                smtpUser = mailFrom.substring(0, pos);
+            }
+        }
+
+        props.setProperty("mail.smtp.starttls.enable", "false");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "465");
+        props.put("mail.smtp.ssl.enable", "true");
+        props.put("mail.smtp.user", smtpUser);
+        props.put("mail.smtp.password", smtpPassword);
+
         try {
             mimeMsg.setContent(mp);
             mimeMsg.saveChanges();
             logger.info("正在发送邮件....");
-            Session mailSession = Session.getInstance(props, null);
+            Session mailSession = Session.getInstance(props, new Authenticator() {
+
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(smtpUser, smtpPassword);
+                }
+
+            });
             Transport transport = mailSession.getTransport("smtp");
             // 连接邮件服务器并进行身份验证
-            transport.connect((String) props.get("mail.smtp.host"), sendUserName, sendUserPass);
+            transport.connect((String) props.get("mail.smtp.host"), smtpUser, smtpPassword);
             // 发送邮件
             transport.sendMessage(mimeMsg, mimeMsg.getRecipients(Message.RecipientType.TO));
             logger.info("发送邮件成功！");
@@ -231,6 +273,14 @@ public class Email {
             bRet = true;
         } catch (Exception e) {
             logger.error("邮件发送失败: ", e);
+            if (loginByEmail) {
+                loginByEmail = false;
+                int pos = mailFrom.indexOf('@');
+                if (pos > 0) {
+                    smtpUser = mailFrom.substring(0, pos);
+                    bRet = send();
+                }
+            }
         }
         return bRet;
     }

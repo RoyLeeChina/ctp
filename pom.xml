@@ -67,7 +67,7 @@
         <!-- apache commons http end -->
 
         <!-- others begin -->
-        <javax.mail.version>1.4.4</javax.mail.version>
+        <javax.mail.version>1.4.7</javax.mail.version>
         <!-- others end -->
     </properties>
 

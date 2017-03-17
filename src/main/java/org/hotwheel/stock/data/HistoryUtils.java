@@ -75,6 +75,7 @@ public class HistoryUtils {
             } else {
                 pojo = new StockHistory(day, open, high, low, close, volume);
             }
+            pojo.setCode(code);
             result.add(pojo);
         }
         return result;
