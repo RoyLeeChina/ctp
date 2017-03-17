@@ -22,8 +22,12 @@ public class TestController {
     public ActionStatus add(String email, String subject, String content) {
         ActionStatus resp = new ActionStatus();
         try {
-            EmailApi.send(email, subject, content);
-            resp.set(0, "SUCCESS");
+            boolean ret = EmailApi.send(email, subject, content);
+            if (ret) {
+                resp.set(0, "SUCCESS");
+            } else {
+                resp.set(1, "FAILED");
+            }
         } catch (Exception e) {
             resp.set(10000, e.getMessage());
             logger.error("", e);

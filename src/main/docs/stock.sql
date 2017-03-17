@@ -178,18 +178,18 @@ ALTER TABLE `stock`.`stock_realtime` ADD INDEX (`code`);
 DROP TABLE IF EXISTS `stock`.`stock_history`;
 CREATE TABLE `stock`.`stock_history`
 (
-	`day`         TIMESTAMP  NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '日期',
-	`code`        VARCHAR(20)  BINARY NOT NULL                      COMMENT '股票代码',
-	`open`        VARCHAR(20)  BINARY NOT NULL                      COMMENT '开盘价',
-	`high`        VARCHAR(20)  BINARY NOT NULL                      COMMENT '最高价',
-	`low`         VARCHAR(20)  BINARY NOT NULL                      COMMENT '最低价',
-	`close`       VARCHAR(20)  BINARY NOT NULL                      COMMENT '收盘价',
-	`volume`      VARCHAR(20)  BINARY NOT NULL                      COMMENT '成交量',
-	`MA5`         VARCHAR(20)  BINARY NOT NULL                      COMMENT 'MA5价',
-	`MA5_volume`  VARCHAR(20)  BINARY NOT NULL                      COMMENT 'MA5量',
-	`MA10`        VARCHAR(20)  BINARY NOT NULL                      COMMENT 'MA10价',
-	`MA10_volume` VARCHAR(20)  BINARY NOT NULL                      COMMENT 'MA10量',
-	`MA30`        VARCHAR(20)  BINARY NOT NULL                      COMMENT 'MA30价',
-	`MA30_volume` VARCHAR(20)  BINARY NOT NULL                      COMMENT 'MA30量'
+	`day`         DATE                DEFAULT NULL              COMMENT '日期',
+	`code`        VARCHAR(20)  BINARY NOT NULL                  COMMENT '股票代码',
+	`open`        VARCHAR(20)  BINARY NOT NULL                  COMMENT '开盘价',
+	`high`        VARCHAR(20)  BINARY NOT NULL                  COMMENT '最高价',
+	`low`         VARCHAR(20)  BINARY NOT NULL                  COMMENT '最低价',
+	`close`       VARCHAR(20)  BINARY NOT NULL                  COMMENT '收盘价',
+	`volume`      VARCHAR(20)  BINARY NOT NULL                  COMMENT '成交量',
+	`MA5`         VARCHAR(20)  BINARY NOT NULL                  COMMENT 'MA5价',
+	`MA5_volume`  VARCHAR(20)  BINARY NOT NULL                  COMMENT 'MA5量',
+	`MA10`        VARCHAR(20)  BINARY NOT NULL                  COMMENT 'MA10价',
+	`MA10_volume` VARCHAR(20)  BINARY NOT NULL                  COMMENT 'MA10量',
+	`MA30`        VARCHAR(20)  BINARY NOT NULL                  COMMENT 'MA30价',
+	`MA30_volume` VARCHAR(20)  BINARY NOT NULL                  COMMENT 'MA30量'
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='历史行情数据';
 ALTER TABLE `stock`.`stock_history` ADD INDEX (`code`);

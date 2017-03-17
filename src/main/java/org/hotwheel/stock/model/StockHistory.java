@@ -8,8 +8,8 @@ import java.util.Date;
  * @version 1.0.0
  */
 public class StockHistory {
-
     private Date day;
+    private String code;
     private double open;
     private double high;
     private double low;
@@ -26,7 +26,7 @@ public class StockHistory {
      * 无参数构造方法
      */
     public StockHistory() {
-        super();
+        //
     }
 
     /**
@@ -38,7 +38,6 @@ public class StockHistory {
      * @param volume 成交量，单位股，除以100为手
      */
     public StockHistory(Date day, double open, double high, double low, double close, double volume) {
-        super();
         this.day = day;
         this.open = open;
         this.high = high;
@@ -113,6 +112,14 @@ public class StockHistory {
      */
     public void setDay(Date day) {
         this.day = day;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     /**

@@ -49,8 +49,9 @@ public class EmailApi {
 		mail.setSubject(subject);
 		mail.setBody(content);
 		mail.setTo(toaddress);
-		//emailHandle.addFileAffix("/Users/wangfeng/Downloads/123.csv");// 附件文件路径
 		mail.setNamePass(smtpUser, smtpPswd);
+		//emailHandle.addFileAffix("/Users/wangfeng/Downloads/123.csv");// 附件文件路径
+
 		return mail.send();
 	}
 }
