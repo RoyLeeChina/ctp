@@ -7,7 +7,7 @@
 
     <!-- ==================== 项目设置 =========================== -->
     <groupId>org.hotwheel.stock</groupId>
-    <artifactId>StockExchange</artifactId>
+    <artifactId>ctp</artifactId>
     <version>1.0.1</version>
     <packaging>war</packaging>
 
@@ -19,7 +19,7 @@
         <!-- MyMMSC组件 版本设置 -->
         <hotwheel.version>3.2.1</hotwheel.version>
         <!-- Stock 版本设置 -->
-        <hotwheel.sotck.version>3.0.3</hotwheel.sotck.version>
+        <hotwheel.ctp.version>3.0.3</hotwheel.ctp.version>
 
         <!-- J2EE 版本 -->
         <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
@@ -301,8 +301,8 @@
         <profile>
             <id>local</id>
             <properties>
-                <sotck.env>local</sotck.env>
-                <sotck.suffix></sotck.suffix>
+                <ctp.env>local</ctp.env>
+                <ctp.suffix></ctp.suffix>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -311,46 +311,46 @@
         <profile>
             <id>dev</id>
             <properties>
-                <sotck.env>dev</sotck.env>
-                <sotck.suffix></sotck.suffix>
+                <ctp.env>dev</ctp.env>
+                <ctp.suffix></ctp.suffix>
             </properties>
         </profile>
         <profile>
             <id>test</id>
             <properties>
-                <sotck.env>test</sotck.env>
-                <sotck.suffix></sotck.suffix>
+                <ctp.env>test</ctp.env>
+                <ctp.suffix></ctp.suffix>
             </properties>
         </profile>
         <profile>
             <id>beta</id>
             <properties>
-                <sotck.env>beta</sotck.env>
-                <sotck.suffix></sotck.suffix>
+                <ctp.env>beta</ctp.env>
+                <ctp.suffix></ctp.suffix>
             </properties>
         </profile>
         <profile>
             <id>prod</id>
             <properties>
-                <sotck.env>prod</sotck.env>
-                <sotck.suffix></sotck.suffix>
+                <ctp.env>prod</ctp.env>
+                <ctp.suffix></ctp.suffix>
             </properties>
         </profile>
         <profile>
             <id>ptest</id>
             <properties>
-                <sotck.env>ptest</sotck.env>
-                <sotck.suffix>-test</sotck.suffix>
+                <ctp.env>ptest</ctp.env>
+                <ctp.suffix>-test</ctp.suffix>
             </properties>
         </profile>
     </profiles>
 
     <!-- ==================== 编译设置 =========================== -->
     <build>
-        <finalName>stock</finalName>
+        <finalName>ctp</finalName>
         <resources>
             <resource>
-                <directory>src/main/resources/profiles/${sotck.env}</directory>
+                <directory>src/main/resources/profiles/${ctp.env}</directory>
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
