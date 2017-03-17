@@ -12,7 +12,7 @@
 
     <mvc:annotation-driven/>
 
-    <context:component-scan base-package="org.hotwheel.stock" use-default-filters="false">
+    <context:component-scan base-package="org.hotwheel.ctp" use-default-filters="false">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 

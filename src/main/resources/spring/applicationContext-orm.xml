@@ -30,12 +30,12 @@
     <bean id="stockSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="stockDataSource" />
         <property name="configLocation" value="classpath:/mybatis/config.xml" />
-        <property name="typeAliasesPackage" value="org.hotwheel.stock.model" />
+        <property name="typeAliasesPackage" value="org.hotwheel.ctp.model" />
         <property name="mapperLocations" value="classpath*:mybatis/stock/*.xml" />
     </bean>
 
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="org.hotwheel.stock.dao" />
+        <property name="basePackage" value="org.hotwheel.ctp.dao" />
         <property name="sqlSessionFactoryBeanName" value="stockSessionFactory" />
     </bean>
 

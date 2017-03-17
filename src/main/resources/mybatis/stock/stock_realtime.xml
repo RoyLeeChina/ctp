@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="org.hotwheel.stock.dao.IStockRealTime">
-    <resultMap id="BaseResultMap" type="org.hotwheel.stock.model.StockRealTime">
+<mapper namespace="org.hotwheel.ctp.dao.IStockRealTime">
+    <resultMap id="BaseResultMap" type="org.hotwheel.ctp.model.StockRealTime">
         <result column="type"         property="type"         jdbcType="TINYINT" />
         <result column="date"         property="date"         jdbcType="DATE"/>
         <result column="time"         property="time"         jdbcType="TIME"/>
@@ -49,7 +49,7 @@
         FROM stock_realtime
         WHERE `code`=#{code}
     </select>
-    <insert id="insert" parameterType="org.hotwheel.stock.model.StockRealTime">
+    <insert id="insert" parameterType="org.hotwheel.ctp.model.StockRealTime">
         INSERT INTO stock_realtime (`type`,`date`,`time`,`code`,`name`,`open`,`close`,`now`,`high`,`low`,`buy_price`,`sell_price`,`volume`,`volume_price`,`buy_1_num`,`buy_1_price`,`buy_2_num`,`buy_2_price`,`buy_3_num`,`buy_3_price`,`buy_4_num`,`buy_4_price`,`buy_5_num`,`buy_5_price`,`sell_1_num`,`sell_1_price`,`sell_2_num`,`sell_2_price`,`sell_3_num`,`sell_3_price`,`sell_4_num`,`sell_4_price`,`sell_5_num`,`sell_5_price`,`rise_fall`,`rise_fall_percent`)
         VALUES (#{type},#{date},#{time},#{fullCode},#{name},#{open},#{close},#{now},#{high},#{low},
                 #{buyPrice},#{sellPrice},#{volume},#{volumePrice},
@@ -58,7 +58,7 @@
                 #{riseAndFall},#{riseAndFallPercent})
     </insert>
 
-    <update id="update" parameterType="org.hotwheel.stock.model.StockRealTime">
+    <update id="update" parameterType="org.hotwheel.ctp.model.StockRealTime">
         UPDATE stock_realtime
         SET `type`=#{type},
             `date`=#{date},

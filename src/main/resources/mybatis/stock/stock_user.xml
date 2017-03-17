@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="org.hotwheel.stock.dao.IStockUser">
+<mapper namespace="org.hotwheel.ctp.dao.IStockUser">
 
     <!-- 查询一个用户是否存在 -->
-    <select id="select" resultType="org.hotwheel.stock.model.User">
+    <select id="select" resultType="org.hotwheel.ctp.model.User">
         SELECT * FROM stock_user WHERE phone=#{phone} LIMIT 0,1
     </select>
 
     <!-- 插入一个用户 -->
-    <insert id="insert" parameterType="org.hotwheel.stock.model.User">
+    <insert id="insert" parameterType="org.hotwheel.ctp.model.User">
         insert into stock_user (flag,memberId,memberName,phone,weixin,email,createTime)
         values (#{flag},#{memberId},#{memberName},#{phone},#{weixin},#{email},now())
     </insert>
 
-    <update id="update" parameterType="org.hotwheel.stock.model.User">
+    <update id="update" parameterType="org.hotwheel.ctp.model.User">
         UPDATE stock_user
         SET flag=#{flag},memberId=#{memberId},memberName=#{memberName},phone=#{phone},weixin=#{weixin},email=#{email},createTime=now()
         WHERE phone=#{phone}
