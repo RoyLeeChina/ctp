@@ -12,8 +12,8 @@ public class EMA {
     // 周期2
     private int cycle2;
 
-    private double ema1;
-    private double ema2;
+    private double ema1 = 0.00;
+    private double ema2 = 0.00;
 
     public int getCycle1() {
         return cycle1;
