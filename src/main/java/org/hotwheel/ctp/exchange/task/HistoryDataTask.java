@@ -1,13 +1,15 @@
 package org.hotwheel.ctp.exchange.task;
 
 import org.hotwheel.assembly.Api;
-import org.hotwheel.spring.scheduler.SchedulerContext;
 import org.hotwheel.ctp.StockOptions;
 import org.hotwheel.ctp.dao.IStockHistory;
 import org.hotwheel.ctp.dao.IStockMonitor;
+import org.hotwheel.ctp.index.EMAIndex;
+import org.hotwheel.ctp.model.EMA;
 import org.hotwheel.ctp.model.StockHistory;
 import org.hotwheel.ctp.model.StockMonitor;
 import org.hotwheel.ctp.util.StockApi;
+import org.hotwheel.spring.scheduler.SchedulerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +67,14 @@ public class HistoryDataTask extends SchedulerContext {
                             logger.error("", e);
                         }
                     }
+
+                    EMAIndex emaIndex = new EMAIndex();
+                    emaIndex.compute(shList);
+                    List<EMA> tmpList = emaIndex.getListEma();
+                    for (EMA ema : tmpList) {
+                        logger.debug("date={}, EMA{}={}, EMA{}={}", ema.getDay(), ema.getCycle1(), ema.getEma1(), ema.getCycle2(), ema.getEma2());
+                    }
+
                 }
             }
             Api.sleep(StockOptions.kRealTimenterval);

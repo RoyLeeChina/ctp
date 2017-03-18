@@ -7,13 +7,23 @@ package org.hotwheel.ctp.model;
  * @version 1.0.1
  */
 public class EMA {
+    // 日期
+    private String day;
     // 周期1
-    private int cycle1;
+    private int cycle1 = 12;
     // 周期2
-    private int cycle2;
+    private int cycle2 = 26;
 
     private double ema1 = 0.00;
     private double ema2 = 0.00;
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
 
     public int getCycle1() {
         return cycle1;
