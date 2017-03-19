@@ -3,6 +3,10 @@
 
 <mapper namespace="org.hotwheel.ctp.dao.IStockCode">
 
+    <!-- 捡出全部的股票代码 -->
+    <select id="getAll" resultType="java.lang.String">
+        SELECT full_code FROM stock_code WHERE flag='01'
+    </select>
     <!-- 查询一个用户是否存在 -->
     <select id="select" resultType="org.hotwheel.ctp.model.StockCode">
         SELECT * FROM stock_code WHERE code=#{code} OR full_code=#{full_code} LIMIT 0,1

@@ -2,12 +2,12 @@ package org.hotwheel.ctp.exchange.task;
 
 import org.hotwheel.assembly.Api;
 import org.hotwheel.ctp.StockOptions;
+import org.hotwheel.ctp.dao.IStockCode;
 import org.hotwheel.ctp.dao.IStockHistory;
 import org.hotwheel.ctp.dao.IStockMonitor;
 import org.hotwheel.ctp.index.EMAIndex;
 import org.hotwheel.ctp.model.EMA;
 import org.hotwheel.ctp.model.StockHistory;
-import org.hotwheel.ctp.model.StockMonitor;
 import org.hotwheel.ctp.util.StockApi;
 import org.hotwheel.spring.scheduler.SchedulerContext;
 import org.slf4j.Logger;
@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * 历史数据
@@ -32,6 +32,9 @@ public class HistoryDataTask extends SchedulerContext {
     @Autowired
     private IStockHistory stockHistory;
 
+    @Autowired
+    private IStockCode stockCode;
+
     @Override
     protected void service() {
 
@@ -41,16 +44,7 @@ public class HistoryDataTask extends SchedulerContext {
                 break;
             }
             // 捡出全部股票的策略
-            List<StockMonitor> listMonitor = stockMonitor.queryAll();
-            Map<String, StockMonitor> mapMonitor = new HashMap<>();
-            Set<String> allCodes = new HashSet<>();
-            if (listMonitor != null) {
-                for (StockMonitor sm : listMonitor) {
-                    String code = sm.getCode();
-                    allCodes.add(code);
-                    mapMonitor.put(code, sm);
-                }
-            }
+            List<String> allCodes = stockCode.getAll();
 
             for (String code : allCodes) {
                 List<StockHistory> shList = StockApi.getHistory(code);
