@@ -5,8 +5,6 @@ import org.hotwheel.ctp.StockOptions;
 import org.hotwheel.ctp.dao.IStockCode;
 import org.hotwheel.ctp.dao.IStockHistory;
 import org.hotwheel.ctp.dao.IStockMonitor;
-import org.hotwheel.ctp.index.EMAIndex;
-import org.hotwheel.ctp.model.EMA;
 import org.hotwheel.ctp.model.StockHistory;
 import org.hotwheel.ctp.util.StockApi;
 import org.hotwheel.spring.scheduler.SchedulerContext;
@@ -48,6 +46,7 @@ public class HistoryDataTask extends SchedulerContext {
             List<String> allCodes = stockCode.getAll();
 
             for (String code : allCodes) {
+                logger.info("code={}",code);
                 Date lastDay = stockHistory.getLastDate(code);
                 long dataLen = Api.valueOf(long.class, StockOptions.DEFAULT_DATALEN);
                 if (!Api.isEmpty(lastDay)) {
@@ -75,14 +74,14 @@ public class HistoryDataTask extends SchedulerContext {
                             logger.error("", e);
                         }
                     }
-
+                    /*
                     EMAIndex emaIndex = new EMAIndex();
                     emaIndex.compute(shList);
                     List<EMA> tmpList = emaIndex.getListEma();
                     for (EMA ema : tmpList) {
                         logger.debug("date={}, EMA{}={}, EMA{}={}", ema.getDay(), ema.getCycle1(), ema.getEma1(), ema.getCycle2(), ema.getEma2());
                     }
-
+                    */
                 }
                 //Api.sleep(StockOptions.kRealTimenterval);
             }
