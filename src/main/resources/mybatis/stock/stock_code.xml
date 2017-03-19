@@ -17,6 +17,6 @@
     <update id="update" parameterType="org.hotwheel.ctp.model.StockCode">
         UPDATE stock_code
         SET flag=#{flag},code=#{code},full_code=#{full_code},`name`=#{name},operator=#{operator},createTime=now()
-        WHERE ode=#{code} OR full_code=#{full_code}
+        WHERE code=#{code} OR full_code=#{full_code}
     </update>
 </mapper>

@@ -7,11 +7,11 @@ package org.hotwheel.ctp.model;
  * @version 1.0.1
  */
 public class StockCode {
-    private String flag; // CHAR    (2)    BINARY DEFAULT '00' COMMENT '标志($): 00-禁止检测,01-正常检测',
+    private String flag = "01"; // CHAR    (2)    BINARY DEFAULT '00' COMMENT '标志($): 00-禁止检测,01-正常检测',
     private String code; // CHAR    (32)   BINARY NOT NULL     COMMENT '股票代码',
     private String full_code; // CHAR    (32)   BINARY NOT NULL     COMMENT '完整的股票代码',
     private String name; // CHAR    (128)  BINARY NOT NULL     COMMENT '股票名称(?$)',
-    private String operator;// VARCHAR (50)   BINARY NOT NULL     COMMENT '操作人(?$)',
+    private String operator = "system";// VARCHAR (50)   BINARY NOT NULL     COMMENT '操作人(?$)',
     private String createTime; // DATETIME          DEFAULT NULL     COMMENT '创建时间($)',
     private long id;// INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY  /* 记录标号 */
 

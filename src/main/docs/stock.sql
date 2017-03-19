@@ -68,12 +68,12 @@ USE `stock`;
 DROP TABLE IF EXISTS `stock`.`stock_code`;
 CREATE TABLE `stock`.`stock_code`
 (
-  `flag`         CHAR    (2)    BINARY DEFAULT '00' COMMENT '标志($): 00-禁止检测,01-正常检测',
-  `code`         CHAR    (32)   BINARY NOT NULL     COMMENT '股票代码',
-  `full_code`    CHAR    (32)   BINARY NOT NULL     COMMENT '完整的股票代码',
-  `name`         CHAR    (128)  BINARY NOT NULL     COMMENT '股票名称(?$)',
-  `operator`     VARCHAR (50)   BINARY NOT NULL     COMMENT '操作人(?$)',
-	`createTime`   DATETIME          DEFAULT NULL     COMMENT '创建时间($)',
+  `flag`         CHAR    (2)    BINARY DEFAULT '01'     COMMENT '标志($): 00-禁止检测,01-正常检测',
+  `code`         CHAR    (32)   BINARY NOT NULL         COMMENT '股票代码',
+  `full_code`    CHAR    (32)   BINARY NOT NULL         COMMENT '完整的股票代码',
+  `name`         CHAR    (128)  BINARY NOT NULL         COMMENT '股票名称(?$)',
+  `operator`     VARCHAR (50)   BINARY DEFAULT 'system' COMMENT '操作人(?$)',
+	`createTime`   DATETIME          DEFAULT NULL         COMMENT '创建时间($)',
   `id`           INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY  /* 记录标号 */
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='个股列表';
 ALTER TABLE `stock`.`stock_code` ADD INDEX (`code`);

@@ -36,17 +36,18 @@ public class HistoryDataTask extends SchedulerContext {
     @Autowired
     private IStockHistory stockHistory;
 
+    @Autowired
+    private ExcelApi excelApi;
+
     @Override
     protected void service() {
 
-        ExcelApi excelApi = new ExcelApi();
         String filename = "classpath:/stock/china-stock-list.xlsx";
         DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
         Resource resource = resourceLoader.getResource(filename);
-        ExcelApi api = new ExcelApi();
         try {
             String filepath = resource.getFile().getAbsolutePath();
-            api.read(filepath);
+            excelApi.read(filepath);
         } catch (IOException e) {
             logger.error("read file failed: ", e);
         }
