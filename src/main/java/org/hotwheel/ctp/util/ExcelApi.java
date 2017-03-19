@@ -28,8 +28,12 @@ public class ExcelApi {
     @Autowired
     private IStockCode stockCode;
 
+    public ExcelApi() {
+        //
+    }
+
     /**
-     * 读取excel文件，生成一个json文件，文件格式见项目根目录的.xlsx文件，<a href="https://github.com/yilihjy/SaveSinaStockData">项目主页</a>
+     * 读取excel文件，生成一个json文件，文件格式见项目根目录的.xlsx文件
      * @param inFileName excel文件文件路径
      */
     public void read(String inFileName){
@@ -55,9 +59,9 @@ public class ExcelApi {
                         stock.setFull_code(fullCode);
                         StockCode old = stockCode.select(codeString, fullCode);
                         if (old == null) {
-                            stockCode.update(stock);
-                        } else {
                             stockCode.insert(stock);
+                        } else {
+                            stockCode.update(stock);
                         }
                     } else {
                         flag = false;
