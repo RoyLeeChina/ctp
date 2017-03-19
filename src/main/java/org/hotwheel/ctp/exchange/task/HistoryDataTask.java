@@ -58,22 +58,23 @@ public class HistoryDataTask extends SchedulerContext {
                         dataLen = diffDays;
                     }
                 }
-                List<StockHistory> shList = StockApi.getHistory(code, dataLen);
-                if (shList != null && shList.size() > 0) {
-                    for (StockHistory history : shList) {
-
-                        String day = Api.toString(history.getDay(), StockOptions.DateFormat);
-                        try {
-                            StockHistory old = stockHistory.select(code, day);
-                            if (old != null) {
-                                stockHistory.update(history);
-                            } else {
-                                stockHistory.insert(history);
+                // 一周内的数据, 逐条处理
+                if (dataLen < 7) {
+                    List<StockHistory> shList = StockApi.getHistory(code, dataLen);
+                    if (shList != null && shList.size() > 0) {
+                        for (StockHistory history : shList) {
+                            String day = Api.toString(history.getDay(), StockOptions.DateFormat);
+                            try {
+                                StockHistory old = stockHistory.select(code, day);
+                                if (old != null) {
+                                    stockHistory.update(history);
+                                } else {
+                                    stockHistory.insert(history);
+                                }
+                            } catch (Exception e) {
+                                logger.error("", e);
                             }
-                        } catch (Exception e) {
-                            logger.error("", e);
                         }
-                    }
                     /*
                     EMAIndex emaIndex = new EMAIndex();
                     emaIndex.compute(shList);
@@ -82,6 +83,15 @@ public class HistoryDataTask extends SchedulerContext {
                         logger.debug("date={}, EMA{}={}, EMA{}={}", ema.getDay(), ema.getCycle1(), ema.getEma1(), ema.getCycle2(), ema.getEma2());
                     }
                     */
+                    }
+                } else {
+                    int ret = stockHistory.deleteOne(code);
+                    logger.debug("delete {}, {}", code, ret);
+                    List<StockHistory> shList = StockApi.getHistory(code);
+                    if (shList != null && shList.size() > 0) {
+                        ret = stockHistory.insertBatch(shList);
+                        logger.debug("insertBatch {}, {}", code, ret);
+                    }
                 }
                 //Api.sleep(StockOptions.kRealTimenterval);
             }

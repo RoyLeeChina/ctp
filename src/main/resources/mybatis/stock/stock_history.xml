@@ -31,6 +31,19 @@
             (#{day},#{code},#{open},#{high},#{low},#{close},#{volume},#{MA5},#{MA5Volume},#{MA10},#{MA10Volume},#{MA30},#{MA30Volume})
     </insert>
 
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO stock_history
+          (`day`,`code`,`open`,`high`,`low`,`close`,`volume`,`MA5`,`MA5_volume`,`MA10`,`MA10_volume`,`MA30`,`MA30_volume`)
+        VALUES
+          <foreach collection ="list" item="historyList" index="index" separator =",">
+            (
+              #{historyList.day},#{historyList.code},
+              #{historyList.open},#{historyList.high},#{historyList.low},#{historyList.close},#{historyList.volume},
+              #{historyList.MA5},#{historyList.MA5Volume},#{historyList.MA10},#{historyList.MA10Volume},#{historyList.MA30},#{historyList.MA30Volume}
+            )
+          </foreach>
+    </insert>
+
     <update id="update" parameterType="org.hotwheel.ctp.model.StockHistory">
         UPDATE stock_history
         SET `day`=#{day},`code`=#{code},
@@ -45,5 +58,9 @@
     <select id="getLastDate" resultType="java.util.Date">
         SELECT `day` FROM stock_history WHERE code=#{code} ORDER BY DAY DESC LIMIT 0,1
     </select>
+
+    <delete id="deleteOne" parameterType="java.lang.String">
+        DELETE FROM stock_history WHERE code=#{code}
+    </delete>
 
 </mapper>

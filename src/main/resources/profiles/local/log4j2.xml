@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- status=debug 可以查看log4j的装配过程 -->
-<Configuration status="off" monitorInterval="1800">
+<Configuration status="off" monitorInterval="60">
     <Properties>
         <!-- 配置日志文件输出目录 -->
         <Property name="logs.home">/data/runtime/logs</Property>

@@ -6,6 +6,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 历史数据
@@ -42,4 +43,14 @@ public interface IStockHistory {
      * @throws DataAccessException
      */
     public Date getLastDate(String code) throws DataAccessException;
+
+    /**
+     * 删除某只股票的全部历史记录
+     * @param code
+     * @return
+     * @throws DataAccessException
+     */
+    public int deleteOne(@Param("code") String code) throws DataAccessException;
+
+    int insertBatch(List<StockHistory > historyList);
 }
