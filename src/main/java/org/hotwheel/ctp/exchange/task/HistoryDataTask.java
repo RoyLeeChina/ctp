@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -47,9 +48,21 @@ public class HistoryDataTask extends SchedulerContext {
             List<String> allCodes = stockCode.getAll();
 
             for (String code : allCodes) {
-                List<StockHistory> shList = StockApi.getHistory(code);
+                Date lastDay = stockHistory.getLastDate(code);
+                long dataLen = Api.valueOf(long.class, StockOptions.DEFAULT_DATALEN);
+                if (!Api.isEmpty(lastDay)) {
+                    long diffDays = Api.diffDays(lastDay, new Date());
+                    if (diffDays == 0) {
+                        logger.info("code={}的历史数据已经到达今日{}", code, Api.toString(lastDay, StockOptions.DateFormat));
+                        continue;
+                    } else {
+                        dataLen = diffDays;
+                    }
+                }
+                List<StockHistory> shList = StockApi.getHistory(code, dataLen);
                 if (shList != null && shList.size() > 0) {
                     for (StockHistory history : shList) {
+
                         String day = Api.toString(history.getDay(), StockOptions.DateFormat);
                         try {
                             StockHistory old = stockHistory.select(code, day);
@@ -71,8 +84,8 @@ public class HistoryDataTask extends SchedulerContext {
                     }
 
                 }
+                //Api.sleep(StockOptions.kRealTimenterval);
             }
-            Api.sleep(StockOptions.kRealTimenterval);
         }
     }
 }

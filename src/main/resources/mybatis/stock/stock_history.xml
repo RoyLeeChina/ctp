@@ -41,4 +41,9 @@
         WHERE `code`=#{code} AND `day`=#{day}
     </update>
 
+    <!-- 查询一股票数据的最后一天 -->
+    <select id="getLastDate" resultType="java.util.Date">
+        SELECT `day` FROM stock_history WHERE code=#{code} ORDER BY DAY DESC LIMIT 0,1
+    </select>
+
 </mapper>
