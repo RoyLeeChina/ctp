@@ -16,6 +16,17 @@
         </property>
     </bean>
 
+    <!-- ==================== 实时数据 =========================== -->
+    <bean id="realTimeDataTask" class="org.hotwheel.ctp.exchange.task.RealTimeDataTask">
+        <property name="taskName" value="${task.realtime.name}"/>
+        <property name="taskSwitch" value="${task.realtime.switch}"/>
+        <property name="taskStartTime" value="${task.realtime.begin}"/>
+        <property name="taskEndTime" value="${task.realtime.end}"/>
+    </bean>
+    <task:scheduled-tasks>
+        <task:scheduled ref="realTimeDataTask" method="doTask" cron="${task.realtime.cron}" />
+    </task:scheduled-tasks>
+
     <!-- ==================== 历史数据 =========================== -->
     <bean id="historyDataTask" class="org.hotwheel.ctp.exchange.task.HistoryDataTask">
         <property name="taskName" value="${task.history.name}"/>
@@ -27,14 +38,14 @@
         <task:scheduled ref="historyDataTask" method="doTask" cron="${task.history.cron}" />
     </task:scheduled-tasks>
 
-    <!-- ==================== 实时数据 =========================== -->
-    <bean id="realTimeDataTask" class="org.hotwheel.ctp.exchange.task.RealTimeDataTask">
-        <property name="taskName" value="${task.realtime.name}"/>
-        <property name="taskSwitch" value="${task.realtime.switch}"/>
-        <property name="taskStartTime" value="${task.realtime.begin}"/>
-        <property name="taskEndTime" value="${task.realtime.end}"/>
+    <!-- ==================== 二级市场数据 =========================== -->
+    <bean id="marketDataTask" class="org.hotwheel.ctp.exchange.task.MarketDataTask">
+        <property name="taskName" value="${task.market.name}"/>
+        <property name="taskSwitch" value="${task.market.switch}"/>
+        <property name="taskStartTime" value="${task.market.begin}"/>
+        <property name="taskEndTime" value="${task.market.end}"/>
     </bean>
     <task:scheduled-tasks>
-        <task:scheduled ref="realTimeDataTask" method="doTask" cron="${task.realtime.cron}" />
+        <task:scheduled ref="marketDataTask" method="doTask" cron="${task.market.cron}" />
     </task:scheduled-tasks>
 </beans>
