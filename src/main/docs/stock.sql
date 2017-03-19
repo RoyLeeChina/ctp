@@ -193,3 +193,4 @@ CREATE TABLE `stock`.`stock_history`
 	`MA30_volume` VARCHAR(20)  BINARY NOT NULL                  COMMENT 'MA30量'
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='历史行情数据';
 ALTER TABLE `stock`.`stock_history` ADD INDEX (`code`);
+ALTER TABLE `stock`.`stock_history` ADD INDEX (`day`);
