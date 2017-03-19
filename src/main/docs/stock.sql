@@ -72,8 +72,8 @@ CREATE TABLE `stock`.`stock_code`
   `code`         CHAR    (32)   BINARY NOT NULL     COMMENT '股票代码',
   `full_code`    CHAR    (32)   BINARY NOT NULL     COMMENT '完整的股票代码',
   `name`         CHAR    (128)  BINARY NOT NULL     COMMENT '股票名称(?$)',
-  `Operator`     VARCHAR (50)   BINARY NOT NULL     COMMENT '操作人(?$)',
-	`CreateTime`   DATETIME          DEFAULT NULL     COMMENT '创建时间($)',
+  `operator`     VARCHAR (50)   BINARY NOT NULL     COMMENT '操作人(?$)',
+	`createTime`   DATETIME          DEFAULT NULL     COMMENT '创建时间($)',
   `id`           INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY  /* 记录标号 */
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='个股列表';
 ALTER TABLE `stock`.`stock_code` ADD INDEX (`code`);
