@@ -11,15 +11,15 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.hotwheel.asio.HttpApi;
 import org.hotwheel.assembly.Api;
-import org.hotwheel.io.ActionStatus;
-import org.hotwheel.io.HttpClient;
-import org.hotwheel.io.HttpResult;
-import org.hotwheel.json.JsonAdapter;
 import org.hotwheel.ctp.StockOptions;
 import org.hotwheel.ctp.data.HistoryUtils;
 import org.hotwheel.ctp.data.RealTimeUtils;
 import org.hotwheel.ctp.model.StockHistory;
 import org.hotwheel.ctp.model.StockRealTime;
+import org.hotwheel.io.ActionStatus;
+import org.hotwheel.io.HttpClient;
+import org.hotwheel.io.HttpResult;
+import org.hotwheel.json.JsonAdapter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONWriter;
@@ -135,6 +135,13 @@ public final class StockApi {
         List<StockHistory> result;
         //result = request(StockOptions.urlHistory, null, StockOptions.historyParams(code), List.class, StockHistory.class);
         result = HistoryUtils.getKLineDataObjects(code, StockOptions.ONE_DAY);
+        return result;
+    }
+
+    public static List<StockHistory> getHistory(final String code, final long days) {
+        List<StockHistory> result;
+        //result = request(StockOptions.urlHistory, null, StockOptions.historyParams(code), List.class, StockHistory.class);
+        result = HistoryUtils.getKLineDataObjects(code, StockOptions.ONE_DAY, "" + days);
         return result;
     }
 

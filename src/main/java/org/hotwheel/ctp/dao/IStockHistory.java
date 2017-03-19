@@ -5,6 +5,8 @@ import org.hotwheel.ctp.model.StockHistory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 /**
  * 历史数据
  * Created by wangfeng on 2017/3/17.
@@ -32,4 +34,12 @@ public interface IStockHistory {
      * @return
      */
     public int update(StockHistory srt) throws DataAccessException;
+
+    /**
+     * 获得历史数据的最后一天
+     * @param code
+     * @return
+     * @throws DataAccessException
+     */
+    public Date getLastDate(String code) throws DataAccessException;
 }
