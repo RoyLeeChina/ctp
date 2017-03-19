@@ -16,6 +16,7 @@ import java.util.List;
  * @see <url>http://baike.baidu.com/item/EMA/12646151?sefr=cr</url>
  */
 public class EMAIndex extends AbstractIndex implements IndexContext{
+    private String code;
     //private int cycle = 12;
     //private int weight = 13;
     private List<EMA> listEma;
@@ -58,6 +59,14 @@ public class EMAIndex extends AbstractIndex implements IndexContext{
             //listEma.set(i, ema);
             listEma.add(ema);
         }
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public List<EMA> getListEma() {
