@@ -1,6 +1,8 @@
 package org.hotwheel.ctp.exchange.task;
 
 import org.hotwheel.assembly.Api;
+import org.hotwheel.core.io.DefaultResourceLoader;
+import org.hotwheel.core.io.Resource;
 import org.hotwheel.ctp.StockOptions;
 import org.hotwheel.ctp.dao.IStockHistory;
 import org.hotwheel.ctp.dao.IStockMonitor;
@@ -8,6 +10,7 @@ import org.hotwheel.ctp.index.EMAIndex;
 import org.hotwheel.ctp.model.EMA;
 import org.hotwheel.ctp.model.StockHistory;
 import org.hotwheel.ctp.model.StockMonitor;
+import org.hotwheel.ctp.util.ExcelApi;
 import org.hotwheel.ctp.util.StockApi;
 import org.hotwheel.spring.scheduler.SchedulerContext;
 import org.slf4j.Logger;
@@ -15,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -34,6 +38,19 @@ public class HistoryDataTask extends SchedulerContext {
 
     @Override
     protected void service() {
+
+        ExcelApi excelApi = new ExcelApi();
+        String filename = "classpath:/stock/china-stock-list.xlsx";
+        DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
+        Resource resource = resourceLoader.getResource(filename);
+        ExcelApi api = new ExcelApi();
+        try {
+            String filepath = resource.getFile().getAbsolutePath();
+            api.read(filepath);
+        } catch (IOException e) {
+            logger.error("read file failed: ", e);
+        }
+
         while (true) {
             if (isTimeExpire()) {
                 logger.info("运行时间{}->{}到, 任务退出", taskStartTime, taskEndTime);

@@ -5,18 +5,18 @@
 
     <!-- 查询一个用户是否存在 -->
     <select id="select" resultType="org.hotwheel.ctp.model.StockCode">
-        SELECT * FROM stock_user WHERE phone=#{phone} LIMIT 0,1
+        SELECT * FROM stock_code WHERE code=#{code} OR full_code=#{full_code} LIMIT 0,1
     </select>
 
     <!-- 插入一个用户 -->
     <insert id="insert" parameterType="org.hotwheel.ctp.model.StockCode">
-        insert into stock_user (flag,memberId,memberName,phone,weixin,email,createTime)
-        values (#{flag},#{memberId},#{memberName},#{phone},#{weixin},#{email},now())
+        INSERT INTO stock_code (flag,code,full_code,`name`,`operator`,`createTime`)
+        VALUES (#{flag},#{code},#{full_code},#{name},#{operator},now())
     </insert>
 
     <update id="update" parameterType="org.hotwheel.ctp.model.StockCode">
-        UPDATE stock_user
-        SET flag=#{flag},memberId=#{memberId},memberName=#{memberName},phone=#{phone},weixin=#{weixin},email=#{email},createTime=now()
-        WHERE phone=#{phone}
+        UPDATE stock_code
+        SET flag=#{flag},code=#{code},full_code=#{full_code},`name`=#{name},operator=#{operator},createTime=now()
+        WHERE ode=#{code} OR full_code=#{full_code}
     </update>
 </mapper>
