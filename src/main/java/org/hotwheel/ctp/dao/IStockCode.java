@@ -4,6 +4,8 @@ import org.apache.ibatis.annotations.Param;
 import org.hotwheel.ctp.model.StockCode;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 股票代码DAO
  * Created by wangfeng on 2017/3/19.
@@ -12,6 +14,14 @@ import org.springframework.stereotype.Service;
 @Service("stockCode")
 public interface IStockCode {
 
+    public List<String> getAll();
+
+    /**
+     * 查询一个股票代码
+     * @param phone
+     * @param fullCode
+     * @return
+     */
     public StockCode select(@Param("code") String phone, @Param("full_code")String fullCode);
 
     /**
