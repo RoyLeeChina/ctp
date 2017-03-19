@@ -3,6 +3,7 @@ package org.hotwheel.ctp.util;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
+import org.hotwheel.assembly.Api;
 import org.hotwheel.ctp.dao.IStockCode;
 import org.hotwheel.ctp.model.StockCode;
 import org.slf4j.Logger;
@@ -37,11 +38,13 @@ public class ExcelApi {
      * @param inFileName excel文件文件路径
      */
     public void read(String inFileName){
+        InputStream inputStream = null;
+        Workbook workbook = null;
         try
         {
-            InputStream inp = new FileInputStream(inFileName);
-            Workbook wb = WorkbookFactory.create(inp);
-            Sheet sheet = wb.getSheetAt(0);
+            inputStream = new FileInputStream(inFileName);
+            workbook = WorkbookFactory.create(inputStream);
+            Sheet sheet = workbook.getSheetAt(0);
             Boolean flag = true;
             int startRow = 1;
             while(flag){
@@ -80,6 +83,15 @@ public class ExcelApi {
             logger.error("", e);
         } catch (Exception e) {
             logger.error("", e);
+        } finally {
+            if (workbook != null) {
+                try {
+                    workbook.close();
+                } catch (IOException e) {
+                    //
+                }
+            }
+            Api.closeQuietly(inputStream);
         }
     }
 }
