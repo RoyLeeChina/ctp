@@ -28,4 +28,9 @@
     <select id="queryByCode" resultType="org.hotwheel.ctp.model.StockSubscribe">
         SELECT * FROM stock_subscribe WHERE flag='01' AND code=#{code}
     </select>
+
+    <!-- 捡出全部的股票代码 -->
+    <select id="checkoutAllCode" resultType="java.lang.String">
+        SELECT DISTINCT code FROM stock_subscribe WHERE flag='01' AND code IS NOT NULL
+    </select>
 </mapper>

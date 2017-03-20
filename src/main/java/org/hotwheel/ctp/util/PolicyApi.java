@@ -61,7 +61,8 @@ public class PolicyApi {
                 today = Api.addDate(today, Calendar.DAY_OF_MONTH, 1);
                 today = Api.addDate(today, Calendar.HOUR_OF_DAY, 6);
             }
-            result.setCreateTime(today);
+            result.setDay(today);
+            result.setCreateTime(new Date());
             if (size < 2) {
                 // 如果只有一条记录, 无法进行策略
                 result.setFlag(StockOptions.kNullState);
