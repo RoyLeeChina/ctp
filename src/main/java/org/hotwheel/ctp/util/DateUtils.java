@@ -38,7 +38,7 @@ public class DateUtils {
 	 * @param date
 	 * @return
 	 */
-	public final static Date getZero(Date date) {
+	public final static Date getZero(final Date date) {
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTime(date);
 		gc.set(Calendar.HOUR_OF_DAY, 0);

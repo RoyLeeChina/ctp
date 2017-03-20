@@ -84,18 +84,19 @@ CREATE TABLE `stock`.`stock_monitor`
 (
 	`flag`         CHAR    (2)    BINARY DEFAULT '00'     COMMENT '标志($): 00-禁止检测,01-正常检测',
 	`code`         CHAR    (32)   BINARY NOT NULL         COMMENT '股票代码',
-	`support1`     CHAR    (20)   BINARY NOT NULL         COMMENT '第一支撑位',
-	`support2`     CHAR    (20)   BINARY NOT NULL         COMMENT '第二支撑位',
-	`pressure1`    CHAR    (20)   BINARY NOT NULL         COMMENT '第一压力位',
-	`pressure2`    CHAR    (20)   BINARY NOT NULL         COMMENT '第二压力位',
-	`stop`         CHAR    (20)   BINARY NOT NULL         COMMENT '止损位',
-	`resistance`   CHAR    (20)   BINARY NOT NULL         COMMENT '压力位',
+	`day`          DATE                  NOT NULL         COMMENT '日期',
+	`support1`     CHAR    (20)   BINARY DEFAULT '0.000'  COMMENT '第一支撑位',
+	`support2`     CHAR    (20)   BINARY DEFAULT '0.000'  COMMENT '第二支撑位',
+	`pressure1`    CHAR    (20)   BINARY DEFAULT '0.000'  COMMENT '第一压力位',
+	`pressure2`    CHAR    (20)   BINARY DEFAULT '0.000'  COMMENT '第二压力位',
+	`stop`         CHAR    (20)   BINARY DEFAULT '0.000'  COMMENT '止损位',
+	`resistance`   CHAR    (20)   BINARY DEFAULT '0.000'  COMMENT '压力位',
 	`createTime`   DATETIME          DEFAULT NULL         COMMENT '创建时间($)',
 	`operator`     VARCHAR (50)   BINARY DEFAULT 'system' COMMENT '操作人(?$)',
 	`id`           INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY  /* 记录标号 */
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='监控个股列表';
 ALTER TABLE `stock`.`stock_monitor` ADD INDEX (`code`);
-ALTER TABLE `stock`.`stock_monitor` ADD INDEX (`CreateTime`);
+ALTER TABLE `stock`.`stock_monitor` ADD INDEX (`day`);
 
 -- TABLE: 用户表
 DROP TABLE IF EXISTS `stock`.`stock_user`;

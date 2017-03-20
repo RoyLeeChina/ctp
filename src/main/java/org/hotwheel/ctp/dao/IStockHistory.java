@@ -15,9 +15,19 @@ import java.util.List;
  */
 @Service("stockHistory")
 public interface IStockHistory {
+
     /**
-     * 查询历史行情
+     * 捡出某只股票的全部历史数据
      * @param code
+     * @return
+     * @throws DataAccessException
+     */
+    public List<StockHistory> selectOne(@Param("code") String code) throws DataAccessException;
+
+    /**
+     * 查询某只股票某天的历史行情
+     * @param code
+     * @param day
      * @return
      */
     public StockHistory select(@Param("code") String code, @Param("day")String day) throws DataAccessException;

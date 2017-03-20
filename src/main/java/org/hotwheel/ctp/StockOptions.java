@@ -61,6 +61,7 @@ public final class StockOptions {
     /**
      * 正常状态, 字符串"01"
      */
+    public final static String kNullState = "00";
     public final static String kNormalState = "01";
 
     /**
