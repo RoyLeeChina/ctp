@@ -78,6 +78,9 @@ public class RealTimeDataTask extends SchedulerContext {
                                 } else {
                                     stockRealTime.insert(realTime);
                                 }
+                                if (realTime.getNow() < 0.01) {
+                                    continue;
+                                }
                                 StockMonitor sm = mapMonitor.get(stockCode);
                                 if (sm != null) {
                                     // 买入价格
