@@ -91,7 +91,7 @@ public class CreatePolicyTask extends SchedulerContext {
                         }
                         List<StockSubscribe> tmpSubscribe = stockSubscribe.queryByCode(code);
                         logger.info("{}({}): {}~{}/{}~{}, 阻力位{}, 止损位{}。",
-                                stockName, stockCode, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
+                                stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
                                 info.getResistance(), info.getStop());
                         if (tmpSubscribe == null) {
                             logger.info("{} 暂无用户订阅");
