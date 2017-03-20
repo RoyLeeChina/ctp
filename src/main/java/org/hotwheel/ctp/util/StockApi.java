@@ -42,6 +42,15 @@ public final class StockApi {
     private static Logger logger = LoggerFactory.getLogger(StockApi.class);
 
     /**
+     * 价格转字符串
+     * @param price
+     * @return
+     */
+    public static String toPrice(final double price) {
+        return String.format("%.3f", price);
+    }
+
+    /**
      * 规范 代码
      *
      * @param fullcode

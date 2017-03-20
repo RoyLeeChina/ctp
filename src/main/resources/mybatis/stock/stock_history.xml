@@ -20,6 +20,11 @@
     </resultMap>
 
     <!-- 查询一只股票的历史数据 -->
+    <select id="selectOne" resultMap="BaseResultMap">
+        SELECT * FROM stock_history WHERE `code`=#{code} ORDER BY `day` ASC
+    </select>
+
+    <!-- 查询一只股票的历史数据 -->
     <select id="select" resultMap="BaseResultMap">
         SELECT * FROM stock_history WHERE `code`=#{code} AND `day`=#{day}
     </select>
