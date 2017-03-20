@@ -81,7 +81,7 @@ public class RealTimeDataTask extends SchedulerContext {
                                 StockMonitor sm = mapMonitor.get(stockCode);
                                 if (sm != null) {
                                     // 买入价格
-                                    double tmpPrice = realTime.getBuyPrice();
+                                    double tmpPrice = realTime.getNow();
                                     double open = realTime.getOpen();
                                     // 昨日收盘
                                     double close = realTime.getClose();
@@ -100,13 +100,13 @@ public class RealTimeDataTask extends SchedulerContext {
                                     String keywords = null;
                                     String field = null;
                                     // 策略判断
-                                    if (tmpPrice > resistance) {
+                                    if (tmpPrice >= resistance) {
                                         field = "resistance";
                                         keywords = "突破阻力位" + resistance;
-                                    } else if (tmpPrice > pressure2) {
+                                    } else if (tmpPrice >= pressure2) {
                                         field = "pressure2";
                                         keywords = "突破第二压力位" + pressure2;
-                                    } else if (tmpPrice > pressure1) {
+                                    } else if (tmpPrice >= pressure1) {
                                         field = "pressure1";
                                         keywords = "突破第一压力位" + pressure1;
                                     } else if (tmpPrice <= support1) {
