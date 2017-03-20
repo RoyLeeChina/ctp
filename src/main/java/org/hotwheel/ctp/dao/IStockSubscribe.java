@@ -50,4 +50,6 @@ public interface IStockSubscribe {
      * @throws DataAccessException
      */
     public List<StockSubscribe> queryByCode(@Param("code") String code) throws DataAccessException;
+
+    public List<String> checkoutAllCode() throws DataAccessException;
 }

@@ -17,8 +17,8 @@
 
     <!-- 插入一条新策略 -->
     <insert id="insert" parameterType="org.hotwheel.ctp.model.StockMonitor">
-        INSERT INTO stock_monitor (`flag`,`day`,`code`,`support1`,`support2`,`pressure1`,`pressure2`,`stop`,`resistance`,`createTime`)
-        VALUES ('01',#{code},#{day},#{support1},#{support2},#{pressure1},#{pressure2},#{stop},#{resistance},now())
+        INSERT INTO stock_monitor (`flag`,`code`,`day`,`support1`,`support2`,`pressure1`,`pressure2`,`stop`,`resistance`,`createTime`)
+        VALUES (#{flag},#{code},#{day},#{support1},#{support2},#{pressure1},#{pressure2},#{stop},#{resistance},now())
     </insert>
 
     <update id="update" parameterType="org.hotwheel.ctp.model.StockMonitor">
