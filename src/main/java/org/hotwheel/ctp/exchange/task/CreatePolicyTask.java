@@ -2,11 +2,9 @@ package org.hotwheel.ctp.exchange.task;
 
 import org.hotwheel.assembly.Api;
 import org.hotwheel.ctp.StockOptions;
-import org.hotwheel.ctp.dao.IStockHistory;
-import org.hotwheel.ctp.dao.IStockMonitor;
-import org.hotwheel.ctp.dao.IStockSubscribe;
-import org.hotwheel.ctp.model.StockHistory;
-import org.hotwheel.ctp.model.StockMonitor;
+import org.hotwheel.ctp.dao.*;
+import org.hotwheel.ctp.model.*;
+import org.hotwheel.ctp.util.EmailApi;
 import org.hotwheel.ctp.util.PolicyApi;
 import org.hotwheel.spring.scheduler.SchedulerContext;
 import org.slf4j.Logger;
@@ -14,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,6 +24,12 @@ import java.util.List;
 @Service("createPolicyTask")
 public class CreatePolicyTask extends SchedulerContext {
     private Logger logger = LoggerFactory.getLogger(CreatePolicyTask.class);
+
+    @Autowired
+    private IStockUser stockUser;
+
+    @Autowired
+    private IStockCode stockCode;
 
     @Autowired
     private IStockSubscribe stockSubscribe;
@@ -79,10 +84,43 @@ public class CreatePolicyTask extends SchedulerContext {
                                 logger.error("{}更新{}策略价格范围失败", info.getDay(), code);
                             }
                         }
+                        StockCode sc = stockCode.select(code, code);
+                        String stockName = null;
+                        if (sc != null) {
+                            stockName = sc.getName();
+                        }
+                        List<StockSubscribe> tmpSubscribe = stockSubscribe.queryByCode(code);
+                        logger.info("{}({}): {}~{}/{}~{}, 阻力位{}, 止损位{}。",
+                                stockName, stockCode, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
+                                info.getResistance(), info.getStop());
+                        if (tmpSubscribe == null) {
+                            logger.info("{} 暂无用户订阅");
+                        } else {
+                            for (StockSubscribe userSubscribe : tmpSubscribe) {
+                                User user = stockUser.select(userSubscribe.getPhone());
+                                if (user == null) {
+                                    logger.info("not found user={}", userSubscribe.getPhone());
+                                } else if (!Api.isEmpty(user.getEmail())) {
+                                    String content = String.format("%s(%s): %s~%s/%s~%s, 阻力位%s, 止损位%s。",
+                                            stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
+                                            info.getResistance(), info.getStop());
+                                    logger.info(content);
+                                    try {
+                                        String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
+                                        if (EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示", content)) {
+                                            //
+                                        }
+                                    } catch (Exception e) {
+                                        //
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
             Api.sleep(StockOptions.kRealTimenterval);
+            break;
         }
     }
 }

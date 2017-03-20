@@ -24,6 +24,15 @@ public interface IStockHistory {
      */
     public List<StockHistory> selectOne(@Param("code") String code) throws DataAccessException;
 
+
+    /**
+     * 捡出某只股票倒序的部分历史数据
+     * @param code
+     * @return
+     * @throws DataAccessException
+     */
+    //public List<StockHistory> selectLimit(@Param("code") String code, @Param("limit") long limit) throws DataAccessException;
+
     /**
      * 查询某只股票某天的历史行情
      * @param code
