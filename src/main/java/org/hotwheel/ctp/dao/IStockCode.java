@@ -18,11 +18,11 @@ public interface IStockCode {
 
     /**
      * 查询一个股票代码
-     * @param phone
+     * @param code
      * @param fullCode
      * @return
      */
-    public StockCode select(@Param("code") String phone, @Param("full_code")String fullCode);
+    public StockCode select(@Param("code") String code, @Param("full_code")String fullCode);
 
     /**
      * 创建一个新用户
