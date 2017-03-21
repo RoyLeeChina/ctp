@@ -169,7 +169,7 @@ public final class StockApi {
      * @param charsetName 字符码
      * @return 响应内容字符串
      */
-    public static String sendHTTPGET(String url, String charsetName) {
+    public static String sendHTTPGET_OLD(String url, String charsetName) {
         String result = "";
         HttpGet httpGet = new HttpGet(url);
         try (
@@ -183,6 +183,23 @@ public final class StockApi {
             httpclient.close();
         } catch (Exception e) {
             logger.error("", e);
+        }
+        return result;
+    }
+
+    /**
+     * 发送get请求，返回内容字符串
+     *
+     * @param url         请求urll
+     * @param charsetName 字符码
+     * @return 响应内容字符串
+     */
+    public static String sendHTTPGET(String url, String charsetName) {
+        String result = "";
+        HttpClient hc = new HttpClient(url, charsetName);
+        HttpResult hRet = hc.post(null, null);
+        if (hRet != null && hRet.getStatus() == 200) {
+            result = hRet.getBody();
         }
         return result;
     }
