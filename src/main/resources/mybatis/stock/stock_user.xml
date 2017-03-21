@@ -4,8 +4,13 @@
 <mapper namespace="org.hotwheel.ctp.dao.IStockUser">
 
     <!-- 查询一个用户是否存在 -->
+    <select id="selectAll" resultType="org.hotwheel.ctp.model.User">
+        SELECT * FROM stock_user WHERE flag='01'
+    </select>
+
+    <!-- 查询一个用户是否存在 -->
     <select id="select" resultType="org.hotwheel.ctp.model.User">
-        SELECT * FROM stock_user WHERE phone=#{phone} LIMIT 0,1
+        SELECT * FROM stock_user WHERE flag='01' AND phone=#{phone} LIMIT 0,1
     </select>
 
     <!-- 插入一个用户 -->
