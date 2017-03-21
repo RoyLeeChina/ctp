@@ -89,7 +89,7 @@
             <appender-ref ref="aio-info" />
         </AsyncLogger>
         <!-- 配置日志的根节点 -->
-        <asyncRoot level="info" includeLocation="true">
+        <asyncRoot level="debug" includeLocation="true">
             <AppenderRef ref="runtime"/>
             <AppenderRef ref="error"/>
             <AppenderRef ref="debug"/>

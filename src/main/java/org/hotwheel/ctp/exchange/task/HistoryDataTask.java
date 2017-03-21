@@ -44,9 +44,8 @@ public class HistoryDataTask extends SchedulerContext {
             }
             // 捡出全部股票的策略
             List<String> allCodes = stockCode.getAll();
-
             for (String code : allCodes) {
-                logger.info("code={}",code);
+                logger.info("code={}", code);
                 Date lastDay = stockHistory.getLastDate(code);
                 long dataLen = Api.valueOf(long.class, StockOptions.DEFAULT_DATALEN);
                 if (!Api.isEmpty(lastDay)) {
@@ -75,25 +74,20 @@ public class HistoryDataTask extends SchedulerContext {
                                 logger.error("", e);
                             }
                         }
-                    /*
-                    EMAIndex emaIndex = new EMAIndex();
-                    emaIndex.compute(shList);
-                    List<EMA> tmpList = emaIndex.getListEma();
-                    for (EMA ema : tmpList) {
-                        logger.debug("date={}, EMA{}={}, EMA{}={}", ema.getDay(), ema.getCycle1(), ema.getEma1(), ema.getCycle2(), ema.getEma2());
-                    }
-                    */
                     }
                 } else {
                     int ret = stockHistory.deleteOne(code);
                     logger.debug("delete {}, {}", code, ret);
                     List<StockHistory> shList = StockApi.getHistory(code);
                     if (shList != null && shList.size() > 0) {
-                        ret = stockHistory.insertBatch(shList);
-                        logger.debug("insertBatch {}, {}", code, ret);
+                        try {
+                            ret = stockHistory.insertBatch(shList);
+                            logger.debug("insertBatch {}, {}", code, ret);
+                        } catch (Exception e) {
+                            logger.error("", e);
+                        }
                     }
                 }
-                //Api.sleep(StockOptions.kRealTimenterval);
             }
         }
     }

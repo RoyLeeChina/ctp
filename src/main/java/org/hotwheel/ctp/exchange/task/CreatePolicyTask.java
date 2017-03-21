@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -48,71 +49,64 @@ public class CreatePolicyTask extends SchedulerContext {
                 break;
             }
             // 获取订阅的个股
-            List<String> allCode = stockSubscribe.checkoutAllCode();
-            if (allCode != null && allCode.size() > 0) {
-                for (String code : allCode) {
-                    List<StockHistory> shList = stockHistory.selectOne(code);
-                    StockMonitor info = PolicyApi.dxcl(shList);
-                    if (info != null) {
-                        info.setCode(code);
-                        StockMonitor old = stockMonitor.query(code);
-                        int result = -1;
-                        if (old == null) {
-                            //info.setFlag(StockOptions.kNormalState);
-                            //info.setCreateTime(today);
-                            //info.setPressure1(Api.toString(pressure1));
-                            //info.setSupport1(Api.toString(support1));
-                            //info.setPressure2(Api.toString(pressure2));
-                            //info.setSupport2(Api.toString(support2));
-                            //info.setStop(Api.toString(stop));
-                            //info.setResistance(Api.toString(resistance));
-                            result = stockMonitor.insert(info);
-                            if (result == 0) {
-                                logger.error("{}添加{}策略价格范围失败", info.getDay(), code);
-                            }
-                        } else {
-                            //info.setFlag(StockOptions.kNormalState);
-                            //info.setCreateTime(today);
-                            //info.setPressure1(Api.toString(pressure1));
-                            //info.setSupport1(Api.toString(support1));
-                            //info.setPressure2(Api.toString(pressure2));
-                            //info.setSupport2(Api.toString(support2));
-                            //info.setStop(Api.toString(stop));
-                            //info.setResistance(Api.toString(resistance));
-                            result = stockMonitor.update(info);
-                            if (result == 0) {
-                                logger.error("{}更新{}策略价格范围失败", info.getDay(), code);
-                            }
+            List<String> allCode = new ArrayList<>();
+            // 上证指数
+            allCode.add("sh000001");
+            // 深证成指
+            allCode.add("sz399001");
+            // 创业板指数
+            allCode.add("sz399006");
+            List<String> stockList = stockSubscribe.checkoutAllCode();
+            if (stockList != null && stockList.size() > 0) {
+                allCode.addAll(stockList);
+            }
+            for (String code : allCode) {
+                // 查询现存历史记录
+                List<StockHistory> shList = stockHistory.selectOne(code);
+                StockMonitor info = PolicyApi.dxcl(shList);
+                if (info != null) {
+                    info.setCode(code);
+                    StockMonitor old = stockMonitor.query(code);
+                    int result = -1;
+                    if (old == null) {
+                        result = stockMonitor.insert(info);
+                        if (result == 0) {
+                            logger.error("{}添加{}策略价格范围失败", info.getDay(), code);
                         }
-                        StockCode sc = stockCode.select(code, code);
-                        String stockName = null;
-                        if (sc != null) {
-                            stockName = sc.getName();
+                    } else {
+                        result = stockMonitor.update(info);
+                        if (result == 0) {
+                            logger.error("{}更新{}策略价格范围失败", info.getDay(), code);
                         }
-                        List<StockSubscribe> tmpSubscribe = stockSubscribe.queryByCode(code);
-                        logger.info("{}({}): {}~{}/{}~{}, 阻力位{}, 止损位{}。",
-                                stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
-                                info.getResistance(), info.getStop());
-                        if (tmpSubscribe == null) {
-                            logger.info("{} 暂无用户订阅");
-                        } else {
-                            for (StockSubscribe userSubscribe : tmpSubscribe) {
-                                User user = stockUser.select(userSubscribe.getPhone());
-                                if (user == null) {
-                                    logger.info("not found user={}", userSubscribe.getPhone());
-                                } else if (!Api.isEmpty(user.getEmail())) {
-                                    String content = String.format("%s(%s): %s~%s/%s~%s, 阻力位%s, 止损位%s。",
-                                            stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
-                                            info.getResistance(), info.getStop());
-                                    logger.info(content);
-                                    try {
-                                        String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
-                                        if (EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示", content)) {
-                                            //
-                                        }
-                                    } catch (Exception e) {
+                    }
+                    StockCode sc = stockCode.select(code, code);
+                    String stockName = null;
+                    if (sc != null) {
+                        stockName = sc.getName();
+                    }
+                    List<StockSubscribe> tmpSubscribe = stockSubscribe.queryByCode(code);
+                    logger.info("{}({}): {}~{}/{}~{}, 阻力位{}, 止损位{}。",
+                            stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
+                            info.getResistance(), info.getStop());
+                    if (tmpSubscribe == null) {
+                        logger.info("{} 暂无用户订阅");
+                    } else {
+                        for (StockSubscribe userSubscribe : tmpSubscribe) {
+                            User user = stockUser.select(userSubscribe.getPhone());
+                            if (user == null) {
+                                logger.info("not found user={}", userSubscribe.getPhone());
+                            } else if (!Api.isEmpty(user.getEmail())) {
+                                String content = String.format("%s(%s): %s~%s/%s~%s, 阻力位%s, 止损位%s。",
+                                        stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
+                                        info.getResistance(), info.getStop());
+                                logger.info(content);
+                                try {
+                                    String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
+                                    if (EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示", content)) {
                                         //
                                     }
+                                } catch (Exception e) {
+                                    //
                                 }
                             }
                         }
