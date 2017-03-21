@@ -91,7 +91,7 @@ public class CreatePolicyTask extends SchedulerContext {
                     logger.info("{}({}): {}~{}/{}~{}, 阻力位{}, 止损位{}。",
                             stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
                             info.getResistance(), info.getStop());
-                    if (code.indexOf(kAllIndex) >= 0) {
+                    if (kAllIndex.indexOf(code) >= 0) {
                         List<User> userList = stockUser.selectAll();
                         if (userList != null && userList.size() > 0) {
                             for (User user : userList) {
