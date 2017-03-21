@@ -95,6 +95,7 @@ CREATE TABLE `stock`.`stock_monitor`
 	`pressure2`    CHAR    (20)   BINARY DEFAULT '0.000'  COMMENT '第二压力位',
 	`stop`         CHAR    (20)   BINARY DEFAULT '0.000'  COMMENT '止损位',
 	`resistance`   CHAR    (20)   BINARY DEFAULT '0.000'  COMMENT '压力位',
+	`remark`       TEXT           BINARY                  COMMENT '策略命中备注',
 	`createTime`   DATETIME          DEFAULT NULL         COMMENT '创建时间($)',
 	`operator`     VARCHAR (50)   BINARY DEFAULT 'system' COMMENT '操作人(?$)',
 	`id`           INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY  /* 记录标号 */
