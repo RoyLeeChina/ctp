@@ -50,6 +50,8 @@ public class StockMonitor {
      */
     private String resistance = "0.000";
 
+    private String remark = "";
+
     /**
      * 创建时间
      */
@@ -132,6 +134,14 @@ public class StockMonitor {
 
     public void setResistance(String resistance) {
         this.resistance = resistance;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public Date getCreateTime() {

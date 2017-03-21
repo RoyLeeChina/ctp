@@ -170,7 +170,7 @@ public final class StockApi {
      * @return 响应内容字符串
      */
     public static String sendHTTPGET(String url, String charsetName) {
-        String result = null;
+        String result = "";
         HttpGet httpGet = new HttpGet(url);
         try (
                 CloseableHttpClient httpclient = HttpClients.createDefault();
@@ -181,7 +181,7 @@ public final class StockApi {
                 result = InputStreamToString(entity.getContent(), charsetName);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
         return result;
     }
