@@ -40,18 +40,23 @@ public class EmailApi {
 	 * @param subject
 	 * @param toaddress
 	 * @param content
-	 * @throws Exception
 	 */
-	public static boolean send(final String toaddress, final String subject, final String content) throws Exception {
-		Email mail = new Email(smtpHost);
-		mail.setFrom(smtpUser);
-		mail.setNeedAuth(true);
-		mail.setSubject(subject);
-		mail.setBody(content);
-		mail.setTo(toaddress);
-		mail.setNamePass(smtpUser, smtpPswd);
-		//emailHandle.addFileAffix("/Users/wangfeng/Downloads/123.csv");// 附件文件路径
+	public static boolean send(final String toaddress, final String subject, final String content) {
+		boolean bRet = false;
+		try {
+			Email mail = new Email(smtpHost);
+			mail.setFrom(smtpUser);
+			mail.setNeedAuth(true);
+			mail.setSubject(subject);
+			mail.setBody(content);
+			mail.setTo(toaddress);
+			mail.setNamePass(smtpUser, smtpPswd);
+			//emailHandle.addFileAffix("/Users/wangfeng/Downloads/123.csv");// 附件文件路径
 
-		return mail.send();
+			bRet = mail.send();
+		} catch (Exception e) {
+			//
+		}
+		return bRet;
 	}
 }

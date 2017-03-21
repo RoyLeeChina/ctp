@@ -1,7 +1,6 @@
 package org.hotwheel.ctp.exchange.task;
 
 import org.hotwheel.assembly.Api;
-import org.hotwheel.ctp.StockOptions;
 import org.hotwheel.ctp.dao.*;
 import org.hotwheel.ctp.model.*;
 import org.hotwheel.ctp.util.EmailApi;
@@ -25,6 +24,11 @@ import java.util.List;
 @Service("createPolicyTask")
 public class CreatePolicyTask extends SchedulerContext {
     private Logger logger = LoggerFactory.getLogger(CreatePolicyTask.class);
+
+    private final static String kIndexShangHai = "sh000001";
+    private final static String kIndexShenZhen = "sz399001";
+    private final static String kIndexChuangYe = "sz399006";
+    private final static String kAllIndex = kIndexShangHai + ',' + kIndexShenZhen + ',' + kIndexChuangYe;
 
     @Autowired
     private IStockUser stockUser;
@@ -84,36 +88,46 @@ public class CreatePolicyTask extends SchedulerContext {
                     if (sc != null) {
                         stockName = sc.getName();
                     }
-                    List<StockSubscribe> tmpSubscribe = stockSubscribe.queryByCode(code);
                     logger.info("{}({}): {}~{}/{}~{}, 阻力位{}, 止损位{}。",
                             stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
                             info.getResistance(), info.getStop());
-                    if (tmpSubscribe == null) {
-                        logger.info("{} 暂无用户订阅");
-                    } else {
-                        for (StockSubscribe userSubscribe : tmpSubscribe) {
-                            User user = stockUser.select(userSubscribe.getPhone());
-                            if (user == null) {
-                                logger.info("not found user={}", userSubscribe.getPhone());
-                            } else if (!Api.isEmpty(user.getEmail())) {
-                                String content = String.format("%s(%s): %s~%s/%s~%s, 阻力位%s, 止损位%s。",
-                                        stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
-                                        info.getResistance(), info.getStop());
-                                logger.info(content);
-                                try {
+                    if (code.indexOf(kAllIndex) >= 0) {
+                        List<User> userList = stockUser.selectAll();
+                        if (userList != null && userList.size() > 0) {
+                            for (User user : userList) {
+                                if (!Api.isEmpty(user.getEmail())) {
+                                    String content = String.format("%s(%s): %s~%s/%s~%s, 阻力位%s, 止损位%s。",
+                                            stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
+                                            info.getResistance(), info.getStop());
+                                    logger.info(content);
                                     String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
-                                    if (EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示", content)) {
-                                        //
-                                    }
-                                } catch (Exception e) {
-                                    //
+                                    EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示-" + stockName, content);
+                                }
+                            }
+                        }
+                    } else {
+                        List<StockSubscribe> tmpSubscribe = stockSubscribe.queryByCode(code);
+                        if (tmpSubscribe == null) {
+                            logger.info("{} 暂无用户订阅");
+                        } else {
+                            for (StockSubscribe userSubscribe : tmpSubscribe) {
+                                User user = stockUser.select(userSubscribe.getPhone());
+                                if (user == null) {
+                                    logger.info("not found user={}", userSubscribe.getPhone());
+                                } else if (!Api.isEmpty(user.getEmail())) {
+                                    String content = String.format("%s(%s): %s~%s/%s~%s, 阻力位%s, 止损位%s。",
+                                            stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
+                                            info.getResistance(), info.getStop());
+                                    logger.info(content);
+                                    String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
+                                    EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示", content);
                                 }
                             }
                         }
                     }
                 }
             }
-            Api.sleep(StockOptions.kRealTimenterval);
+            //Api.sleep(StockOptions.kRealTimenterval);
             break;
         }
     }
