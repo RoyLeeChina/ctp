@@ -31,7 +31,7 @@ public class HistoryUtils {
      * @return json字符串
      */
     public static String getKLineData(String code, String scale, String datalen) {
-        String url = HistoryUtils.createURL(code, scale, datalen);
+        String url = createURL(code, scale, datalen);
         return StockApi.sendHTTPGET(url, "UTF-8");
     }
 
@@ -46,37 +46,41 @@ public class HistoryUtils {
      * @return 一个{@link List}，里面是{@link StockHistory}对象
      */
     public static List<StockHistory> getKLineDataObjects(String code, String scale, String datalen) {
-        String jsonText = getKLineData(code, scale, datalen);
-        JSONArray jsonarray = new JSONArray(jsonText);
-        int lengh = jsonarray.length();
         List<StockHistory> result = new ArrayList<>();
-        for (int i = 0; i < lengh; i++) {
-            JSONObject jsonobject = jsonarray.getJSONObject(i);
-            String dayString = jsonobject.getString("day");
-            Date day = StockApi.string2LocalDateTime(dayString);
-            double open = Double.parseDouble(jsonobject.getString("open"));
-            double high = Double.parseDouble(jsonobject.getString("high"));
-            double low = Double.parseDouble(jsonobject.getString("low"));
-            double close = Double.parseDouble(jsonobject.getString("close"));
-            double volume = Double.parseDouble(jsonobject.getString("volume"));
-            double MA5 = jsonobject.optDouble("ma_price5");
-            double MA5Volume = jsonobject.optDouble("ma_volume5");
-            double MA10 = jsonobject.optDouble("ma_price10");
-            double MA10Volume = jsonobject.optDouble("ma_volume10");
-            double MA30 = jsonobject.optDouble("ma_price30");
-            double MA30Volume = jsonobject.optDouble("ma_volume30");
-            StockHistory pojo;
-            if (!Double.isNaN(MA30) && !Double.isNaN(MA30Volume)) {
-                pojo = new StockHistory(day, open, high, low, close, volume, MA5, MA5Volume, MA10, MA10Volume, MA30, MA30Volume);
-            } else if (!Double.isNaN(MA10) && !Double.isNaN(MA10Volume)) {
-                pojo = new StockHistory(day, open, high, low, close, volume, MA5, MA5Volume, MA10, MA10Volume);
-            } else if (!Double.isNaN(MA5) && !Double.isNaN(MA5Volume)) {
-                pojo = new StockHistory(day, open, high, low, close, volume, MA5, MA5Volume);
-            } else {
-                pojo = new StockHistory(day, open, high, low, close, volume);
+        try {
+            String jsonText = getKLineData(code, scale, datalen);
+            JSONArray jsonarray = new JSONArray(jsonText);
+            int lengh = jsonarray.length();
+            for (int i = 0; i < lengh; i++) {
+                JSONObject jsonobject = jsonarray.getJSONObject(i);
+                String dayString = jsonobject.getString("day");
+                Date day = StockApi.string2LocalDateTime(dayString);
+                double open = Double.parseDouble(jsonobject.getString("open"));
+                double high = Double.parseDouble(jsonobject.getString("high"));
+                double low = Double.parseDouble(jsonobject.getString("low"));
+                double close = Double.parseDouble(jsonobject.getString("close"));
+                double volume = Double.parseDouble(jsonobject.getString("volume"));
+                double MA5 = jsonobject.optDouble("ma_price5");
+                double MA5Volume = jsonobject.optDouble("ma_volume5");
+                double MA10 = jsonobject.optDouble("ma_price10");
+                double MA10Volume = jsonobject.optDouble("ma_volume10");
+                double MA30 = jsonobject.optDouble("ma_price30");
+                double MA30Volume = jsonobject.optDouble("ma_volume30");
+                StockHistory pojo;
+                if (!Double.isNaN(MA30) && !Double.isNaN(MA30Volume)) {
+                    pojo = new StockHistory(day, open, high, low, close, volume, MA5, MA5Volume, MA10, MA10Volume, MA30, MA30Volume);
+                } else if (!Double.isNaN(MA10) && !Double.isNaN(MA10Volume)) {
+                    pojo = new StockHistory(day, open, high, low, close, volume, MA5, MA5Volume, MA10, MA10Volume);
+                } else if (!Double.isNaN(MA5) && !Double.isNaN(MA5Volume)) {
+                    pojo = new StockHistory(day, open, high, low, close, volume, MA5, MA5Volume);
+                } else {
+                    pojo = new StockHistory(day, open, high, low, close, volume);
+                }
+                pojo.setCode(code);
+                result.add(pojo);
             }
-            pojo.setCode(code);
-            result.add(pojo);
+        } catch (Exception e) {
+            //
         }
         return result;
     }
@@ -98,7 +102,7 @@ public class HistoryUtils {
      * @return json字符串
      */
     public static String getKLineData(String code, String scale) {
-        return HistoryUtils.getKLineData(code, scale, StockOptions.DEFAULT_DATALEN);
+        return getKLineData(code, scale, StockOptions.DEFAULT_DATALEN);
     }
 
     /**
@@ -109,7 +113,7 @@ public class HistoryUtils {
      * @return json字符串
      */
     public static String get5MKlineData(String code, String datalen) {
-        return HistoryUtils.getKLineData(code, StockOptions.FIVE_MINUTES, datalen);
+        return getKLineData(code, StockOptions.FIVE_MINUTES, datalen);
     }
 
     /**
@@ -119,7 +123,7 @@ public class HistoryUtils {
      * @return json字符串
      */
     public static String get5MKlineData(String code) {
-        return HistoryUtils.getKLineData(code, StockOptions.FIVE_MINUTES, StockOptions.DEFAULT_DATALEN);
+        return getKLineData(code, StockOptions.FIVE_MINUTES, StockOptions.DEFAULT_DATALEN);
     }
 
     /**
@@ -130,7 +134,7 @@ public class HistoryUtils {
      * @return json字符串
      */
     public static String get15MKlineData(String code, String datalen) {
-        return HistoryUtils.getKLineData(code, StockOptions.FIFTEEN_MINUTES, datalen);
+        return getKLineData(code, StockOptions.FIFTEEN_MINUTES, datalen);
     }
 
     /**
@@ -140,7 +144,7 @@ public class HistoryUtils {
      * @return json字符串
      */
     public static String get15MKlineData(String code) {
-        return HistoryUtils.getKLineData(code, StockOptions.FIFTEEN_MINUTES, StockOptions.DEFAULT_DATALEN);
+        return getKLineData(code, StockOptions.FIFTEEN_MINUTES, StockOptions.DEFAULT_DATALEN);
     }
 
     /**
@@ -151,7 +155,7 @@ public class HistoryUtils {
      * @return json字符串
      */
     public static String get30MKlineData(String code, String datalen) {
-        return HistoryUtils.getKLineData(code, StockOptions.THIRTY_MINUTES, datalen);
+        return getKLineData(code, StockOptions.THIRTY_MINUTES, datalen);
     }
 
     /**
@@ -161,7 +165,7 @@ public class HistoryUtils {
      * @return json字符串
      */
     public static String get30MKlineData(String code) {
-        return HistoryUtils.getKLineData(code, StockOptions.THIRTY_MINUTES, StockOptions.DEFAULT_DATALEN);
+        return getKLineData(code, StockOptions.THIRTY_MINUTES, StockOptions.DEFAULT_DATALEN);
     }
 
     /**
@@ -172,7 +176,7 @@ public class HistoryUtils {
      * @return json字符串
      */
     public static String get1HKlineData(String code, String datalen) {
-        return HistoryUtils.getKLineData(code, StockOptions.ONE_HOUR, datalen);
+        return getKLineData(code, StockOptions.ONE_HOUR, datalen);
     }
 
     /**
@@ -182,7 +186,7 @@ public class HistoryUtils {
      * @return json字符串
      */
     public static String get1HKlineData(String code) {
-        return HistoryUtils.getKLineData(code, StockOptions.ONE_HOUR, StockOptions.DEFAULT_DATALEN);
+        return getKLineData(code, StockOptions.ONE_HOUR, StockOptions.DEFAULT_DATALEN);
     }
 
     /**
@@ -193,7 +197,7 @@ public class HistoryUtils {
      * @return json字符串
      */
     public static String get1DKlineData(String code, String datalen) {
-        return HistoryUtils.getKLineData(code, StockOptions.ONE_DAY, datalen);
+        return getKLineData(code, StockOptions.ONE_DAY, datalen);
     }
 
     /**
@@ -203,7 +207,7 @@ public class HistoryUtils {
      * @return json字符串
      */
     public static String get1DKlineData(String code) {
-        return HistoryUtils.getKLineData(code, StockOptions.ONE_DAY, StockOptions.DEFAULT_DATALEN);
+        return getKLineData(code, StockOptions.ONE_DAY, StockOptions.DEFAULT_DATALEN);
     }
 
     /**
@@ -214,7 +218,7 @@ public class HistoryUtils {
      * @return json字符串
      */
     public static String get1WKlineData(String code, String datalen) {
-        return HistoryUtils.getKLineData(code, StockOptions.ONE_WEEK, datalen);
+        return getKLineData(code, StockOptions.ONE_WEEK, datalen);
     }
 
     /**
@@ -224,7 +228,7 @@ public class HistoryUtils {
      * @return json字符串
      */
     public static String get1WKlineData(String code) {
-        return HistoryUtils.getKLineData(code, StockOptions.ONE_WEEK, StockOptions.DEFAULT_DATALEN);
+        return getKLineData(code, StockOptions.ONE_WEEK, StockOptions.DEFAULT_DATALEN);
     }
 
     /**
@@ -235,7 +239,7 @@ public class HistoryUtils {
      * @return 一个{@link List}，里面是{@link StockHistory}对象
      */
     public static List<StockHistory> getKLineDataObjects(String code, String scale) {
-        return HistoryUtils.getKLineDataObjects(code, scale, StockOptions.DEFAULT_DATALEN);
+        return getKLineDataObjects(code, scale, StockOptions.DEFAULT_DATALEN);
     }
 
     /**
@@ -246,7 +250,7 @@ public class HistoryUtils {
      * @return 一个{@link List}，里面是{@link StockHistory}对象
      */
     public static List<StockHistory> get5MKLineDataObjects(String code, String datalen) {
-        return HistoryUtils.getKLineDataObjects(code, StockOptions.FIVE_MINUTES, datalen);
+        return getKLineDataObjects(code, StockOptions.FIVE_MINUTES, datalen);
     }
 
     /**
@@ -256,7 +260,7 @@ public class HistoryUtils {
      * @return 一个{@link List}，里面是{@link StockHistory}对象
      */
     public static List<StockHistory> get5MKlineDataObjects(String code) {
-        return HistoryUtils.getKLineDataObjects(code, StockOptions.FIVE_MINUTES, StockOptions.DEFAULT_DATALEN);
+        return getKLineDataObjects(code, StockOptions.FIVE_MINUTES, StockOptions.DEFAULT_DATALEN);
     }
 
     /**
@@ -267,7 +271,7 @@ public class HistoryUtils {
      * @return 一个{@link List}，里面是{@link StockHistory}对象
      */
     public static List<StockHistory> get15MKlineDataObjects(String code, String datalen) {
-        return HistoryUtils.getKLineDataObjects(code, StockOptions.FIFTEEN_MINUTES, datalen);
+        return getKLineDataObjects(code, StockOptions.FIFTEEN_MINUTES, datalen);
     }
 
     /**
@@ -277,7 +281,7 @@ public class HistoryUtils {
      * @return 一个{@link List}，里面是{@link StockHistory}对象
      */
     public static List<StockHistory> get15MKlineDataObjects(String code) {
-        return HistoryUtils.getKLineDataObjects(code, StockOptions.FIFTEEN_MINUTES, StockOptions.DEFAULT_DATALEN);
+        return getKLineDataObjects(code, StockOptions.FIFTEEN_MINUTES, StockOptions.DEFAULT_DATALEN);
     }
 
     /**
@@ -288,7 +292,7 @@ public class HistoryUtils {
      * @return 一个{@link List}，里面是{@link StockHistory}对象
      */
     public static List<StockHistory> get30MKlineDataObjects(String code, String datalen) {
-        return HistoryUtils.getKLineDataObjects(code, StockOptions.THIRTY_MINUTES, datalen);
+        return getKLineDataObjects(code, StockOptions.THIRTY_MINUTES, datalen);
     }
 
     /**
@@ -298,7 +302,7 @@ public class HistoryUtils {
      * @return 一个{@link List}，里面是{@link StockHistory}对象
      */
     public static List<StockHistory> get30MKlineDataObjects(String code) {
-        return HistoryUtils.getKLineDataObjects(code, StockOptions.THIRTY_MINUTES, StockOptions.DEFAULT_DATALEN);
+        return getKLineDataObjects(code, StockOptions.THIRTY_MINUTES, StockOptions.DEFAULT_DATALEN);
     }
 
     /**
@@ -309,7 +313,7 @@ public class HistoryUtils {
      * @return 一个{@link List}，里面是{@link StockHistory}对象
      */
     public static List<StockHistory> get1HKlineDataObjects(String code, String datalen) {
-        return HistoryUtils.getKLineDataObjects(code, StockOptions.ONE_HOUR, datalen);
+        return getKLineDataObjects(code, StockOptions.ONE_HOUR, datalen);
     }
 
     /**
@@ -319,7 +323,7 @@ public class HistoryUtils {
      * @return 一个{@link List}，里面是{@link StockHistory}对象
      */
     public static List<StockHistory> get1HKlineDataObjects(String code) {
-        return HistoryUtils.getKLineDataObjects(code, StockOptions.ONE_HOUR, StockOptions.DEFAULT_DATALEN);
+        return getKLineDataObjects(code, StockOptions.ONE_HOUR, StockOptions.DEFAULT_DATALEN);
     }
 
     /**
@@ -330,7 +334,7 @@ public class HistoryUtils {
      * @return 一个{@link List}，里面是{@link StockHistory}对象
      */
     public static List<StockHistory> get1DKlineDataObjects(String code, String datalen) {
-        return HistoryUtils.getKLineDataObjects(code, StockOptions.ONE_DAY, datalen);
+        return getKLineDataObjects(code, StockOptions.ONE_DAY, datalen);
     }
 
     /**
@@ -340,7 +344,7 @@ public class HistoryUtils {
      * @return 一个{@link List}，里面是{@link StockHistory}对象
      */
     public static List<StockHistory> get1DKlineDataObjects(String code) {
-        return HistoryUtils.getKLineDataObjects(code, StockOptions.ONE_DAY, StockOptions.DEFAULT_DATALEN);
+        return getKLineDataObjects(code, StockOptions.ONE_DAY, StockOptions.DEFAULT_DATALEN);
     }
 
     /**
@@ -351,7 +355,7 @@ public class HistoryUtils {
      * @return 一个{@link List}，里面是{@link StockHistory}对象
      */
     public static List<StockHistory> get1WKlineDataObjects(String code, String datalen) {
-        return HistoryUtils.getKLineDataObjects(code, StockOptions.ONE_WEEK, datalen);
+        return getKLineDataObjects(code, StockOptions.ONE_WEEK, datalen);
     }
 
     /**
@@ -361,6 +365,6 @@ public class HistoryUtils {
      * @return 一个{@link List}，里面是{@link StockHistory}对象
      */
     public static List<StockHistory> get1WKlineDataObjects(String code) {
-        return HistoryUtils.getKLineDataObjects(code, StockOptions.ONE_WEEK, StockOptions.DEFAULT_DATALEN);
+        return getKLineDataObjects(code, StockOptions.ONE_WEEK, StockOptions.DEFAULT_DATALEN);
     }
 }

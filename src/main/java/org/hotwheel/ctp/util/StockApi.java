@@ -180,7 +180,8 @@ public final class StockApi {
                 HttpEntity entity = response.getEntity();
                 result = InputStreamToString(entity.getContent(), charsetName);
             }
-        } catch (IOException e) {
+            httpclient.close();
+        } catch (Exception e) {
             logger.error("", e);
         }
         return result;
