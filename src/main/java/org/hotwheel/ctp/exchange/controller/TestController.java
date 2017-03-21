@@ -2,6 +2,7 @@ package org.hotwheel.ctp.exchange.controller;
 
 import org.hotwheel.assembly.Api;
 import org.hotwheel.ctp.dao.IStockHistory;
+import org.hotwheel.ctp.dao.IStockMonitor;
 import org.hotwheel.ctp.model.StockHistory;
 import org.hotwheel.ctp.model.StockMonitor;
 import org.hotwheel.ctp.util.EmailApi;
@@ -29,6 +30,9 @@ public class TestController {
     @Autowired
     private IStockHistory stockHistory;
 
+    @Autowired
+    private IStockMonitor stockMonitor;
+
     @ResponseBody
     @RequestMapping("/sendmail")
     public ActionStatus add(String email, String subject, String content) {
@@ -50,12 +54,30 @@ public class TestController {
     @ResponseBody
     @RequestMapping("/genPolicy")
     public StockMonitor genPolicy(String code) {
+        StockMonitor info;
         if (Api.isEmpty(code)) {
-            return new StockMonitor();
+            info =  new StockMonitor();
         } else {
             code = StockApi.fixCode(code);
             List<StockHistory> shList = stockHistory.selectOne(code);
-            return PolicyApi.dxcl(shList);
+            info = PolicyApi.dxcl(shList);
+            if (info != null) {
+                info.setCode(code);
+                StockMonitor old = stockMonitor.query(code);
+                int result = -1;
+                if (old == null) {
+                    result = stockMonitor.insert(info);
+                    if (result == 0) {
+                        logger.error("{}添加{}策略价格范围失败", info.getDay(), code);
+                    }
+                } else {
+                    result = stockMonitor.update(info);
+                    if (result == 0) {
+                        logger.error("{}更新{}策略价格范围失败", info.getDay(), code);
+                    }
+                }
+            }
         }
+        return info;
     }
 }

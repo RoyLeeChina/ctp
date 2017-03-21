@@ -78,6 +78,10 @@ CREATE TABLE `stock`.`stock_code`
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='个股列表';
 ALTER TABLE `stock`.`stock_code` ADD INDEX (`code`);
 
+INSERT INTO `stock`.`stock_code` (flag,code,full_code,`name`,`operator`,`createTime`) VALUES ('01','sh000001','sh000001','上证指数','system',now());
+INSERT INTO `stock`.`stock_code` (flag,code,full_code,`name`,`operator`,`createTime`) VALUES ('01','sz399001','sz399001','深证成指','system',now());
+INSERT INTO `stock`.`stock_code` (flag,code,full_code,`name`,`operator`,`createTime`) VALUES ('01','sz399006','sz399006','创业板指','system',now());
+
 -- TABLE: 监控个股列表
 DROP TABLE IF EXISTS `stock`.`stock_monitor`;
 CREATE TABLE `stock`.`stock_monitor`
