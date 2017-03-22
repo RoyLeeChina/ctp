@@ -11,9 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 生成当天策略任务
@@ -52,6 +50,7 @@ public class CreatePolicyTask extends SchedulerContext {
                 logger.info("运行时间{}->{}到, 任务退出", taskStartTime, taskEndTime);
                 break;
             }
+            Map<String, PolicyMessage> mapMessage = new HashMap<>();
             // 获取订阅的个股
             List<String> allCode = new ArrayList<>();
             // 上证指数
@@ -101,7 +100,14 @@ public class CreatePolicyTask extends SchedulerContext {
                                             info.getResistance(), info.getStop());
                                     logger.info(content);
                                     String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
-                                    EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示-" + stockName, content);
+                                    //EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示-" + stockName, content);
+                                    PolicyMessage pm = mapMessage.get(user.getEmail());
+                                    if (pm == null) {
+                                        pm = new PolicyMessage();
+                                    }
+                                    pm.setTitle(prefix + "-CTP策略早盘提示");
+                                    pm.getBuffer().append(content + "</br>");
+                                    mapMessage.put(user.getEmail(), pm);
                                 }
                             }
                         }
@@ -120,11 +126,25 @@ public class CreatePolicyTask extends SchedulerContext {
                                             info.getResistance(), info.getStop());
                                     logger.info(content);
                                     String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
-                                    EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示", content);
+                                    //EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示", content);
+                                    PolicyMessage pm = mapMessage.get(user.getEmail());
+                                    if (pm == null) {
+                                        pm = new PolicyMessage();
+                                    }
+                                    pm.setTitle(prefix + "-CTP策略早盘提示");
+                                    pm.getBuffer().append(content + "</br>");
+                                    mapMessage.put(user.getEmail(), pm);
                                 }
                             }
                         }
                     }
+                }
+            }
+            for (Map.Entry<String, PolicyMessage> entry : mapMessage.entrySet()) {
+                String email = entry.getKey();
+                PolicyMessage pm = entry.getValue();
+                if (pm != null) {
+                    EmailApi.send(email, pm.getTitle(), pm.getBuffer().toString());
                 }
             }
             //Api.sleep(StockOptions.kRealTimenterval);
