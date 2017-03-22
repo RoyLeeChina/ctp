@@ -24,6 +24,11 @@ public class StockMonitor {
     private Date day;
 
     /**
+     * 策略名
+     */
+    private String policy;
+
+    /**
      * 第一支撑位
      */
     private String support1 = "0.000";
@@ -86,6 +91,14 @@ public class StockMonitor {
 
     public void setDay(Date day) {
         this.day = day;
+    }
+
+    public String getPolicy() {
+        return policy;
+    }
+
+    public void setPolicy(String policy) {
+        this.policy = policy;
     }
 
     public String getSupport1() {

@@ -9,8 +9,6 @@
         <![CDATA[
          `createTime`<curdate()
         ]]>
-
-
     </update>
     <!-- 查询某个类型的全部消息记录 -->
     <select id="selectAll" resultType="org.hotwheel.ctp.model.StockMessage">
