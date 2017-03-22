@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -50,7 +51,12 @@ public class PushMessageTask extends SchedulerContext {
                     if (userInfo == null) {
                         type = "97";
                     } else {
-                        boolean bResult = EmailApi.send(userInfo.getEmail(), "CTP策略提示", message.getRemark());
+                        String toMail = userInfo.getEmail();
+                        String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
+                        String subject = prefix + " CTP策略提示";
+                        String content = message.getRemark();
+                        logger.info("{}({}): {} {}", content, toMail, subject, content);
+                        boolean bResult = EmailApi.send(toMail, subject, content);
                         if (bResult) {
                             type = "01";
                         } else {

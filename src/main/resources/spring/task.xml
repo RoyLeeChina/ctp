@@ -27,6 +27,17 @@
         <task:scheduled ref="realTimeDataTask" method="doTask" cron="${task.realtime.cron}" />
     </task:scheduled-tasks>
 
+    <!-- ==================== 消息推送 =========================== -->
+    <bean id="pushMessageTask" class="org.hotwheel.ctp.exchange.task.PushMessageTask">
+        <property name="taskName" value="${task.push.name}"/>
+        <property name="taskSwitch" value="${task.push.switch}"/>
+        <property name="taskStartTime" value="${task.push.begin}"/>
+        <property name="taskEndTime" value="${task.push.end}"/>
+    </bean>
+    <task:scheduled-tasks>
+        <task:scheduled ref="pushMessageTask" method="doTask" cron="${task.push.cron}" />
+    </task:scheduled-tasks>
+
     <!-- ==================== 创建策略数据 =========================== -->
     <bean id="createPolicyTask" class="org.hotwheel.ctp.exchange.task.CreatePolicyTask">
         <property name="taskName" value="${task.policy.name}"/>
