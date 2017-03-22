@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="org.hotwheel.ctp.dao.IStockMessage">
+
+    <!-- 查询某个类型的全部消息记录 -->
+    <select id="selectAll" resultType="org.hotwheel.ctp.model.StockMessage">
+        SELECT * FROM stock_messages WHERE flag=#{type}
+    </select>
+
+    <!-- 插入一条策略消息 -->
+    <insert id="insert" parameterType="org.hotwheel.ctp.model.StockMessage">
+        INSERT INTO stock_messages (flag,phone,code,policy,price,remark,createTime,sendDate)
+        VALUES (#{flag},#{phone},#{code},#{policy},#{price},#{remark},now(),#{sendDate})
+    </insert>
+
+    <!-- 修改一条策略消息 -->
+    <update id="update" parameterType="org.hotwheel.ctp.model.StockMessage">
+        UPDATE stock_messages
+        SET `flag`=#{flag},
+            `phone`=#{phone},
+            `code`=#{code},
+            `policy`=#{policy},
+            `price`=#{price},
+            `remark`=#{remark},
+            `createTime`=#{createTime},
+            `sendDate`=#{sendDate},
+            `operator`=#{operator},
+        WHERE `id`=#{id}
+    </update>
+
+</mapper>

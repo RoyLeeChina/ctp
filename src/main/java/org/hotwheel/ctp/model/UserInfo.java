@@ -7,7 +7,7 @@ import java.util.Date;
  * Created by wangfeng on 2017/3/13.
  * @version 1.0.0
  */
-public class User {
+public class UserInfo {
     private String flag = "01";
     private String memberId;
     private String memberName;

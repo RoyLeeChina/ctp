@@ -1,7 +1,7 @@
 package org.hotwheel.ctp.dao;
 
 import org.apache.ibatis.annotations.Param;
-import org.hotwheel.ctp.model.User;
+import org.hotwheel.ctp.model.UserInfo;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
@@ -16,15 +16,15 @@ import java.util.List;
 @Repository("stockUser")
 public interface IStockUser {
 
-    public List<User> selectAll() throws DataAccessException;
-    public User select(@Param("phone") String phone) throws DataAccessException;
+    public List<UserInfo> selectAll() throws DataAccessException;
+    public UserInfo select(@Param("phone") String phone) throws DataAccessException;
 
     /**
      * 创建一个新用户
      * @param user
      * @return
      */
-    public int insert(User user) throws DataAccessException;
+    public int insert(UserInfo user) throws DataAccessException;
 
-    public int update(User user) throws DataAccessException;
+    public int update(UserInfo user) throws DataAccessException;
 }

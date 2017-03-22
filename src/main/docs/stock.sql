@@ -137,6 +137,25 @@ CREATE TABLE `stock`.`stock_subscribe`
 ALTER TABLE `stock`.`stock_subscribe` ADD INDEX (`phone`);
 ALTER TABLE `stock`.`stock_subscribe` ADD INDEX (`code`);
 
+-- TABLE: 用户消息表
+DROP TABLE IF EXISTS `stock`.`stock_messages`;
+CREATE TABLE `stock`.`stock_messages`
+(
+	`flag`         CHAR    (2)    BINARY DEFAULT '00'     COMMENT '标志($): 00-未发送,01-正常发送,97-丢弃的策略消息',
+	`phone`        CHAR    (32)   BINARY NOT NULL         COMMENT '客户ID',
+	`code`         CHAR    (32)   BINARY NOT NULL         COMMENT '股票代码',
+	`policy`       VARCHAR (512)  BINARY DEFAULT  ''      COMMENT '策略',
+	`price`        CHAR    (20)   BINARY DEFAULT  ''      COMMENT '交易价格',
+	`remark`       TEXT           BINARY                  COMMENT '策略命中备注',
+	`createTime`   DATETIME          DEFAULT NULL         COMMENT '创建时间($)',
+	`sendDate`     DATE              DEFAULT NULL         COMMENT '发送日期',
+	`operator`     VARCHAR (50)   BINARY DEFAULT 'system' COMMENT '操作人(?$)',
+	`id`           INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY  /* 记录标号 */
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户消息表';
+ALTER TABLE `stock`.`stock_messages` ADD INDEX (`phone`);
+ALTER TABLE `stock`.`stock_messages` ADD INDEX (`code`);
+ALTER TABLE `stock`.`stock_messages` ADD INDEX (`policy`);
+
 -- TABLE: 个股实时行情表
 DROP TABLE IF EXISTS `stock`.`stock_realtime`;
 CREATE TABLE `stock`.`stock_realtime`
