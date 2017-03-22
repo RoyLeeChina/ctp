@@ -91,9 +91,9 @@ public class CreatePolicyTask extends SchedulerContext {
                             stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
                             info.getResistance(), info.getStop());
                     if (kAllIndex.indexOf(code) >= 0) {
-                        List<User> userList = stockUser.selectAll();
+                        List<UserInfo> userList = stockUser.selectAll();
                         if (userList != null && userList.size() > 0) {
-                            for (User user : userList) {
+                            for (UserInfo user : userList) {
                                 if (!Api.isEmpty(user.getEmail())) {
                                     String content = String.format("%s(%s): %s~%s/%s~%s, 阻力位%s, 止损位%s。",
                                             stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
@@ -117,7 +117,7 @@ public class CreatePolicyTask extends SchedulerContext {
                             logger.info("{} 暂无用户订阅");
                         } else {
                             for (StockSubscribe userSubscribe : tmpSubscribe) {
-                                User user = stockUser.select(userSubscribe.getPhone());
+                                UserInfo user = stockUser.select(userSubscribe.getPhone());
                                 if (user == null) {
                                     logger.info("not found user={}", userSubscribe.getPhone());
                                 } else if (!Api.isEmpty(user.getEmail())) {

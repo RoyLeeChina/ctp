@@ -29,7 +29,7 @@ public interface IStockCode {
      * @param info
      * @return
      */
-    public int insert(StockCode info);
+    public int insert(final StockCode info);
 
-    public int update(StockCode info);
+    public int update(final StockCode info);
 }

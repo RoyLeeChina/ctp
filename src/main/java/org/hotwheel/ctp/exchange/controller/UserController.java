@@ -1,9 +1,9 @@
 package org.hotwheel.ctp.exchange.controller;
 
 import org.hotwheel.assembly.Api;
-import org.hotwheel.io.ActionStatus;
 import org.hotwheel.ctp.dao.IStockUser;
-import org.hotwheel.ctp.model.User;
+import org.hotwheel.ctp.model.UserInfo;
+import org.hotwheel.io.ActionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,9 +34,9 @@ public class UserController {
         if (Api.isEmpty(weixin)) {
             weixin = phone;
         }
-        User user = stockUser.select(phone);
+        UserInfo user = stockUser.select(phone);
         if (user == null) {
-            user = new User();
+            user = new UserInfo();
             user.setMemberId(phone);
             user.setMemberName(name);
             user.setPhone(phone);

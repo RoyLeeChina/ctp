@@ -149,7 +149,7 @@ public class RealTimeDataTask extends SchedulerContext {
                                                 }
                                                 // 如果没有发送过
                                                 if (!bSent) {
-                                                    User user = stockUser.select(userSubscribe.getPhone());
+                                                    UserInfo user = stockUser.select(userSubscribe.getPhone());
                                                     if (user == null) {
                                                         logger.info("not found user={}", userSubscribe.getPhone());
                                                     } else if (!Api.isEmpty(user.getEmail())) {

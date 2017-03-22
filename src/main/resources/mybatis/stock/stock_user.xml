@@ -4,22 +4,22 @@
 <mapper namespace="org.hotwheel.ctp.dao.IStockUser">
 
     <!-- 查询一个用户是否存在 -->
-    <select id="selectAll" resultType="org.hotwheel.ctp.model.User">
+    <select id="selectAll" resultType="org.hotwheel.ctp.model.UserInfo">
         SELECT * FROM stock_user WHERE flag='01'
     </select>
 
     <!-- 查询一个用户是否存在 -->
-    <select id="select" resultType="org.hotwheel.ctp.model.User">
+    <select id="select" resultType="org.hotwheel.ctp.model.UserInfo">
         SELECT * FROM stock_user WHERE flag='01' AND phone=#{phone} LIMIT 0,1
     </select>
 
     <!-- 插入一个用户 -->
-    <insert id="insert" parameterType="org.hotwheel.ctp.model.User">
+    <insert id="insert" parameterType="org.hotwheel.ctp.model.UserInfo">
         insert into stock_user (flag,memberId,memberName,phone,weixin,email,createTime)
         values (#{flag},#{memberId},#{memberName},#{phone},#{weixin},#{email},now())
     </insert>
 
-    <update id="update" parameterType="org.hotwheel.ctp.model.User">
+    <update id="update" parameterType="org.hotwheel.ctp.model.UserInfo">
         UPDATE stock_user
         SET flag=#{flag},memberId=#{memberId},memberName=#{memberName},phone=#{phone},weixin=#{weixin},email=#{email},createTime=now()
         WHERE phone=#{phone}
