@@ -3,6 +3,15 @@
 
 <mapper namespace="org.hotwheel.ctp.dao.IStockMessage">
 
+    <!-- 清除历史记录 -->
+    <update id="cleanAll">
+        UPDATE stock_messages SET `flag`='97' WHERE `flag`='00' AND
+        <![CDATA[
+         `createTime`<curdate()
+        ]]>
+
+
+    </update>
     <!-- 查询某个类型的全部消息记录 -->
     <select id="selectAll" resultType="org.hotwheel.ctp.model.StockMessage">
         SELECT * FROM stock_messages WHERE flag=#{type}
@@ -27,6 +36,10 @@
             `sendDate`=#{sendDate},
             `operator`=#{operator},
         WHERE `id`=#{id}
+    </update>
+
+    <update id="updateType">
+        UPDATE stock_message SET flag=#{type} WHERE `id`=${id}
     </update>
 
 </mapper>
