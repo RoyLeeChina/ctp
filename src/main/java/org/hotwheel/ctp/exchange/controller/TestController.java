@@ -12,6 +12,8 @@ import org.hotwheel.io.ActionStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,6 +34,9 @@ public class TestController {
 
     @Autowired
     private IStockMonitor stockMonitor;
+
+    @Autowired
+    private JavaMailSenderImpl mailSender;
 
     @ResponseBody
     @RequestMapping("/sendmail")
@@ -79,5 +84,25 @@ public class TestController {
             }
         }
         return info;
+    }
+
+    @RequestMapping("sendmail2")
+    @ResponseBody
+    public String sendMail() {
+        String toUser = "89009@qq.com";
+        String fromUser = "StockExchange@sina.cn";
+
+        // 建立邮件讯息
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+
+        // 设定收件人、寄件人、主题与内文
+        mailMessage.setTo(toUser);
+        mailMessage.setFrom(fromUser);
+        mailMessage.setSubject("CTP策略-测试消息");
+        mailMessage.setText("这是一封测试邮件");
+        //setBody(mailMessage, "This is a test!\r\n123.");
+        // 传送邮件
+        mailSender.send(mailMessage);
+        return "OK";
     }
 }

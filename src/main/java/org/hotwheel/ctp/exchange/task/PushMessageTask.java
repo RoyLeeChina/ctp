@@ -11,6 +11,7 @@ import org.hotwheel.spring.scheduler.SchedulerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -25,6 +26,9 @@ import java.util.List;
 @Service("pushMessageTask")
 public class PushMessageTask extends SchedulerContext {
     private static Logger logger = LoggerFactory.getLogger(PushMessageTask.class);
+
+    //@Autowired
+    private JavaMailSenderImpl mailSender;
 
     @Autowired
     private IStockMessage stockMessage;
@@ -68,5 +72,13 @@ public class PushMessageTask extends SchedulerContext {
             }
             Api.sleep(StockOptions.kRealTimenterval);
         }
+    }
+
+    public JavaMailSenderImpl getMailSender() {
+        return mailSender;
+    }
+
+    public void setMailSender(JavaMailSenderImpl mailSender) {
+        this.mailSender = mailSender;
     }
 }
