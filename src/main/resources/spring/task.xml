@@ -33,6 +33,9 @@
         <property name="taskSwitch" value="${task.push.switch}"/>
         <property name="taskStartTime" value="${task.push.begin}"/>
         <property name="taskEndTime" value="${task.push.end}"/>
+        <property name="mailSender">
+            <ref bean="javaMailSenderImpl"/>
+        </property>
     </bean>
     <task:scheduled-tasks>
         <task:scheduled ref="pushMessageTask" method="doTask" cron="${task.push.cron}" />
@@ -70,4 +73,30 @@
     <task:scheduled-tasks>
         <task:scheduled ref="marketDataTask" method="doTask" cron="${task.market.cron}" />
     </task:scheduled-tasks>
+
+    <bean id="javaMailSenderImpl" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host">
+            <value>smtp.sina.cn</value>
+        </property>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.debug">true</prop>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.timeout">25000</prop>
+                <prop key="mail.smtp.starttls.enable">false</prop>
+                <prop key="mail.smtp.socketFactory.port">465</prop>
+                <prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+                <prop key="mail.smtp.port">465</prop>
+                <prop key="mail.smtp.ssl.enable">true</prop>
+                <prop key="mail.smtp.user">${mail.smtp.user}</prop>
+                <prop key="mail.smtp.password">${mail.smtp.pswd}</prop>
+            </props>
+        </property>
+        <property name="username">
+            <value>${mail.smtp.user}</value>
+        </property>
+        <property name="password">
+            <value>${mail.smtp.pswd}</value>
+        </property>
+    </bean>
 </beans>
