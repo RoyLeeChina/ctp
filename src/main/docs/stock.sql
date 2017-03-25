@@ -48,6 +48,8 @@
 
 #SET PASSWORD FOR 'stock_runtime'@'%' = OLD_PASSWORD('stock_w1f2');
 #SET PASSWORD FOR 'stock_runtime'@'localhost' = OLD_PASSWORD('stock_w1f2');
+#GRANT ALL PRIVILEGES ON stock.* TO 'runtime'@'%' IDENTIFIED BY 'qe3dThd4nm4rbfG28T' WITH GRANT OPTION;
+#flush privileges;
 
 --
 -- 创建数据库 stock
