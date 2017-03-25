@@ -37,7 +37,7 @@
     </update>
 
     <update id="updateType">
-        UPDATE stock_message SET flag=#{type} WHERE `id`=${id}
+        UPDATE stock_messages SET flag=#{type} WHERE `id`=${id}
     </update>
 
 </mapper>
