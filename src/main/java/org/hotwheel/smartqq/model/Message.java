@@ -1,18 +1,16 @@
-package com.scienjus.smartqq.model;
+package org.hotwheel.smartqq.model;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 /**
- * 讨论组消息.
+ * 消息.
  *
  * @author ScienJus
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @date 15/12/19.
  */
-public class DiscussMessage {
-
-    private long discussId;
+public class Message {
 
     private long time;
 
@@ -22,21 +20,19 @@ public class DiscussMessage {
 
     private Font font;
 
-    public DiscussMessage(JSONObject json) {
-        JSONArray content = json.getJSONArray("content");
-        this.font = content.getJSONArray(0).getObject(1, Font.class);
-        this.content = content.getString(1);
+    public Message(JSONObject json) {
+        JSONArray cont = json.getJSONArray("content");
+        this.font = cont.getJSONArray(0).getObject(1, Font.class);
+
+        final int size = cont.size();
+        final StringBuilder contentBuilder = new StringBuilder();
+        for (int i = 1; i < size; i++) {
+            contentBuilder.append(cont.getString(i));
+        }
+        this.content = contentBuilder.toString();
+
         this.time = json.getLongValue("time");
-        this.discussId = json.getLongValue("did");
-        this.userId = json.getLongValue("send_uin");
-    }
-
-    public long getDiscussId() {
-        return discussId;
-    }
-
-    public void setDiscussId(long discussId) {
-        this.discussId = discussId;
+        this.userId = json.getLongValue("from_uin");
     }
 
     public long getTime() {
