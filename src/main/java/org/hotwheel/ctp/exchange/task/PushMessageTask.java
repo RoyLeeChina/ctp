@@ -6,11 +6,11 @@ import org.hotwheel.ctp.dao.IStockMessage;
 import org.hotwheel.ctp.dao.IStockUser;
 import org.hotwheel.ctp.model.StockMessage;
 import org.hotwheel.ctp.model.UserInfo;
-import org.hotwheel.ctp.util.EmailApi;
 import org.hotwheel.spring.scheduler.SchedulerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
@@ -60,7 +60,7 @@ public class PushMessageTask extends SchedulerContext {
                         String subject = prefix + " CTP策略提示";
                         String content = message.getRemark();
                         logger.info("{}({}): {} {}", content, toMail, subject, content);
-                        boolean bResult = EmailApi.send(toMail, subject, content);
+                        boolean bResult = sendMail(toMail, subject, content);
                         if (bResult) {
                             type = "01";
                         } else {
@@ -80,5 +80,28 @@ public class PushMessageTask extends SchedulerContext {
 
     public void setMailSender(JavaMailSenderImpl mailSender) {
         this.mailSender = mailSender;
+    }
+
+    private boolean sendMail(final String toUser, final String title, final String message) {
+        boolean bRet = false;
+        try {
+            String fromUser = "StockExchange@sina.cn";
+
+            // 建立邮件讯息
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+
+            // 设定收件人、寄件人、主题与内文
+            mailMessage.setTo(toUser);
+            mailMessage.setFrom(fromUser);
+            mailMessage.setSubject(title);
+            mailMessage.setText(message);
+            //setBody(mailMessage, "This is a test!\r\n123.");
+            // 传送邮件
+            mailSender.send(mailMessage);
+            bRet = true;
+        } catch (Exception e) {
+            logger.error("发送邮件失败: ", e);
+        }
+        return bRet;
     }
 }

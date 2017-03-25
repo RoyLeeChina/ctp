@@ -3,7 +3,6 @@ package org.hotwheel.ctp.exchange.task;
 import org.hotwheel.assembly.Api;
 import org.hotwheel.ctp.dao.*;
 import org.hotwheel.ctp.model.*;
-import org.hotwheel.ctp.util.EmailApi;
 import org.hotwheel.ctp.util.PolicyApi;
 import org.hotwheel.spring.scheduler.SchedulerContext;
 import org.slf4j.Logger;
@@ -42,6 +41,9 @@ public class CreatePolicyTask extends SchedulerContext {
 
     @Autowired
     private IStockMonitor stockMonitor;
+
+    @Autowired
+    private IStockMessage stockMessage;
 
     @Override
     protected void service() {
@@ -101,13 +103,13 @@ public class CreatePolicyTask extends SchedulerContext {
                                     logger.info(content);
                                     String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
                                     //EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示-" + stockName, content);
-                                    PolicyMessage pm = mapMessage.get(user.getEmail());
+                                    PolicyMessage pm = mapMessage.get(user.getPhone());
                                     if (pm == null) {
                                         pm = new PolicyMessage();
                                     }
                                     pm.setTitle(prefix + "-CTP策略早盘提示");
-                                    pm.getBuffer().append(content + "</br>");
-                                    mapMessage.put(user.getEmail(), pm);
+                                    pm.getBuffer().append(content + "\r\n");
+                                    mapMessage.put(user.getPhone(), pm);
                                 }
                             }
                         }
@@ -127,13 +129,13 @@ public class CreatePolicyTask extends SchedulerContext {
                                     logger.info(content);
                                     String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
                                     //EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示", content);
-                                    PolicyMessage pm = mapMessage.get(user.getEmail());
+                                    PolicyMessage pm = mapMessage.get(user.getPhone());
                                     if (pm == null) {
                                         pm = new PolicyMessage();
                                     }
                                     pm.setTitle(prefix + "-CTP策略早盘提示");
-                                    pm.getBuffer().append(content + "</br>");
-                                    mapMessage.put(user.getEmail(), pm);
+                                    pm.getBuffer().append(content + "\r\n");
+                                    mapMessage.put(user.getPhone(), pm);
                                 }
                             }
                         }
@@ -141,10 +143,15 @@ public class CreatePolicyTask extends SchedulerContext {
                 }
             }
             for (Map.Entry<String, PolicyMessage> entry : mapMessage.entrySet()) {
-                String email = entry.getKey();
+                String phone = entry.getKey();
                 PolicyMessage pm = entry.getValue();
                 if (pm != null) {
-                    EmailApi.send(email, pm.getTitle(), pm.getBuffer().toString());
+                    StockMessage sm = new StockMessage();
+                    sm.setFlag("00");
+                    sm.setPhone(phone);
+                    sm.setRemark(pm.getBuffer().toString());
+                    //EmailApi.send(email, pm.getTitle(), pm.getBuffer().toString());
+                    stockMessage.insert(sm);
                 }
             }
             //Api.sleep(StockOptions.kRealTimenterval);
