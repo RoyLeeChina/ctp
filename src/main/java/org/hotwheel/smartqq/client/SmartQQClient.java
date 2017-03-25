@@ -1,18 +1,17 @@
-package com.scienjus.smartqq.client;
+package org.hotwheel.smartqq.client;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.scienjus.smartqq.callback.MessageCallback;
-import com.scienjus.smartqq.constant.ApiURL;
-import com.scienjus.smartqq.model.*;
-import com.scienjus.smartqq.model.Font;
 import net.dongliu.requests.Client;
 import net.dongliu.requests.HeadOnlyRequestBuilder;
 import net.dongliu.requests.Response;
 import net.dongliu.requests.Session;
 import net.dongliu.requests.exception.RequestException;
 import net.dongliu.requests.struct.Cookie;
+import org.hotwheel.smartqq.callback.MessageCallback;
+import org.hotwheel.smartqq.constant.ApiURL;
+import org.hotwheel.smartqq.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -261,7 +260,7 @@ public class SmartQQClient implements Closeable {
 
         JSONObject r = new JSONObject();
         r.put("group_uin", groupId);
-        r.put("content", JSON.toJSONString(Arrays.asList(msg, Arrays.asList("font", Font.DEFAULT_FONT))));  //注意这里虽然格式是Json，但是实际是String
+        r.put("content", JSON.toJSONString(Arrays.asList(msg, Arrays.asList("font", org.hotwheel.smartqq.model.Font.DEFAULT_FONT))));  //注意这里虽然格式是Json，但是实际是String
         r.put("face", 573);
         r.put("clientid", Client_ID);
         r.put("msg_id", MESSAGE_ID++);
@@ -282,7 +281,7 @@ public class SmartQQClient implements Closeable {
 
         JSONObject r = new JSONObject();
         r.put("did", discussId);
-        r.put("content", JSON.toJSONString(Arrays.asList(msg, Arrays.asList("font", Font.DEFAULT_FONT))));  //注意这里虽然格式是Json，但是实际是String
+        r.put("content", JSON.toJSONString(Arrays.asList(msg, Arrays.asList("font", org.hotwheel.smartqq.model.Font.DEFAULT_FONT))));  //注意这里虽然格式是Json，但是实际是String
         r.put("face", 573);
         r.put("clientid", Client_ID);
         r.put("msg_id", MESSAGE_ID++);
@@ -303,7 +302,7 @@ public class SmartQQClient implements Closeable {
 
         JSONObject r = new JSONObject();
         r.put("to", friendId);
-        r.put("content", JSON.toJSONString(Arrays.asList(msg, Arrays.asList("font", Font.DEFAULT_FONT))));  //注意这里虽然格式是Json，但是实际是String
+        r.put("content", JSON.toJSONString(Arrays.asList(msg, Arrays.asList("font", org.hotwheel.smartqq.model.Font.DEFAULT_FONT))));  //注意这里虽然格式是Json，但是实际是String
         r.put("face", 573);
         r.put("clientid", Client_ID);
         r.put("msg_id", MESSAGE_ID++);

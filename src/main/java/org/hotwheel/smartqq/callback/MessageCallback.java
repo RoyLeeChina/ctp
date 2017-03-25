@@ -1,8 +1,8 @@
-package com.scienjus.smartqq.callback;
+package org.hotwheel.smartqq.callback;
 
-import com.scienjus.smartqq.model.DiscussMessage;
-import com.scienjus.smartqq.model.GroupMessage;
-import com.scienjus.smartqq.model.Message;
+import org.hotwheel.smartqq.model.DiscussMessage;
+import org.hotwheel.smartqq.model.GroupMessage;
+import org.hotwheel.smartqq.model.Message;
 
 /**
  * 收到消息的回调

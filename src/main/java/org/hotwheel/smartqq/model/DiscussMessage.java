@@ -1,18 +1,18 @@
-package com.scienjus.smartqq.model;
+package org.hotwheel.smartqq.model;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 /**
- * 群消息.
+ * 讨论组消息.
  *
  * @author ScienJus
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @date 15/12/19.
  */
-public class GroupMessage {
+public class DiscussMessage {
 
-    private long groupId;
+    private long discussId;
 
     private long time;
 
@@ -22,28 +22,21 @@ public class GroupMessage {
 
     private Font font;
 
-    public GroupMessage(JSONObject json) {
-        JSONArray cont = json.getJSONArray("content");
-        this.font = cont.getJSONArray(0).getObject(1, Font.class);
-
-        final int size = cont.size();
-        final StringBuilder contentBuilder = new StringBuilder();
-        for (int i = 1; i < size; i++) {
-            contentBuilder.append(cont.getString(i));
-        }
-        this.content = contentBuilder.toString();
-
+    public DiscussMessage(JSONObject json) {
+        JSONArray content = json.getJSONArray("content");
+        this.font = content.getJSONArray(0).getObject(1, Font.class);
+        this.content = content.getString(1);
         this.time = json.getLongValue("time");
-        this.groupId = json.getLongValue("group_code");
+        this.discussId = json.getLongValue("did");
         this.userId = json.getLongValue("send_uin");
     }
 
-    public long getGroupId() {
-        return groupId;
+    public long getDiscussId() {
+        return discussId;
     }
 
-    public void setGroupId(long groupId) {
-        this.groupId = groupId;
+    public void setDiscussId(long discussId) {
+        this.discussId = discussId;
     }
 
     public long getTime() {

@@ -1,16 +1,18 @@
-package com.scienjus.smartqq.model;
+package org.hotwheel.smartqq.model;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 /**
- * 消息.
+ * 群消息.
  *
  * @author ScienJus
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @date 15/12/19.
  */
-public class Message {
+public class GroupMessage {
+
+    private long groupId;
 
     private long time;
 
@@ -20,7 +22,7 @@ public class Message {
 
     private Font font;
 
-    public Message(JSONObject json) {
+    public GroupMessage(JSONObject json) {
         JSONArray cont = json.getJSONArray("content");
         this.font = cont.getJSONArray(0).getObject(1, Font.class);
 
@@ -32,7 +34,16 @@ public class Message {
         this.content = contentBuilder.toString();
 
         this.time = json.getLongValue("time");
-        this.userId = json.getLongValue("from_uin");
+        this.groupId = json.getLongValue("group_code");
+        this.userId = json.getLongValue("send_uin");
+    }
+
+    public long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(long groupId) {
+        this.groupId = groupId;
     }
 
     public long getTime() {

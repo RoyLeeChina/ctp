@@ -1,20 +1,24 @@
-package com.scienjus.smartqq.model;
+package org.hotwheel.smartqq.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
 /**
- * 讨论组.
+ * 群.
  *
  * @author ScienJus
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @date 2015/12/23.
+ * @date 2015/12/18.
  */
-public class Discuss {
+public class Group {
 
-    @JSONField(name = "did")
+    @JSONField(name = "gid")
     private long id;
 
     private String name;
+
+    private long flag;
+
+    private long code;
 
     public long getId() {
         return id;
@@ -30,6 +34,22 @@ public class Discuss {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public long getFlag() {
+        return flag;
+    }
+
+    public void setFlag(long flag) {
+        this.flag = flag;
+    }
+
+    public long getCode() {
+        return code;
+    }
+
+    public void setCode(long code) {
+        this.code = code;
     }
 
 }

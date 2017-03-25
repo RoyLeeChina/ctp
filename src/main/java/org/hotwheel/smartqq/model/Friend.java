@@ -1,4 +1,4 @@
-package com.scienjus.smartqq.model;
+package org.hotwheel.smartqq.model;
 
 /**
  * 好友.

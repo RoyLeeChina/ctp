@@ -1,8 +1,8 @@
-package com.scienjus.smartqq;
+package org.hotwheel.smartqq;
 
-import com.scienjus.smartqq.callback.MessageCallback;
-import com.scienjus.smartqq.client.SmartQQClient;
-import com.scienjus.smartqq.model.*;
+import org.hotwheel.smartqq.callback.MessageCallback;
+import org.hotwheel.smartqq.client.SmartQQClient;
+import org.hotwheel.smartqq.model.*;
 
 import java.io.IOException;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.scienjus.smartqq.constant;
+package org.hotwheel.smartqq.constant;
 
 /**
  * Api的请求地址和Referer
