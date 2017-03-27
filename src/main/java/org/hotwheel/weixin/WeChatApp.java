@@ -1,15 +1,20 @@
 package org.hotwheel.weixin;
 
+import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import org.hotwheel.weixin.DownLoadQrCodeThread.OnloadQrCodeFinnishListener;
 import org.hotwheel.weixin.HeartBeatThread.OnNewMsgListener;
 import org.hotwheel.weixin.WaitScanAndLoginThread.OnScanListener;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-
-
+/**
+ * 微信主程序
+ * @version 1.0.2
+ */
 public class WeChatApp {
     boolean isBeat=false;
     //************** 一些变量
@@ -22,6 +27,7 @@ public class WeChatApp {
     public String keyString;
     public BaseResponeBean initbean;
     public String deviceId;
+    public String fromUser;
     //***************监听接口
 
     Gson gson=new Gson();
@@ -87,11 +93,12 @@ public class WeChatApp {
      * @param message
      */
     public void sendMessage(String message) {
+        statusnotify();
         long tt = new Date().getTime();
         //tt = tt / 1000;
         tt = tt *  10000;
         tt += 1234;
-        String from = "@8675f9a8ad8ec22c6af15330ea9760e2";
+        String from = fromUser;
         String to   = "@bc963331f7bbaa59f4f4142233aa1c16";
         //String msg = "\"Msg\":{\"Type\":1,\"Content\":\"要发送的消息\",\"FromUserName\":\""+wxuin+"\",\"ToUserName\":\""+wxuin+"\",\"LocalID\":\""+tt+"\",\"ClientMsgId\":\""+tt+"\"}";
         String msg = "\"Msg\":{\"Type\":1,\"Content\":\""+message+"\",\"FromUserName\":\""+from+"\",\"ToUserName\":\""+to+"\",\"LocalID\":\""+tt+"\",\"ClientMsgId\":\""+tt+"\"}";
@@ -100,6 +107,26 @@ public class WeChatApp {
         String data="{\"BaseRequest\":{\"Uin\":\""+wxuin+"\",\"Sid\":\""+wxsid+"\",\"Skey\":\""+skey+"\",\"DeviceID\":\""+deviceId+"\"}," + msg + "}";
         hc.contentType="application/json; charset=UTF-8";
         String initResult = hc.post(baseUrl+"/webwxsendmsg?pass_ticket="+pass_ticket,
+                data);
+    }
+
+    /**
+     * 发送消息 /webwxstatusnotify?lang=zh_CN&pass_ticket=
+     */
+    public void statusnotify() {
+        long tt = new Date().getTime();
+        //tt = tt / 1000;
+        tt = tt *  10000;
+        tt += 1234;
+        String from = fromUser;
+        String to   = fromUser;
+        //String msg = "\"Msg\":{\"Type\":1,\"Content\":\"要发送的消息\",\"FromUserName\":\""+wxuin+"\",\"ToUserName\":\""+wxuin+"\",\"LocalID\":\""+tt+"\",\"ClientMsgId\":\""+tt+"\"}";
+        String msg = "\"Type\":3,\",\"FromUserName\":\""+from+"\",\"ToUserName\":\""+to+"\",\"ClientMsgId\":\""+tt+"\"}";
+        //String data="{\"BaseRequest\":{\"Uin\":\""+wxuin+"\",\"Sid\":\""+wxsid+"\",\"Skey\":\""+skey+"\",\"DeviceID\":\"" + deviceId + "\"},"+msg+",\"Scene\":0}";
+        //e110854731714634
+        String data="{\"BaseRequest\":{\"Uin\":\""+wxuin+"\",\"Sid\":\""+wxsid+"\",\"Skey\":\""+skey+"\",\"DeviceID\":\""+deviceId+"\"}," + msg + "}";
+        hc.contentType="application/json; charset=UTF-8";
+        String initResult = hc.post(baseUrl+"/webwxstatusnotify?lang=zh_CN&pass_ticket="+pass_ticket,
                 data);
     }
 
@@ -141,7 +168,14 @@ public class WeChatApp {
             hc.contentType="application/json";
             String initResult = hc.post(baseUrl+"/webwxinit?r="+System.currentTimeMillis(),
                     data);
+            Map<String, Object> resultMap = JSON.parseObject(initResult, HashMap.class);
+            if (resultMap != null) {
+                Map<String, Object> user = (Map<String, Object>)resultMap.get("User");
+                if (user != null) {
+                    fromUser = (String)user.get("UserName");
+                }
 
+            }
             System.out.println("是否已开启心跳线程");
             if(!isBeat){
                 //同步keys
