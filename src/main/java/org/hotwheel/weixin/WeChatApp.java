@@ -99,6 +99,26 @@ public class WeChatApp {
 
     }
 
+    public void sendGroupMessage(String groupId, String userId, String message) {
+        long tt = new Date().getTime();
+        //tt = tt / 1000;
+        tt = tt * 10000;
+        tt += 1234;
+        //String from = mapFriendAndGroup.get(groupId);
+        //String to = mapFriendAndGroup.get(userId);
+        String from = fromUser;
+        String to = mapFriendAndGroup.get(groupId);
+        message = "@夏日 " + message;
+        //String msg = "\"Msg\":{\"Type\":1,\"Content\":\"要发送的消息\",\"FromUserName\":\""+wxuin+"\",\"ToUserName\":\""+wxuin+"\",\"LocalID\":\""+tt+"\",\"ClientMsgId\":\""+tt+"\"}";
+        String msg = "\"Msg\":{\"Type\":1,\"Content\":\"" + message + "\",\"FromUserName\":\"" + from + "\",\"ToUserName\":\"" + to + "\",\"LocalID\":\"" + tt + "\",\"ClientMsgId\":\"" + tt + "\"}";
+        //String data="{\"BaseRequest\":{\"Uin\":\""+wxuin+"\",\"Sid\":\""+wxsid+"\",\"Skey\":\""+skey+"\",\"DeviceID\":\"" + deviceId + "\"},"+msg+",\"Scene\":0}";
+        //e110854731714634
+        String data = "{\"BaseRequest\":{\"Uin\":\"" + wxuin + "\",\"Sid\":\"" + wxsid + "\",\"Skey\":\"" + skey + "\",\"DeviceID\":\"" + deviceId + "\"}," + msg + "}";
+        hc.contentType = "application/json; charset=UTF-8";
+        String initResult = hc.post(baseUrl + "/webwxsendmsg?pass_ticket=" + pass_ticket,
+                data);
+    }
+
     /**
      * 发送消息 webwxsendmsg?pass_ticket=xxx
      *
@@ -120,6 +140,7 @@ public class WeChatApp {
         hc.contentType = "application/json; charset=UTF-8";
         String initResult = hc.post(baseUrl + "/webwxsendmsg?pass_ticket=" + pass_ticket,
                 data);
+        System.out.println(initResult);
     }
 
     /**
@@ -156,9 +177,13 @@ public class WeChatApp {
                     for (Map<String, Object> tu : userList) {
                         String nm = (String)tu.get("NickName");
                         String um = (String)tu.get("UserName");
+                        if (um.startsWith("@@")) {
+                            System.out.println("group: " + nm);
+                        }
                         mapFriendAndGroup.put(nm, um);
                     }
-                    sendMessage("夏日", "啥意思");
+                    //sendMessage("夏日", "啥意思");
+                    sendGroupMessage("CTP内测", "夏日", "test");
                 }
             }
         }
