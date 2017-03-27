@@ -183,7 +183,7 @@ public class WeChatApp {
                         mapFriendAndGroup.put(nm, um);
                     }
                     //sendMessage("夏日", "啥意思");
-                    sendGroupMessage("CTP内测", "夏日", "test");
+                    //sendGroupMessage("CTP内测", "夏日", "test");
                 }
             }
         }
