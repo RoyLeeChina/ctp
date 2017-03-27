@@ -20,6 +20,7 @@ import java.util.Map;
  * @version 1.0.2
  */
 public class WeChatApp {
+    private final static String kGroupId = "CTP内测";
     boolean isBeat = false;
     //************** 一些变量
     public String uuid;
@@ -33,9 +34,12 @@ public class WeChatApp {
     public String deviceId;
     public String fromUser;
     public String nickName;
-    //***************监听接口
 
+    // 好友列表
     public Map<String, String> mapFriendAndGroup = new HashMap<>();
+    public Map<String, String> mapGroupMember = new HashMap<>();
+
+    //***************监听接口
 
     public Gson gson = new Gson();
     private HttpClient hc = HttpClient.getInstance();
@@ -140,7 +144,6 @@ public class WeChatApp {
         hc.contentType = "application/json; charset=UTF-8";
         String initResult = hc.post(baseUrl + "/webwxsendmsg?pass_ticket=" + pass_ticket,
                 data);
-        System.out.println(initResult);
     }
 
     /**
@@ -167,7 +170,15 @@ public class WeChatApp {
      * 初始化后可选择性获取好友和群
      */
     public void getFriendAndGroup() {
-        String groupResult = hc.post(baseUrl + "/webwxgetcontact?r=" + System.currentTimeMillis() + "&pass_ticket=" + pass_ticket + "&skey=" + skey, "{}");
+        long tt = new Date().getTime();
+        tt = tt * 10000;
+        tt += 1234;
+        String from = fromUser;
+        String to = fromUser;
+        String msg = "\"Type\":3,\",\"FromUserName\":\"" + from + "\",\"ToUserName\":\"" + to + "\",\"ClientMsgId\":\"" + tt + "\"}";
+        String data = "{\"BaseRequest\":{\"Uin\":\"" + wxuin + "\",\"Sid\":\"" + wxsid + "\",\"Skey\":\"" + skey + "\",\"DeviceID\":\"" + deviceId + "\"}," + msg + "}";
+        hc.contentType = "application/json; charset=UTF-8";
+        String groupResult = hc.post(baseUrl + "/webwxgetcontact?r=" + System.currentTimeMillis() + "&pass_ticket=" + pass_ticket + "&skey=" + skey, data);
         //System.err.println(groupResult);
         if (!Api.isEmpty(groupResult)) {
             Map<String, Object> resp = JSON.parseObject(groupResult, HashMap.class);
@@ -177,13 +188,47 @@ public class WeChatApp {
                     for (Map<String, Object> tu : userList) {
                         String nm = (String)tu.get("NickName");
                         String um = (String)tu.get("UserName");
+                        mapFriendAndGroup.put(nm, um);
                         if (um.startsWith("@@")) {
                             System.out.println("group: " + nm);
+                            if (nm.equalsIgnoreCase(kGroupId)) {
+                                getGroupMemberList(um);
+                            }
                         }
-                        mapFriendAndGroup.put(nm, um);
                     }
-                    //sendMessage("夏日", "啥意思");
-                    //sendGroupMessage("CTP内测", "夏日", "test");
+                }
+            }
+        }
+    }
+
+    /**
+     * 获取群信息
+     */
+    public void getGroupMemberList(final String groupId) {
+        long tt = new Date().getTime();
+        //tt = tt / 1000;
+        tt = tt * 10000;
+        tt += 1234;
+        String from = fromUser;
+        String to = fromUser;
+        String msg = "\"Count\":1,\"List\":[{\"UserName\":\"" + groupId + "\",\"ChatRoomId\":\"\"}]";
+        String data = "{\"BaseRequest\":{\"Uin\":\"" + wxuin + "\",\"Sid\":\"" + wxsid + "\",\"Skey\":\"" + skey + "\",\"DeviceID\":\"" + deviceId + "\"}," + msg + "}";
+        hc.contentType = "application/json; charset=UTF-8";
+
+        String groupResult = hc.post(baseUrl + "/webwxbatchgetcontact?type=ex&r=" + System.currentTimeMillis() + "&pass_ticket=" + pass_ticket, data);
+        if (!Api.isEmpty(groupResult)) {
+            Map<String, Object> resp = JSON.parseObject(groupResult, HashMap.class);
+            if (resp != null) {
+                Map<String, Object> contactList = (Map<String, Object>)resp.get("ContactList");
+                if (contactList != null) {
+                    List<Map<String, Object>> userList = (List<Map<String, Object>>) resp.get("MemberList");
+                    if (userList != null) {
+                        for (Map<String, Object> tu : userList) {
+                            String nm = (String) tu.get("NickName");
+                            String um = (String) tu.get("UserName");
+                            mapGroupMember.put(nm, um);
+                        }
+                    }
                 }
             }
         }

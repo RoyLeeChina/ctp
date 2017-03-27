@@ -66,6 +66,25 @@ ALTER DATABASE `stock` DEFAULT CHARACTER SET utf8;
 -- 打开数据库
 USE `stock`;
 
+-- TABLE: 用户表
+DROP TABLE IF EXISTS `stock`.`stock_user`;
+CREATE TABLE `stock`.`stock_user`
+(
+	`flag`         CHAR    (2)    BINARY DEFAULT '00'     COMMENT '标志($): 00-禁止,01-正常',
+	`memberId`     CHAR    (128)  BINARY DEFAULT ''       COMMENT '客户ID',
+	`memberName`   CHAR    (128)  BINARY DEFAULT ''       COMMENT '客户姓名',
+	`phone`        CHAR    (32)   BINARY NOT NULL         COMMENT '手机号码(?$)',
+	`weixin`       CHAR    (128)  BINARY DEFAULT ''       COMMENT '微信id(?$)',
+	`email`        CHAR    (128)  BINARY DEFAULT ''       COMMENT '邮箱(?$)',
+	`createTime`   DATETIME          DEFAULT NULL         COMMENT '创建时间($)',
+	`sendDate`     DATE              DEFAULT NULL         COMMENT '发送日期',
+	`operator`     VARCHAR (50)   BINARY DEFAULT 'system' COMMENT '操作人(?$)',
+	`id`           INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY  /* 记录标号 */
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
+ALTER TABLE `stock`.`stock_user` ADD INDEX (`phone`);
+ALTER TABLE `stock`.`stock_user` ADD INDEX (`memberId`);
+ALTER TABLE `stock`.`stock_user` ADD INDEX (`memberName`);
+
 -- TABLE: 个股列表
 DROP TABLE IF EXISTS `stock`.`stock_code`;
 CREATE TABLE `stock`.`stock_code`
@@ -104,24 +123,6 @@ CREATE TABLE `stock`.`stock_monitor`
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='监控个股列表';
 ALTER TABLE `stock`.`stock_monitor` ADD INDEX (`code`);
 ALTER TABLE `stock`.`stock_monitor` ADD INDEX (`day`);
-
--- TABLE: 用户表
-DROP TABLE IF EXISTS `stock`.`stock_user`;
-CREATE TABLE `stock`.`stock_user`
-(
-	`flag`         CHAR    (2)    BINARY DEFAULT '00'     COMMENT '标志($): 00-禁止,01-正常',
-	`memberId`     CHAR    (128)  BINARY DEFAULT ''       COMMENT '客户ID',
-	`memberName`   CHAR    (128)  BINARY DEFAULT ''       COMMENT '客户姓名',
-	`phone`        CHAR    (32)   BINARY NOT NULL         COMMENT '手机号码(?$)',
-	`weixin`       CHAR    (128)  BINARY DEFAULT ''       COMMENT '微信id(?$)',
-	`email`        CHAR    (128)  BINARY DEFAULT ''       COMMENT '邮箱(?$)',
-	`createTime`   DATETIME          DEFAULT NULL         COMMENT '创建时间($)',
-	`sendDate`     DATE              DEFAULT NULL         COMMENT '发送日期',
-	`operator`     VARCHAR (50)   BINARY DEFAULT 'system' COMMENT '操作人(?$)',
-	`id`           INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY  /* 记录标号 */
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
-ALTER TABLE `stock`.`stock_user` ADD INDEX (`memberId`);
-ALTER TABLE `stock`.`stock_user` ADD INDEX (`phone`);
 
 -- TABLE: 用户订阅表
 DROP TABLE IF EXISTS `stock`.`stock_subscribe`;
