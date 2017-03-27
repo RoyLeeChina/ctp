@@ -65,9 +65,14 @@ public class PortalController {
             request.setCharacterEncoding("UTF-8");
             //获取文件的路径
             String url = "login-qrcode.jpg";
-            System.out.println(url);
             File file = new File(url);
-
+            try {
+                if (file.exists()) {
+                    file.delete();
+                }
+            } catch (Exception e) {
+                //
+            }
             DownLoadQrCodeThread.setPathname(url);
             {
                 AsyncSubmitThread thrTask = new AsyncSubmitThread();
@@ -77,13 +82,11 @@ public class PortalController {
                 thread.setDaemon(true);
                 thread.start();
             }
-
             while (!file.exists()) {
                 Api.sleep( 5 * 1000);
             }
             input = new FileInputStream(file);
             byte[] data = DataStream.recv(input);
-
             response.reset();
             //设置响应的报头信息(中文问题解决办法)
             //response.setHeader("content-disposition", "attachment;fileName=" + URLEncoder.encode(downLoadName, "UTF-8"));
@@ -91,15 +94,13 @@ public class PortalController {
             response.setContentType("image/jpeg");
             ServletOutputStream output = response.getOutputStream();
             output.write(data);
+            output.flush();
+            output.close();
         } catch (Exception e) {
             logger.error("下载图片出错");
-            if (input != null) {
-                Api.closeQuietly(input);
-            }
         } finally {
             Api.closeQuietly(input);
         }
-        //return html;
     }
 
     private class AsyncSubmitThread implements Runnable {
@@ -117,16 +118,31 @@ public class PortalController {
 
                 @Override
                 public void onScan() {
-                    System.out.println("已经扫描成功，等待确认登陆");
+                    logger.info("已经扫描成功，等待确认登陆");
 
                 }
             });
             weChat.setmNewMsgListener(new HeartBeatThread.OnNewMsgListener() {
 
                 @Override
-                public void onNewMsg(String text) {//只处理群消息
-                    logger.info("接收到消息:" + text);
+                public void onNewMsg(String fromUser, String toUser, String text) {
+                    logger.info("{}->{}: {}", fromUser, toUser, text);
+                    if (text.startsWith("@王布衣")) {
+                        String msg = text.replaceAll("( )+"," ");
+                        String[] args = msg.split(" ");
+                        if (args.length >= 3) {
+                            String command = args[1];
+                            String params = args[2];
+                            String message = null;
+                            if (command.equalsIgnoreCase("help")) {
+                                // 帮助信息
+                                message = "CTP策略订阅帮助信息:\r\n1)订阅个股预警信息: at 王布衣 订阅 股票代码";
+                            } else if (command.equalsIgnoreCase("订阅") || command.equalsIgnoreCase("dy")){
 
+                            }
+                        }
+
+                    }
                 }
 
                 @Override

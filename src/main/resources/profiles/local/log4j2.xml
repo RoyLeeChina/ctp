@@ -71,9 +71,9 @@
             </Policies>
         </RollingRandomAccessFile>
 
-        <RollingRandomAccessFile name="aio-info"
-                                 immediateFlush="false" fileName="${logs.home}/${logs.project}/aio-info.log"
-                                 filePattern="${logs.home}/${logs.project}/aio-info.log.%d{yyyy-MM-dd}.gz">
+        <RollingRandomAccessFile name="weixin-info"
+                                 immediateFlush="false" fileName="${logs.home}/${logs.project}/weixin-info.log"
+                                 filePattern="${logs.home}/${logs.project}/weixin-info.log.%d{yyyy-MM-dd}.gz">
 
             <PatternLayout>
                 <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] (%F.%M:%L) %m %n</pattern>
@@ -85,8 +85,8 @@
     </Appenders>
 
     <Loggers>
-        <AsyncLogger name="org.apache.http" level="debug" additivity="false" includeLocation="true">
-            <appender-ref ref="aio-info" />
+        <AsyncLogger name="org.hotwheel.ctp.exchange.controller.weixin" level="debug" additivity="false" includeLocation="true">
+            <appender-ref ref="weixin-info" />
         </AsyncLogger>
         <!-- 配置日志的根节点 -->
         <asyncRoot level="debug" includeLocation="true">

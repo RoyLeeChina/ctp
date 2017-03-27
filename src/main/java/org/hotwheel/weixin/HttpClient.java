@@ -24,14 +24,13 @@ public class HttpClient {
         }
         return hcClient;
     }
-    public String get(String url, String charset,String referer,boolean isRedirects) {
+    public String get(String url, String charset,String referer, boolean isRedirects) {
         try {
             String key = "";
             String cookieVal = "";
 
             URL httpURL = new URL(url);
-            HttpURLConnection http = (HttpURLConnection) httpURL
-                    .openConnection();
+            HttpURLConnection http = (HttpURLConnection) httpURL.openConnection();
             http.setInstanceFollowRedirects(isRedirects);//设置自动跳转
             if (referer!=null ) {
                 http.setRequestProperty("Referer", referer);
@@ -39,6 +38,8 @@ public class HttpClient {
             if (contentType!=null ) {
                 http.setRequestProperty("content-type", contentType);
             }
+            //http.setConnectTimeout(5 * 1000);
+            //http.setReadTimeout( 5 * 1000);
             http.setRequestProperty("User-agent","Mozilla/5.0 (Linux; Android 4.2.1; Nexus 7 Build/JOP40D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166  Safari/535.19");
             if (!sessionID.equals("")) {
                 http.setRequestProperty("Cookie", sessionID);
