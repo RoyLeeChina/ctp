@@ -16,7 +16,8 @@ public class HeartBeatThread extends Thread{
     private boolean beat=true;
     private OnNewMsgListener mNewMsgListener;
     private WeChatApp wechat;
-    interface OnNewMsgListener{//接收新消息监听器
+
+    public interface OnNewMsgListener{//接收新消息监听器
         void onNewMsg(String text);
         void startBeat();
     }

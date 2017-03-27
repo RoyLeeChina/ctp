@@ -6,7 +6,7 @@ import org.hotwheel.weixin.WaitScanAndLoginThread.OnScanListener;
 public class WeChatDemo {
 
     public static void main(String[] args) {
-        WeChatApp weChat=new WeChatApp();
+        WeChatApp weChat = new WeChatApp();
         weChat.setmScanListener(new OnScanListener() {
 
             @Override
@@ -25,7 +25,7 @@ public class WeChatDemo {
 
             @Override
             public void onNewMsg(String text) {//只处理群消息
-                System.out.println("接收到消息:"+text);
+                System.out.println("接收到消息:" + text);
 
             }
 
@@ -36,7 +36,6 @@ public class WeChatDemo {
             }
         });
         weChat.startListner();
-
     }
 
 }
