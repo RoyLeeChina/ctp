@@ -4,7 +4,6 @@ import org.hotwheel.assembly.Api;
 import org.hotwheel.ctp.dao.*;
 import org.hotwheel.ctp.model.*;
 import org.hotwheel.ctp.util.PolicyApi;
-import org.hotwheel.spring.scheduler.SchedulerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ import java.util.*;
  * @version 1.0.1
  */
 @Service("createPolicyTask")
-public class CreatePolicyTask extends SchedulerContext {
+public class CreatePolicyTask extends CTPContext {
     private Logger logger = LoggerFactory.getLogger(CreatePolicyTask.class);
 
     private final static String kIndexShangHai = "sh000001";
