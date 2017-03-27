@@ -35,7 +35,7 @@ public class WeChatDemo {
 
             }
         });
-        weChat.gogogo();
+        weChat.startListner();
 
     }
 

@@ -73,7 +73,7 @@ public class HeartBeatThread extends Thread{
                     }//for
                 }
             }
-            wechat.sendMessage("123");
+            //wechat.sendMessage("123");
         }//while
     }
 }
