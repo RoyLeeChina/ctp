@@ -1,6 +1,7 @@
 package org.hotwheel.ctp.exchange.task;
 
 import org.hotwheel.assembly.Api;
+import org.hotwheel.ctp.StockOptions;
 import org.hotwheel.ctp.dao.*;
 import org.hotwheel.ctp.model.*;
 import org.hotwheel.ctp.util.PolicyApi;
@@ -51,6 +52,10 @@ public class CreatePolicyTask extends CTPContext {
                 logger.info("运行时间{}->{}到, 任务退出", taskStartTime, taskEndTime);
                 break;
             }
+            if (weChat == null || !weChat.isRunning()) {
+                Api.sleep(StockOptions.kRealTimenterval);
+                continue;
+            }
             Map<String, PolicyMessage> mapMessage = new HashMap<>();
             // 获取订阅的个股
             List<String> allCode = new ArrayList<>();
@@ -92,26 +97,14 @@ public class CreatePolicyTask extends CTPContext {
                             stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
                             info.getResistance(), info.getStop());
                     if (kAllIndex.indexOf(code) >= 0) {
-                        List<UserInfo> userList = stockUser.selectAll();
-                        if (userList != null && userList.size() > 0) {
-                            for (UserInfo user : userList) {
-                                if (!Api.isEmpty(user.getEmail())) {
-                                    String content = String.format("%s(%s): %s~%s/%s~%s, 阻力位%s, 止损位%s。",
-                                            stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
-                                            info.getResistance(), info.getStop());
-                                    logger.info(content);
-                                    String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
-                                    //EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示-" + stockName, content);
-                                    PolicyMessage pm = mapMessage.get(user.getPhone());
-                                    if (pm == null) {
-                                        pm = new PolicyMessage();
-                                    }
-                                    pm.setTitle(prefix + "-CTP策略早盘提示");
-                                    pm.getBuffer().append(content + "\r\n");
-                                    mapMessage.put(user.getPhone(), pm);
-                                }
-                            }
-                        }
+                        String content = String.format("%s(%s): %s~%s/%s~%s, 阻力位%s, 止损位%s。",
+                                stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
+                                info.getResistance(), info.getStop());
+                        logger.info(content);
+                        String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
+                        String title = prefix + "-CTP策略订阅早盘提示-" + stockName;
+                        //EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示-" + stockName, content);
+                        weChat.sendGroupMessage("", title + ": " + content);
                     } else {
                         List<StockSubscribe> tmpSubscribe = stockSubscribe.queryByCode(code);
                         if (tmpSubscribe == null) {
@@ -127,7 +120,9 @@ public class CreatePolicyTask extends CTPContext {
                                             info.getResistance(), info.getStop());
                                     logger.info(content);
                                     String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
+                                    String title = prefix + "-CTP策略订阅早盘提示";
                                     //EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示", content);
+                                    weChat.sendGroupMessage(user.getWeixin(), title + ": " + content);
                                     PolicyMessage pm = mapMessage.get(user.getPhone());
                                     if (pm == null) {
                                         pm = new PolicyMessage();
@@ -141,6 +136,7 @@ public class CreatePolicyTask extends CTPContext {
                     }
                 }
             }
+            /*
             for (Map.Entry<String, PolicyMessage> entry : mapMessage.entrySet()) {
                 String phone = entry.getKey();
                 PolicyMessage pm = entry.getValue();
@@ -154,6 +150,7 @@ public class CreatePolicyTask extends CTPContext {
                 }
             }
             //Api.sleep(StockOptions.kRealTimenterval);
+            */
             break;
         }
     }

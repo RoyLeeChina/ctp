@@ -10,7 +10,7 @@ import org.hotwheel.weixin.WeChatApp;
  * @version 1.0.3
  */
 public abstract class CTPContext extends SchedulerContext {
-    private static WeChatApp weChat = null;
+    protected static WeChatApp weChat = null;
 
     public static WeChatApp getWeChat() {
         return weChat;
