@@ -18,8 +18,9 @@ import java.io.InputStream;
 
 /**
  * Excel 工具类
- *
+ * <p>
  * Created by wangfeng on 2017/3/19.
+ *
  * @version 1.0.1
  */
 @Service("excelApi")
@@ -35,24 +36,24 @@ public class ExcelApi {
 
     /**
      * 读取excel文件，生成一个json文件，文件格式见项目根目录的.xlsx文件
+     *
      * @param inFileName excel文件文件路径
      */
-    public void read(String inFileName){
+    public void read(String inFileName) {
         InputStream inputStream = null;
         Workbook workbook = null;
-        try
-        {
+        try {
             inputStream = new FileInputStream(inFileName);
             workbook = WorkbookFactory.create(inputStream);
             Sheet sheet = workbook.getSheetAt(0);
             Boolean flag = true;
             int startRow = 1;
-            while(flag){
+            while (flag) {
                 Row row = sheet.getRow(startRow++);
-                if(row != null){
+                if (row != null) {
                     Cell code = row.getCell(0);
                     Cell name = row.getCell(1);
-                    if(code != null && name != null){
+                    if (code != null && name != null) {
                         StockCode stock = new StockCode();
                         String codeString = code.getStringCellValue();
                         String nameString = name.getStringCellValue();
