@@ -1,6 +1,7 @@
 package org.hotwheel.ctp.exchange.controller.weixin;
 
 import org.hotwheel.assembly.Api;
+import org.hotwheel.ctp.exchange.task.CTPContext;
 import org.hotwheel.io.DataStream;
 import org.hotwheel.weixin.DownLoadQrCodeThread;
 import org.hotwheel.weixin.HeartBeatThread;
@@ -107,12 +108,13 @@ public class PortalController {
 
         @Override
         public void run() {
-            WeChatApp weChat = new WeChatApp();
+            final WeChatApp weChat = new WeChatApp();
             weChat.setmScanListener(new WaitScanAndLoginThread.OnScanListener() {
 
                 @Override
                 public void onSure() {
                     logger.info("登陆成功");
+                    CTPContext.setWeChat(weChat);
 
                 }
 
@@ -138,7 +140,7 @@ public class PortalController {
                                 // 帮助信息
                                 message = "CTP策略订阅帮助信息:\r\n1)订阅个股预警信息: at 王布衣 订阅 股票代码";
                             } else if (command.equalsIgnoreCase("订阅") || command.equalsIgnoreCase("dy")){
-
+                                //
                             }
                         }
 

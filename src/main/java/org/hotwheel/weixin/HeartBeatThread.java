@@ -46,8 +46,8 @@ public class HeartBeatThread extends Thread {
                 "webpush2.weixin.qq.com",
                     "webpush.wechat.com",
                     "webpush1.wechat.com",
-                    "webpush2.wechat.com",
-                    "webpush1.wechatapp.com"};
+                    "webpush2.wechat.com"
+            };
             //window.synccheck={retcode:"0",selector:"7"}
             String syncResult = "";
             String selector = "";
@@ -74,6 +74,7 @@ public class HeartBeatThread extends Thread {
             }
 
             if (Api.isEmpty(selector)) {
+                Api.sleep(5 * 1000);
                 continue;
             }
 
