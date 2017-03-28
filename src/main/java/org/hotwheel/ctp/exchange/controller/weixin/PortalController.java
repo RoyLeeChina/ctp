@@ -73,6 +73,7 @@ public class PortalController {
             //获取文件的路径
             String url = "login-qrcode.jpg";
             File file = new File(url);
+            logger.info(file.getAbsolutePath());
             try {
                 if (file.exists()) {
                     file.delete();
