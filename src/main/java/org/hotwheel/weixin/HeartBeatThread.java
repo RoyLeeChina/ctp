@@ -45,8 +45,9 @@ public class HeartBeatThread extends Thread {
             mNewMsgListener.startBeat();
         }
         while (beat) {
-            String[] hosts = {"webpush.weixin.qq.com",
-                "webpush2.weixin.qq.com",
+            String[] hosts = {
+                    "webpush.weixin.qq.com",
+                    "webpush2.weixin.qq.com",
                     "webpush.wechat.com",
                     "webpush1.wechat.com",
                     "webpush2.wechat.com"
@@ -87,8 +88,6 @@ public class HeartBeatThread extends Thread {
                     String data2 = "{\"BaseRequest\":{\"Uin\":\"" + wechat.wxuin + "\",\"Sid\":\"" + wechat.wxsid + "\",\"Skey\":\"" + wechat.skey + "\",\"DeviceID\":\"" + wechat.deviceId + "\"},\"SyncKey\":"
                             + wechat.gson.toJson(wechat.initbean.getSyncKey()) + ",\"rr\":" + System.currentTimeMillis() + "}";
                     String newMsg = hc.post(wechat.baseUrl + "/webwxsync?sid=" + wechat.wxsid + "&skey=" + wechat.skey + "&pass_ticket=" + wechat.pass_ticket, data2);//
-
-
                     //同步键更新
                     wechat.syncKeys(newMsg);
 

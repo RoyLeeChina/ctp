@@ -1,11 +1,17 @@
 package org.hotwheel.weixin;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-
+/**
+ * 下载二维码
+ */
 public class DownLoadQrCodeThread extends Thread {
+    private static Logger logger = LoggerFactory.getLogger(DownLoadQrCodeThread.class);
     private static String pathname = null;
     private String imageUrl = "";
     private boolean write;
@@ -65,7 +71,6 @@ public class DownLoadQrCodeThread extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("二维码生成");
-
+        logger.info("二维码生成");
     }
 }

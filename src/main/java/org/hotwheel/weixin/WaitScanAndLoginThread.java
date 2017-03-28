@@ -1,9 +1,14 @@
 package org.hotwheel.weixin;
 
+import org.hotwheel.assembly.Api;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 等待线程
  */
 public class WaitScanAndLoginThread extends Thread {
+    private static Logger logger = LoggerFactory.getLogger(WaitScanAndLoginThread.class);
     private int tip = 1;//0表示已经扫描
     private String uuid;
     private boolean running = true;
@@ -34,12 +39,15 @@ public class WaitScanAndLoginThread extends Thread {
 
     @Override
     public void run() {
-        System.out.println("开启等待线程");
+        logger.info("开启等待线程");
         while (running) {
             String result = hc.get(
                     "https://login.weixin.qq.com/cgi-bin/mmwebwx-bin/login?tip="
                             + tip + "&uuid=" + uuid + "&_="
                             + System.currentTimeMillis(), "utf-8", null, false);
+            if (Api.isEmpty(result)) {
+                continue;
+            }
             String code = ss.subStringOne(result, ".code=", ";");
             if (mScanListener != null) {
                 if (code.equals("201")) {

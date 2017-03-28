@@ -8,6 +8,8 @@ import org.hotwheel.weixin.HeartBeatThread.OnNewMsgListener;
 import org.hotwheel.weixin.WaitScanAndLoginThread.OnScanListener;
 import org.hotwheel.weixin.bean.BaseResponeBean;
 import org.hotwheel.weixin.bean.SyncKeyEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -20,7 +22,8 @@ import java.util.Map;
  * @version 1.0.2
  */
 public class WeChatApp {
-    private final static String kGroupId = "CTP内测";
+    private static Logger logger = LoggerFactory.getLogger(WeChatApp.class);
+    private final static String kGroupId = "股友会";
     boolean isBeat = false;
     //************** 一些变量
     public String uuid;
@@ -93,7 +96,6 @@ public class WeChatApp {
             }
         });
         qrCodeThread.start();
-
     }
 
 
@@ -156,13 +158,15 @@ public class WeChatApp {
         tt += 1234;
         String from = kFromUser;
         String to = mapFriendAndGroup.get(userId);
-        //String msg = "\"Msg\":{\"Type\":1,\"Content\":\"要发送的消息\",\"FromUserName\":\""+wxuin+"\",\"ToUserName\":\""+wxuin+"\",\"LocalID\":\""+tt+"\",\"ClientMsgId\":\""+tt+"\"}";
-        String msg = "\"Msg\":{\"Type\":1,\"Content\":\"" + message + "\",\"FromUserName\":\"" + from + "\",\"ToUserName\":\"" + to + "\",\"LocalID\":\"" + tt + "\",\"ClientMsgId\":\"" + tt + "\"}";
-        //String data="{\"BaseRequest\":{\"Uin\":\""+wxuin+"\",\"Sid\":\""+wxsid+"\",\"Skey\":\""+skey+"\",\"DeviceID\":\"" + deviceId + "\"},"+msg+",\"Scene\":0}";
-        //e110854731714634
-        String data = "{\"BaseRequest\":{\"Uin\":\"" + wxuin + "\",\"Sid\":\"" + wxsid + "\",\"Skey\":\"" + skey + "\",\"DeviceID\":\"" + deviceId + "\"}," + msg + "}";
-        hc.contentType = "application/json; charset=UTF-8";
-        String initResult = hc.post(baseUrl + "/webwxsendmsg?pass_ticket=" + pass_ticket, data);
+        if (!Api.isEmpty(to)) {
+            //String msg = "\"Msg\":{\"Type\":1,\"Content\":\"要发送的消息\",\"FromUserName\":\""+wxuin+"\",\"ToUserName\":\""+wxuin+"\",\"LocalID\":\""+tt+"\",\"ClientMsgId\":\""+tt+"\"}";
+            String msg = "\"Msg\":{\"Type\":1,\"Content\":\"" + message + "\",\"FromUserName\":\"" + from + "\",\"ToUserName\":\"" + to + "\",\"LocalID\":\"" + tt + "\",\"ClientMsgId\":\"" + tt + "\"}";
+            //String data="{\"BaseRequest\":{\"Uin\":\""+wxuin+"\",\"Sid\":\""+wxsid+"\",\"Skey\":\""+skey+"\",\"DeviceID\":\"" + deviceId + "\"},"+msg+",\"Scene\":0}";
+            //e110854731714634
+            String data = "{\"BaseRequest\":{\"Uin\":\"" + wxuin + "\",\"Sid\":\"" + wxsid + "\",\"Skey\":\"" + skey + "\",\"DeviceID\":\"" + deviceId + "\"}," + msg + "}";
+            hc.contentType = "application/json; charset=UTF-8";
+            String initResult = hc.post(baseUrl + "/webwxsendmsg?pass_ticket=" + pass_ticket, data);
+        }
     }
 
     /**
@@ -300,7 +304,7 @@ public class WeChatApp {
                     kNickName = (String) user.get("NickName");
                 }
             }
-            System.out.println("是否已开启心跳线程");
+            logger.info("是否已开启心跳线程");
             if (!isBeat) {
                 //同步keys
                 syncKeys(initResult);

@@ -12,7 +12,6 @@ import org.hotwheel.ctp.util.DateUtils;
 import org.hotwheel.ctp.util.EmailApi;
 import org.hotwheel.ctp.util.PolicyApi;
 import org.hotwheel.ctp.util.StockApi;
-import org.hotwheel.spring.scheduler.SchedulerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ import java.util.*;
  * @version 1.0.0
  */
 @Service("realTimeDataTask")
-public class RealTimeDataTask extends SchedulerContext {
+public class RealTimeDataTask extends CTPContext {
     private static Logger logger = LoggerFactory.getLogger(RealTimeDataTask.class);
 
     @Autowired
@@ -48,6 +47,10 @@ public class RealTimeDataTask extends SchedulerContext {
             if (isTimeExpire()) {
                 logger.info("运行时间{}->{}到, 任务退出", taskStartTime, taskEndTime);
                 break;
+            }
+            if (weChat == null || !weChat.isRunning()) {
+                Api.sleep(StockOptions.kRealTimenterval);
+                continue;
             }
             // 时间范围内
             if (isTimerCycle()) {
@@ -124,7 +127,7 @@ public class RealTimeDataTask extends SchedulerContext {
                                     // 如果命中价格范围监控, 输出策略提醒的关键字
                                     if (!Api.isEmpty(keywords)) {
                                         List<StockSubscribe> tmpSubscribe = stockSubscribe.queryByCode(stockCode);
-                                        logger.info("{}({}) {}, 现价{}, 涨跌幅{}%.", stockName, stockCode, keywords, tmpPrice, zf);
+                                        //logger.info("{}({}) {}, 现价{}, 涨跌幅{}%.", stockName, stockCode, keywords, tmpPrice, zf);
                                         if (tmpSubscribe == null) {
                                             logger.info("{} 暂无用户订阅");
                                         } else {
@@ -151,16 +154,21 @@ public class RealTimeDataTask extends SchedulerContext {
                                                     UserInfo user = stockUser.select(userSubscribe.getPhone());
                                                     if (user == null) {
                                                         logger.info("not found user={}", userSubscribe.getPhone());
-                                                    } else if (!Api.isEmpty(user.getEmail())) {
+                                                    } else {
                                                         // 如果没有发送, 设置发送状态
                                                         Api.setValue(policy, field, true);
+                                                        String title = StockOptions.kPrefixMessage + "盘中策略提醒";
                                                         String content = String.format("%s: %s(%s) ,现价%.2f %s, 涨跌幅%s%%.",
                                                                 userSubscribe.getPhone(), stockName, stockCode, tmpPrice, keywords, zf);
                                                         logger.info(content);
-                                                        if (EmailApi.send(user.getEmail(), "CTP策略提醒", content)) {
-                                                            userSubscribe.setRemark(policy.toString());
-                                                            userSubscribe.setSendDate(new Date());
-                                                            stockSubscribe.update(userSubscribe);
+                                                        if (!Api.isEmpty(user.getWeixin())) {
+                                                            weChat.sendMessage(user.getWeixin(), title + ": " + content);
+                                                        } else if (!Api.isEmpty(user.getEmail())) {
+                                                            if (EmailApi.send(user.getEmail(), title, content)) {
+                                                                userSubscribe.setRemark(policy.toString());
+                                                                userSubscribe.setSendDate(new Date());
+                                                                stockSubscribe.update(userSubscribe);
+                                                            }
                                                         }
                                                     }
                                                 }
