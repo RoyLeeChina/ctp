@@ -29,4 +29,6 @@ public interface IStockUser {
     public int insert(UserInfo user) throws DataAccessException;
 
     public int update(UserInfo user) throws DataAccessException;
+
+    public int finished(UserInfo user) throws DataAccessException;
 }

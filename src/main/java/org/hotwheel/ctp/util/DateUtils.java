@@ -1,5 +1,6 @@
 package org.hotwheel.ctp.util;
 
+import org.hotwheel.assembly.Api;
 import org.hotwheel.ctp.StockOptions;
 
 import java.util.Calendar;
@@ -39,8 +40,12 @@ public class DateUtils {
 	 * @return
 	 */
 	public final static Date getZero(final Date date) {
+		Date dt = date;
+		if (Api.isEmpty(date)) {
+			dt  = new Date(0);
+		}
 		GregorianCalendar gc = new GregorianCalendar();
-		gc.setTime(date);
+		gc.setTime(dt);
 		gc.set(Calendar.HOUR_OF_DAY, 0);
 		gc.set(Calendar.MINUTE, 0);
 		gc.set(Calendar.SECOND, 0);
