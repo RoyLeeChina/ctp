@@ -4,13 +4,16 @@ import org.hotwheel.assembly.Api;
 import org.hotwheel.ctp.StockOptions;
 import org.hotwheel.ctp.dao.*;
 import org.hotwheel.ctp.model.*;
+import org.hotwheel.ctp.util.EmailApi;
 import org.hotwheel.ctp.util.PolicyApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 生成当天策略任务
@@ -56,15 +59,17 @@ public class CreatePolicyTask extends CTPContext {
                 Api.sleep(StockOptions.kRealTimenterval);
                 continue;
             }
-            Map<String, PolicyMessage> mapMessage = new HashMap<>();
+            //Map<String, PolicyMessage> mapMessage = new HashMap<>();
             // 获取订阅的个股
             List<String> allCode = new ArrayList<>();
+            /*
             // 上证指数
             allCode.add("sh000001");
             // 深证成指
             allCode.add("sz399001");
             // 创业板指数
             allCode.add("sz399006");
+            */
             List<String> stockList = stockSubscribe.checkoutAllCode();
             if (stockList != null && stockList.size() > 0) {
                 allCode.addAll(stockList);
@@ -104,6 +109,7 @@ public class CreatePolicyTask extends CTPContext {
                         String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
                         String title = prefix + "-CTP策略订阅早盘提示-" + stockName;
                         //EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示-" + stockName, content);
+                        content += StockOptions.kSuffixMessage;
                         weChat.sendGroupMessage("", title + ": " + content);
                     } else {
                         List<StockSubscribe> tmpSubscribe = stockSubscribe.queryByCode(code);
@@ -114,22 +120,20 @@ public class CreatePolicyTask extends CTPContext {
                                 UserInfo user = stockUser.select(userSubscribe.getPhone());
                                 if (user == null) {
                                     logger.info("not found user={}", userSubscribe.getPhone());
-                                } else if (!Api.isEmpty(user.getEmail())) {
+                                } else {
                                     String content = String.format("%s(%s): %s~%s/%s~%s, 阻力位%s, 止损位%s。",
                                             stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
                                             info.getResistance(), info.getStop());
                                     logger.info(content);
                                     String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
                                     String title = prefix + "-CTP策略订阅早盘提示";
-                                    //EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示", content);
-                                    weChat.sendGroupMessage(user.getWeixin(), title + ": " + content);
-                                    PolicyMessage pm = mapMessage.get(user.getPhone());
-                                    if (pm == null) {
-                                        pm = new PolicyMessage();
+                                    content += StockOptions.kSuffixMessage;
+                                    if (!Api.isEmpty(user.getWeixin())) {
+                                        //weChat.sendGroupMessage(user.getWeixin(), title + ": " + content);
+                                        weChat.sendMessage(user.getWeixin(), title + ": " + content);
+                                    } else if (!Api.isEmpty(user.getEmail())) {
+                                        EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示", content);
                                     }
-                                    pm.setTitle(prefix + "-CTP策略早盘提示");
-                                    pm.getBuffer().append(content + "\r\n");
-                                    mapMessage.put(user.getPhone(), pm);
                                 }
                             }
                         }
