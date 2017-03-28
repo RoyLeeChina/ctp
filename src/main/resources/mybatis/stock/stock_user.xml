@@ -29,4 +29,10 @@
         SET flag=#{flag},memberId=#{memberId},memberName=#{memberName},phone=#{phone},weixin=#{weixin},email=#{email},createTime=now()
         WHERE phone=#{phone}
     </update>
+
+    <update id="finished" parameterType="org.hotwheel.ctp.model.UserInfo">
+        UPDATE stock_user
+        SET sendDate=now()
+        WHERE phone=#{phone}
+    </update>
 </mapper>

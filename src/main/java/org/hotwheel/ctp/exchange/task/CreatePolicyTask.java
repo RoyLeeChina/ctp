@@ -4,6 +4,7 @@ import org.hotwheel.assembly.Api;
 import org.hotwheel.ctp.StockOptions;
 import org.hotwheel.ctp.dao.*;
 import org.hotwheel.ctp.model.*;
+import org.hotwheel.ctp.util.DateUtils;
 import org.hotwheel.ctp.util.EmailApi;
 import org.hotwheel.ctp.util.PolicyApi;
 import org.slf4j.Logger;
@@ -11,9 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 生成当天策略任务
@@ -61,15 +63,13 @@ public class CreatePolicyTask extends CTPContext {
             }
             //Map<String, PolicyMessage> mapMessage = new HashMap<>();
             // 获取订阅的个股
-            List<String> allCode = new ArrayList<>();
-            /*
+            Set<String> allCode = new HashSet<>();
             // 上证指数
             allCode.add("sh000001");
             // 深证成指
             allCode.add("sz399001");
             // 创业板指数
             allCode.add("sz399006");
-            */
             List<String> stockList = stockSubscribe.checkoutAllCode();
             if (stockList != null && stockList.size() > 0) {
                 allCode.addAll(stockList);
@@ -121,18 +121,30 @@ public class CreatePolicyTask extends CTPContext {
                                 if (user == null) {
                                     logger.info("not found user={}", userSubscribe.getPhone());
                                 } else {
-                                    String content = String.format("%s(%s): %s~%s/%s~%s, 阻力位%s, 止损位%s。",
-                                            stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
-                                            info.getResistance(), info.getStop());
-                                    logger.info(content);
-                                    String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
-                                    String title = prefix + "-CTP策略订阅早盘提示";
-                                    content += StockOptions.kSuffixMessage;
-                                    if (!Api.isEmpty(user.getWeixin())) {
-                                        //weChat.sendGroupMessage(user.getWeixin(), title + ": " + content);
-                                        weChat.sendMessage(user.getWeixin(), title + ": " + content);
-                                    } else if (!Api.isEmpty(user.getEmail())) {
-                                        EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示", content);
+                                    boolean bSent = true;
+                                    Date tmpDate = user.getSendDate();
+                                    Date sendDate = DateUtils.getZero(tmpDate);
+                                    Date today = DateUtils.getZero(new Date());
+                                    // 如果已经是第二天了
+                                    if (bSent && today.after(sendDate)) {
+                                        bSent = false;
+                                    }
+                                    bSent = false;
+                                    if (!bSent) {
+                                        String content = String.format("%s(%s): %s~%s/%s~%s, 阻力位%s, 止损位%s。",
+                                                stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
+                                                info.getResistance(), info.getStop());
+                                        logger.info("{}: {}", user.getMemberName(), content);
+                                        String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
+                                        String title = prefix + "-CTP策略订阅早盘提示";
+                                        content += StockOptions.kSuffixMessage;
+                                        if (!Api.isEmpty(user.getWeixin())) {
+                                            //weChat.sendGroupMessage(user.getWeixin(), title + ": " + content);
+                                            weChat.sendMessage(user.getWeixin(), title + ": " + content);
+                                        } else if (!Api.isEmpty(user.getEmail())) {
+                                            EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示", content);
+                                        }
+                                        stockUser.finished(user);
                                     }
                                 }
                             }
@@ -152,9 +164,8 @@ public class CreatePolicyTask extends CTPContext {
                     //EmailApi.send(email, pm.getTitle(), pm.getBuffer().toString());
                     stockMessage.insert(sm);
                 }
-            }
+            }*/
             //Api.sleep(StockOptions.kRealTimenterval);
-            */
             break;
         }
     }
