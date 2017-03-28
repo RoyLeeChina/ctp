@@ -60,7 +60,6 @@ public class DownLoadQrCodeThread extends Thread {
                 listener.onLoadSuccess(imageBytes);
             }
             bos.close();
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -69,4 +68,4 @@ public class DownLoadQrCodeThread extends Thread {
         System.out.println("二维码生成");
 
     }
-}//class
+}

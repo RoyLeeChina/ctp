@@ -19,6 +19,8 @@ public interface IStockUser {
     public List<UserInfo> selectAll() throws DataAccessException;
     public UserInfo select(@Param("phone") String phone) throws DataAccessException;
 
+    public UserInfo selectByWeixin(@Param("weixin")String weixin) throws DataAccessException;
+
     /**
      * 创建一个新用户
      * @param user

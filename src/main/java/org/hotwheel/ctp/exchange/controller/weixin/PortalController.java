@@ -2,6 +2,8 @@ package org.hotwheel.ctp.exchange.controller.weixin;
 
 import org.hotwheel.assembly.Api;
 import org.hotwheel.ctp.exchange.task.CTPContext;
+import org.hotwheel.ctp.service.UserService;
+import org.hotwheel.io.ActionStatus;
 import org.hotwheel.io.DataStream;
 import org.hotwheel.weixin.DownLoadQrCodeThread;
 import org.hotwheel.weixin.HeartBeatThread;
@@ -9,6 +11,7 @@ import org.hotwheel.weixin.WaitScanAndLoginThread;
 import org.hotwheel.weixin.WeChatApp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,6 +38,9 @@ public class PortalController {
 
     private final static String kToken = "stockExchange";
     private final static String kEncodingAESKey = "Pl2la9FY1Ka91Py1Kf5lMGFt0BGSuff87AUMO0vZAyt";
+
+    @Autowired
+    private UserService userService;
 
     @RequestMapping("/wx")
     @ResponseBody
@@ -115,32 +121,71 @@ public class PortalController {
                 public void onSure() {
                     logger.info("登陆成功");
                     CTPContext.setWeChat(weChat);
-
                 }
 
                 @Override
                 public void onScan() {
                     logger.info("已经扫描成功，等待确认登陆");
-
+                    //CTPContext.setWeChat(null);
                 }
             });
+
             weChat.setmNewMsgListener(new HeartBeatThread.OnNewMsgListener() {
+                private final static String kPrefix = "【CTP微信助手】";
 
                 @Override
                 public void onNewMsg(String fromUser, String toUser, String text) {
-                    logger.info("{}->{}: {}", fromUser, toUser, text);
+                    String nickName = weChat.mapFriendAndGroup2.get(fromUser);
+                    String phone = null;
+                    if (!Api.isEmpty(nickName)) {
+                        phone = userService.getPhone(nickName);
+                    }
+                    logger.info("{}->{}: {}", nickName, toUser, text);
                     if (text.startsWith("@王布衣")) {
                         String msg = text.replaceAll("( )+"," ");
                         String[] args = msg.split(" ");
                         if (args.length >= 3) {
+
                             String command = args[1];
                             String params = args[2];
                             String message = null;
                             if (command.equalsIgnoreCase("help")) {
                                 // 帮助信息
                                 message = "CTP策略订阅帮助信息:\r\n1)订阅个股预警信息: at 王布衣 订阅 股票代码";
+                                weChat.sendMessage(nickName, message);
+                            } else if (command.equalsIgnoreCase("查询") || command.equalsIgnoreCase("cx")) {
+                                if (params.equalsIgnoreCase("id")) {
+                                    // 查询用户ID
+                                    ActionStatus resp = userService.query(nickName);
+                                    if (resp.getStatus() == 0) {
+                                        weChat.sendMessage(nickName, kPrefix + nickName + "的id是" + resp.getMessage());
+                                    } else {
+                                        weChat.sendMessage(nickName, kPrefix + nickName + "查询ID失败: " + resp.getMessage());
+                                    }
+                                }
+                            }  else if (command.equalsIgnoreCase("注册") || command.equalsIgnoreCase("zc")) {
+                                // 查询用户ID
+                                ActionStatus resp = userService.query(nickName);
+                                if (resp.getStatus() != 0) {
+                                    phone = params;
+                                    resp = userService.register(phone, nickName, nickName, "");
+                                    if (resp.getStatus() == 0) {
+                                        weChat.sendMessage(nickName, kPrefix + nickName + "注册:" + resp.getMessage());
+                                    } else {
+                                        weChat.sendMessage(nickName, kPrefix + nickName + "注册: " + resp.getMessage());
+                                    }
+                                } else {
+                                    weChat.sendMessage(nickName, kPrefix + nickName + "已注册过");
+                                }
+                            } else if (Api.isEmpty(phone)) {
+                                weChat.sendMessage(nickName, kPrefix + nickName + " 未注册");
                             } else if (command.equalsIgnoreCase("订阅") || command.equalsIgnoreCase("dy")){
-                                //
+                                ActionStatus resp = userService.subscribe(phone, params);
+                                if (resp.getStatus() == 0) {
+                                    weChat.sendMessage(nickName, kPrefix + nickName + "订阅" + params+ "成功");
+                                } else {
+                                    weChat.sendMessage(nickName, kPrefix + nickName + "订阅" + params+ "失败: " + resp.getMessage());
+                                }
                             }
                         }
 

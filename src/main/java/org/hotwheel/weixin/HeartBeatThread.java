@@ -2,7 +2,7 @@ package org.hotwheel.weixin;
 
 import com.google.gson.Gson;
 import org.hotwheel.assembly.Api;
-import org.hotwheel.weixin.MsgBean.AddMsgListEntity;
+import org.hotwheel.weixin.bean.AddMsgListEntity;
 
 import java.util.List;
 
@@ -14,14 +14,17 @@ import java.util.List;
  */
 public class HeartBeatThread extends Thread {
 
-    private HttpClient hc = HttpClient.getInstance();
+    private WxHttpClient hc = WxHttpClient.getInstance();
     private StringSubClass ss = new StringSubClass();
     private Gson gson = new Gson();
     private boolean beat = true;
     private OnNewMsgListener mNewMsgListener;
     private WeChatApp wechat;
 
-    public interface OnNewMsgListener {//接收新消息监听器
+    /**
+     * 接收新消息监听器
+     */
+    public interface OnNewMsgListener {
 
         void onNewMsg(final String fromUser, final String toUser, String text);
 
@@ -99,6 +102,12 @@ public class HeartBeatThread extends Thread {
                             String toUser = addMsgListEntity.getToUserName();
                             String msg = addMsgListEntity.getContent();
                             msg = msg.substring(msg.indexOf("<br/>") + 5);
+                            mNewMsgListener.onNewMsg(fromUser, toUser, msg);
+                        } else if ( addMsgListEntity.getToUserName().equalsIgnoreCase(wechat.kFromUser)) {
+                            String fromUser = addMsgListEntity.getFromUserName();
+                            String toUser = addMsgListEntity.getToUserName();
+                            String msg = addMsgListEntity.getContent();
+                            msg = "@王布衣 " + msg.trim();
                             mNewMsgListener.onNewMsg(fromUser, toUser, msg);
                         }
                     }

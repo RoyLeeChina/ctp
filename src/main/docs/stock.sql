@@ -84,6 +84,7 @@ CREATE TABLE `stock`.`stock_user`
 ALTER TABLE `stock`.`stock_user` ADD INDEX (`phone`);
 ALTER TABLE `stock`.`stock_user` ADD INDEX (`memberId`);
 ALTER TABLE `stock`.`stock_user` ADD INDEX (`memberName`);
+ALTER TABLE `stock`.`stock_user` ADD INDEX (`weixin`);
 
 -- TABLE: 个股列表
 DROP TABLE IF EXISTS `stock`.`stock_code`;

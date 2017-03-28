@@ -1,13 +1,12 @@
 package org.hotwheel.ctp.exchange.controller;
 
 import org.hotwheel.assembly.Api;
-import org.hotwheel.io.ActionStatus;
 import org.hotwheel.ctp.StockOptions;
 import org.hotwheel.ctp.dao.IStockMonitor;
-import org.hotwheel.ctp.dao.IStockSubscribe;
 import org.hotwheel.ctp.model.StockMonitor;
-import org.hotwheel.ctp.model.StockSubscribe;
+import org.hotwheel.ctp.service.UserService;
 import org.hotwheel.ctp.util.StockApi;
+import org.hotwheel.io.ActionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +23,7 @@ import java.util.Date;
 public class MonitorController {
 
     @Autowired
-    private IStockSubscribe stockSubscribe;
+    private UserService userService;
 
     @Autowired
     private IStockMonitor stockMonitor;
@@ -32,46 +31,7 @@ public class MonitorController {
     @ResponseBody
     @RequestMapping("/subscribe/add")
     public ActionStatus addSubscribe(String phone, String code) {
-        ActionStatus resp = new ActionStatus();
-        int errno = 10000;
-        String message = "订阅已经存在";
-        String fullCode = StockApi.fixCode(code);
-        if (Api.isEmpty(phone)) {
-            // 手机号码为空
-            resp.set(errno + 1, "手机号码不能为空");
-        } else if (Api.isEmpty(code)) {
-            // 代码为空
-            resp.set(errno + 2, "股票代码不能为空");
-        } else if (Api.isEmpty(fullCode)) {
-            // 代码为空
-            resp.set(errno + 3, "股票代码无效");
-        } else {
-            StockSubscribe info = stockSubscribe.select(phone, fullCode);
-            int result = -1;
-            if (info == null) {
-                info = new StockSubscribe();
-                info.setFlag(StockOptions.kNormalState);
-                info.setPhone(phone);
-                info.setCode(fullCode);
-                result = stockSubscribe.insert(info);
-                if (result == 1) {
-                    resp.set(0, "SUCCESS");
-                } else {
-                    resp.set(errno + 1, "添加订阅失败");
-                }
-            } else {
-                info.setCode(fullCode);
-                info.setCreateTime(new Date());
-                result = stockSubscribe.update(info);
-                if (result == 1) {
-                    resp.set(0, "SUCCESS");
-                } else {
-                    resp.set(errno, message);
-                }
-            }
-        }
-
-        return resp;
+        return userService.subscribe(phone, code);
     }
 
     /**
