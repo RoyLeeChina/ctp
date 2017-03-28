@@ -7,7 +7,7 @@ public class WaitScanAndLoginThread extends Thread {
     private int tip = 1;//0表示已经扫描
     private String uuid;
     private boolean running = true;
-    private HttpClient hc = HttpClient.getInstance();
+    private WxHttpClient hc = WxHttpClient.getInstance();
     private StringSubClass ss = new StringSubClass();
     private OnScanListener mScanListener;
     private WeChatApp wechat;

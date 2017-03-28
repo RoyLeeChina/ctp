@@ -47,11 +47,11 @@ public class HistoryDataTask extends SchedulerContext {
             /*
             allCodes = new ArrayList<>();
             // 上证指数
-            allCodes.add("sh000001");
+            allCodes.register("sh000001");
             // 深证成指
-            allCodes.add("sz399001");
+            allCodes.register("sz399001");
             // 创业板指数
-            allCodes.add("sz399006");
+            allCodes.register("sz399006");
             */
             for (String code : allCodes) {
                 logger.info("code={}", code);

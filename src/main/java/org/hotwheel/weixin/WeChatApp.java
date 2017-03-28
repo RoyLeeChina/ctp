@@ -35,14 +35,16 @@ public class WeChatApp {
     public String kFromUser;
     public String kNickName;
 
-    // 好友列表
+    // 好友列表, 昵称-用户名
     public Map<String, String> mapFriendAndGroup = new HashMap<>();
+    // 好友列表, 用户名-昵称
+    public Map<String, String> mapFriendAndGroup2 = new HashMap<>();
     public Map<String, String> mapGroupMember = new HashMap<>();
 
     //***************监听接口
 
     public Gson gson = new Gson();
-    private HttpClient hc = HttpClient.getInstance();
+    private WxHttpClient hc = WxHttpClient.getInstance();
     private StringSubClass ss = new StringSubClass();
     private OnScanListener mScanListener;
     private OnNewMsgListener mNewMsgListener;
@@ -141,7 +143,6 @@ public class WeChatApp {
         return result;
     }
 
-
     /**
      * 发送消息 webwxsendmsg?pass_ticket=xxx
      *
@@ -161,8 +162,7 @@ public class WeChatApp {
         //e110854731714634
         String data = "{\"BaseRequest\":{\"Uin\":\"" + wxuin + "\",\"Sid\":\"" + wxsid + "\",\"Skey\":\"" + skey + "\",\"DeviceID\":\"" + deviceId + "\"}," + msg + "}";
         hc.contentType = "application/json; charset=UTF-8";
-        String initResult = hc.post(baseUrl + "/webwxsendmsg?pass_ticket=" + pass_ticket,
-                data);
+        String initResult = hc.post(baseUrl + "/webwxsendmsg?pass_ticket=" + pass_ticket, data);
     }
 
     /**
@@ -207,7 +207,12 @@ public class WeChatApp {
                     for (Map<String, Object> tu : userList) {
                         String nm = (String)tu.get("NickName");
                         String um = (String)tu.get("UserName");
+                        String rm = (String)tu.get("RemarkName");
+                        if (!Api.isEmpty(rm)) {
+                            nm = rm;
+                        }
                         mapFriendAndGroup.put(nm, um);
+                        mapFriendAndGroup2.put(um, nm);
                         if (um.startsWith("@@")) {
                             System.out.println("group: " + nm);
                             if (nm.equalsIgnoreCase(kGroupId)) {
