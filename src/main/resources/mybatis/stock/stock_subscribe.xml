@@ -33,4 +33,9 @@
     <select id="checkoutAllCode" resultType="java.lang.String">
         SELECT DISTINCT code FROM stock_subscribe WHERE flag='01' AND code IS NOT NULL
     </select>
+
+    <!-- 查询一个用户全部订阅信息 -->
+    <select id="checkoutByPhone" resultType="java.lang.String">
+        SELECT DISTINCT code FROM stock_subscribe WHERE flag='01' AND code IS NOT NULL AND phone=#{phone}
+    </select>
 </mapper>

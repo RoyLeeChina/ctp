@@ -51,5 +51,18 @@ public interface IStockSubscribe {
      */
     public List<StockSubscribe> queryByCode(@Param("code") String code) throws DataAccessException;
 
+    /**
+     * 捡出全部有效的股票代码
+     * @return
+     * @throws DataAccessException
+     */
     public List<String> checkoutAllCode() throws DataAccessException;
+
+    /**
+     * 查询一个用户订阅的全部股票代码
+     * @param phone
+     * @return
+     * @throws DataAccessException
+     */
+    public List<String> checkoutByPhone(@Param("phone") String phone) throws DataAccessException;
 }

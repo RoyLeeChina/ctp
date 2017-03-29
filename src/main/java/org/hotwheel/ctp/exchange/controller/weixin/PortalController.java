@@ -164,6 +164,20 @@ public class PortalController {
                                     } else {
                                         weChat.sendMessage(nickName, kPrefix + nickName + "查询ID失败: " + resp.getMessage());
                                     }
+                                } else if (params.equalsIgnoreCase("dy")) {
+                                    if (Api.isEmpty(phone)) {
+                                        message = nickName + "未注册";
+                                    } else {
+                                        message = userService.querySubscribe(phone);
+                                        if (Api.isEmpty(message)) {
+                                            message = "没有订阅个股";
+                                        }
+                                    }
+                                    weChat.sendMessage(nickName, kPrefix + nickName + " 订阅信息: " + message);
+                                } else {
+                                    message  = "1. 查询注册id: cx id\n";
+                                    message += "2. 查询订阅信息: cx dy";
+                                    weChat.sendMessage(nickName, kPrefix + ": " + message);
                                 }
                             }  else if (command.equalsIgnoreCase("注册") || command.equalsIgnoreCase("zc")) {
                                 // 查询用户ID
@@ -180,13 +194,20 @@ public class PortalController {
                                     weChat.sendMessage(nickName, kPrefix + nickName + "已注册过");
                                 }
                             } else if (Api.isEmpty(phone)) {
-                                weChat.sendMessage(nickName, kPrefix + nickName + " 未注册");
+                                //weChat.sendMessage(nickName, kPrefix + nickName + " 未注册");
                             } else if (command.equalsIgnoreCase("订阅") || command.equalsIgnoreCase("dy")){
                                 ActionStatus resp = userService.subscribe(phone, params);
                                 if (resp.getStatus() == 0) {
                                     weChat.sendMessage(nickName, kPrefix + nickName + "订阅" + params+ "成功");
                                 } else {
                                     weChat.sendMessage(nickName, kPrefix + nickName + "订阅" + params+ "失败: " + resp.getMessage());
+                                }
+                            } else if (command.equalsIgnoreCase("退订") || command.equalsIgnoreCase("td")){
+                                ActionStatus resp = userService.unsubscribe(phone, params);
+                                if (resp.getStatus() == 0) {
+                                    weChat.sendMessage(nickName, kPrefix + nickName + "退订" + params+ "成功");
+                                } else {
+                                    weChat.sendMessage(nickName, kPrefix + nickName + "退订" + params+ "失败: " + resp.getMessage());
                                 }
                             }
                         }
