@@ -50,8 +50,8 @@ public class HeartBeatThread extends Thread {
             String[] hosts = {
                     "webpush.weixin.qq.com",
                     "webpush2.weixin.qq.com",
-                    "webpush.weChat.com",
-                    "webpush1.weChat.com",
+                    //"webpush.weChat.com",
+                    //"webpush1.weChat.com",
                     "webpush2.weChat.com"
             };
             //window.synccheck={retcode:"0",selector:"7"}

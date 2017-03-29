@@ -44,7 +44,7 @@ public class WxHttpClient {
 
             URL httpURL = new URL(url);
             httpConn = (HttpURLConnection) httpURL.openConnection();
-            httpConn.setInstanceFollowRedirects(isRedirects);//设置自动跳转
+            //httpConn.setInstanceFollowRedirects(isRedirects);//设置自动跳转
             if (referer != null) {
                 httpConn.setRequestProperty("Referer", referer);
             }
