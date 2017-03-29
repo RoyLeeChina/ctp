@@ -44,15 +44,15 @@ public class WxHttpClient {
 
             URL httpURL = new URL(url);
             httpConn = (HttpURLConnection) httpURL.openConnection();
-            //httpConn.setInstanceFollowRedirects(isRedirects);//设置自动跳转
+            httpConn.setInstanceFollowRedirects(isRedirects);//设置自动跳转
             if (referer != null) {
                 httpConn.setRequestProperty("Referer", referer);
             }
             if (contentType != null) {
                 httpConn.setRequestProperty("content-type", contentType);
             }
-            httpConn.setConnectTimeout(10 * 1000);
-            httpConn.setReadTimeout(10 * 1000);
+            httpConn.setConnectTimeout(20 * 1000);
+            httpConn.setReadTimeout(20 * 1000);
             httpConn.setRequestProperty("User-agent", "Mozilla/5.0 (Linux; Android 4.2.1; Nexus 7 Build/JOP40D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166  Safari/535.19");
             if (!sessionID.equals("")) {
                 httpConn.setRequestProperty("Cookie", sessionID);
