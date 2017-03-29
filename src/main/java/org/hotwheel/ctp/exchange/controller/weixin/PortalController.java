@@ -62,7 +62,6 @@ public class PortalController {
     }
 
     @RequestMapping("/start.wx")
-    @ResponseBody
     public void scheduleDownload(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         //String html = "";
         response.setCharacterEncoding("UTF-8");
