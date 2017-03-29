@@ -8,7 +8,7 @@
     <!-- ==================== 项目设置 =========================== -->
     <groupId>org.hotwheel.stock</groupId>
     <artifactId>ctp</artifactId>
-    <version>1.0.3</version>
+    <version>2.0.0</version>
     <packaging>war</packaging>
 
     <!-- ==================== 依赖jar版本 设置 =========================== -->
