@@ -62,6 +62,7 @@ public class PortalController {
     }
 
     @RequestMapping("/start.wx")
+    @ResponseBody
     public void scheduleDownload(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         //String html = "";
         response.setCharacterEncoding("UTF-8");
@@ -114,6 +115,7 @@ public class PortalController {
 
         @Override
         public void run() {
+            logger.info("starting...");
             final WeChatApp weChat = new WeChatApp();
             weChat.setmScanListener(new WaitScanAndLoginThread.OnScanListener() {
 
