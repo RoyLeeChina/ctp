@@ -52,7 +52,7 @@ public class HeartBeatThread extends Thread {
                     "webpush2.weixin.qq.com",
                     //"webpush.weChat.com",
                     //"webpush1.weChat.com",
-                    "webpush2.weChat.com"
+                    //"webpush2.weChat.com"
             };
             //window.synccheck={retcode:"0",selector:"7"}
             String syncResult = "";
