@@ -218,7 +218,7 @@ public class WeChatApp {
                         long verifyFlag = (int)tu.get("VerifyFlag");
                         if (verifyFlag != 0) {
                             // # 公众号/服务号
-                            logger.info("公众或服务号: {}", um);
+                            logger.info("公众或服务号: {}", nm);
                         } else if (um.charAt(0) != '@') {
                             // 特殊账号
                             logger.info("特殊账号: {}", um);
@@ -226,7 +226,7 @@ public class WeChatApp {
                             mapFriendAndGroup.put(nm, um);
                             mapFriendAndGroup2.put(um, nm);
                             if (um.startsWith("@@")) {
-                                System.out.println("group: " + nm);
+                                logger.info("group: " + nm);
                                 if (nm.equalsIgnoreCase(kGroupId)) {
                                     getGroupMemberList(um);
                                 }
