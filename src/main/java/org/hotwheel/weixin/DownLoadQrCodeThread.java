@@ -37,15 +37,16 @@ public class DownLoadQrCodeThread extends Thread {
 
     @Override
     public void run() {
+        logger.info("开始下载二维码");
         URL url;
         DataInputStream bfin = null;
         try {
             url = new URL(imageUrl);
             bfin = new DataInputStream(url.openStream());
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            logger.error("", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
         //String pathname = "resources/qrcode.jpg";
         try {
@@ -67,9 +68,9 @@ public class DownLoadQrCodeThread extends Thread {
             }
             bos.close();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error("", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
         logger.info("二维码生成");
     }
