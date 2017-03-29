@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import org.hotwheel.assembly.Api;
 import org.hotwheel.weixin.bean.AddMsgListEntity;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 心跳线程
@@ -13,13 +15,13 @@ import java.util.List;
  * @version 1.0.2
  */
 public class HeartBeatThread extends Thread {
-
     private WxHttpClient hc = WxHttpClient.getInstance();
     private StringSubClass ss = new StringSubClass();
     private Gson gson = new Gson();
     private boolean beat = true;
     private OnNewMsgListener mNewMsgListener;
     private WeChatApp weChat;
+    private static Set<String> msgIdList = new HashSet<>();
 
     /**
      * 接收新消息监听器
@@ -78,6 +80,7 @@ public class HeartBeatThread extends Thread {
             }
 
             if (Api.isEmpty(selector)) {
+                msgIdList.clear();
                 Api.sleep(5 * 1000);
                 continue;
             }
@@ -103,12 +106,14 @@ public class HeartBeatThread extends Thread {
                             msg = msg.substring(msg.indexOf("<br/>") + 5);
                             mNewMsgListener.onNewMsg(fromUser, toUser, msg);
                         } else if ( addMsgListEntity.getToUserName().equalsIgnoreCase(weChat.kFromUser)) {
+                            String msgId = addMsgListEntity.getMsgId();
                             String fromUser = addMsgListEntity.getFromUserName();
                             String nickName = weChat.mapFriendAndGroup2.get(fromUser);
-                            if (!Api.isEmpty(nickName)) {
+                            if (!Api.isEmpty(nickName) && !msgIdList.contains(msgId)) {
                                 String toUser = addMsgListEntity.getToUserName();
                                 String msg = addMsgListEntity.getContent();
                                 msg = "@王布衣 " + msg.trim();
+                                msgIdList.add(msgId);
                                 mNewMsgListener.onNewMsg(fromUser, toUser, msg);
                             }
                         }

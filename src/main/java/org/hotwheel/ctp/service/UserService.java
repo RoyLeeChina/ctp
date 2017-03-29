@@ -8,6 +8,7 @@ import org.hotwheel.ctp.model.StockSubscribe;
 import org.hotwheel.ctp.model.UserInfo;
 import org.hotwheel.ctp.util.StockApi;
 import org.hotwheel.io.ActionStatus;
+import org.hotwheel.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -161,5 +162,60 @@ public class UserService {
         }
 
         return resp;
+    }
+
+    /**
+     * 退订
+     *
+     * @param phone
+     * @param code
+     * @return
+     */
+    public ActionStatus unsubscribe(String phone, String code) {
+        ActionStatus resp = new ActionStatus();
+        int errno = 10000;
+        String message = "没有订阅";
+        String fullCode = StockApi.fixCode(code);
+        if (Api.isEmpty(phone)) {
+            // 手机号码为空
+            resp.set(errno + 1, "手机号码不能为空");
+        } else if (Api.isEmpty(code)) {
+            // 代码为空
+            resp.set(errno + 2, "股票代码不能为空");
+        } else if (Api.isEmpty(fullCode)) {
+            // 代码为空
+            resp.set(errno + 3, "股票代码无效");
+        } else {
+            StockSubscribe info = stockSubscribe.select(phone, fullCode);
+            int result = -1;
+            if (info != null) {
+                info.setFlag("00");
+                info.setCode(fullCode);
+                info.setCreateTime(new Date());
+                result = stockSubscribe.update(info);
+                if (result == 1) {
+                    resp.set(0, "SUCCESS");
+                } else {
+                    resp.set(errno, "已退订");
+                }
+            }
+        }
+
+        return resp;
+    }
+
+    /**
+     * 查询订阅情况
+     * @param phone
+     * @return
+     */
+    public String querySubscribe(final String phone) {
+        String sRet = null;
+        List<String> list = stockSubscribe.checkoutByPhone(phone);
+        if (list != null && list.size() > 0) {
+            sRet = StringUtils.collectionToDelimitedString(list, ",");
+        }
+
+        return sRet;
     }
 }
