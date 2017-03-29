@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +37,7 @@ public class WxHttpClient {
     }
 
     public String get(String url, String charset, String referer, boolean isRedirects) {
+        String sRet = null;
         HttpURLConnection httpConn = null;
         InputStream inputStream = null;
         try {
@@ -76,7 +78,9 @@ public class WxHttpClient {
                 sb.append("\n");
             }
             br.close();
-            return sb.toString();
+            sRet = sb.toString();
+        } catch (SocketTimeoutException e) {
+            // 忽略超时
         } catch (Exception e) {
             logger.error("", e);
         } finally {
@@ -85,7 +89,7 @@ public class WxHttpClient {
                 httpConn.disconnect();
             }
         }
-        return null;
+        return sRet;
     }
 
     public String get(String url) {
