@@ -215,12 +215,21 @@ public class WeChatApp {
                         if (!Api.isEmpty(rm)) {
                             nm = rm;
                         }
-                        mapFriendAndGroup.put(nm, um);
-                        mapFriendAndGroup2.put(um, nm);
-                        if (um.startsWith("@@")) {
-                            System.out.println("group: " + nm);
-                            if (nm.equalsIgnoreCase(kGroupId)) {
-                                getGroupMemberList(um);
+                        long verifyFlag = (int)tu.get("VerifyFlag");
+                        if ((verifyFlag & 8) != 0) {
+                            // # 公众号/服务号
+                            logger.info("公众或服务号: {}", um);
+                        } else if (um.charAt(0) != '@') {
+                            // 特殊账号
+                            logger.info("特殊账号: {}", um);
+                        } else {
+                            mapFriendAndGroup.put(nm, um);
+                            mapFriendAndGroup2.put(um, nm);
+                            if (um.startsWith("@@")) {
+                                System.out.println("group: " + nm);
+                                if (nm.equalsIgnoreCase(kGroupId)) {
+                                    getGroupMemberList(um);
+                                }
                             }
                         }
                     }
