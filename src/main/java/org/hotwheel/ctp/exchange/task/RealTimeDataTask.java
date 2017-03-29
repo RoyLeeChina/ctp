@@ -161,14 +161,19 @@ public class RealTimeDataTask extends CTPContext {
                                                         String content = String.format("%s: %s(%s) ,现价%.2f %s, 涨跌幅%s%%.",
                                                                 userSubscribe.getPhone(), stockName, stockCode, tmpPrice, keywords, zf);
                                                         logger.info(content);
+                                                        bSent = false;
                                                         if (!Api.isEmpty(user.getWeixin())) {
                                                             weChat.sendMessage(user.getWeixin(), title + ": " + content);
+                                                            bSent = true;
                                                         } else if (!Api.isEmpty(user.getEmail())) {
                                                             if (EmailApi.send(user.getEmail(), title, content)) {
-                                                                userSubscribe.setRemark(policy.toString());
-                                                                userSubscribe.setSendDate(new Date());
-                                                                stockSubscribe.update(userSubscribe);
+                                                                bSent = true;
                                                             }
+                                                        }
+                                                        if (bSent) {
+                                                            userSubscribe.setRemark(policy.toString());
+                                                            userSubscribe.setSendDate(new Date());
+                                                            stockSubscribe.update(userSubscribe);
                                                         }
                                                     }
                                                 }

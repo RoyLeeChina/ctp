@@ -58,7 +58,7 @@ public class WeChatApp {
      */
     public WeChatApp() {
         long randomId = System.nanoTime();
-        String str = "" + randomId;
+        String str = "" + System.currentTimeMillis() + "" + randomId;
         deviceId = "e" + str.substring(2, 17);
     }
 
