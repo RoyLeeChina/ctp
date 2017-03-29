@@ -216,7 +216,7 @@ public class WeChatApp {
                             nm = rm;
                         }
                         long verifyFlag = (int)tu.get("VerifyFlag");
-                        if ((verifyFlag & 8) != 0) {
+                        if (verifyFlag != 0) {
                             // # 公众号/服务号
                             logger.info("公众或服务号: {}", um);
                         } else if (um.charAt(0) != '@') {
