@@ -103,7 +103,7 @@ public class WeChatApp {
      * 在成功登陆后初始化微信相关参数
      */
     void init() {
-        for (int i = 0; i < 2; i++) {//开5个线程去初始化
+        for (int i = 0; i < 3; i++) {//开5个线程去初始化
             new InitThread().start();
         }
 
