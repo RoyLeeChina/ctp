@@ -20,7 +20,7 @@ public class HeartBeatThread extends Thread {
     private Gson gson = new Gson();
     private boolean beat = true;
     private OnNewMsgListener mNewMsgListener;
-    private WeChatApp weChat;
+    private WeChat weChat;
     private static Set<String> msgIdList = new HashSet<>();
 
     /**
@@ -33,7 +33,7 @@ public class HeartBeatThread extends Thread {
         void startBeat();
     }
 
-    public HeartBeatThread(WeChatApp wechat) {
+    public HeartBeatThread(WeChat wechat) {
         this.weChat = wechat;
     }
 
@@ -47,80 +47,64 @@ public class HeartBeatThread extends Thread {
             mNewMsgListener.startBeat();
         }
         while (beat) {
-            String[] hosts = {
-                    "webpush.wx.qq.com"
-                    //"webpush2.weChat.com",
-                    //"webpush.weixin.qq.com",
-                    //"webpush2.weixin.qq.com",
-                    //"webpush.weChat.com",
-                    //"webpush1.weChat.com"
-
-            };
-            //window.synccheck={retcode:"0",selector:"7"}
-            String syncResult = "";
-            String selector = "";
-            for (String host : hosts) {
-                syncResult = hc.get("https://"+host+"/cgi-bin/mmwebwx-bin/synccheck?skey=" + weChat.skey
+            try {
+                String host = "webpush.wx.qq.com";
+                //window.synccheck={retcode:"0",selector:"7"}
+                String syncResult = "";
+                String selector = "";
+                syncResult = hc.get("https://" + host + "/cgi-bin/mmwebwx-bin/synccheck?skey=" + weChat.skey
                         + "&sid=" + weChat.wxsid
                         + "&uin=" + weChat.wxuin
                         + "&deviceId=" + weChat.deviceId + ""
-                        + "&synckey=" + weChat.keyString
+                        + "&synckey=" + weChat.syncKey
                         + "&r=" + System.currentTimeMillis()
                         + "&_=" + System.currentTimeMillis()
                 );
 
-                try {
-                    selector = ss.subStringOne(syncResult, "selector:\"", "\"}");
-                    if (!Api.isEmpty(selector) && selector.equals("0")) {
-                        continue;
-                    } else if (!Api.isEmpty(selector) && !selector.equals("0")) {
-                        break;
-                    }
-                } catch (Exception e) {
+                selector = ss.subStringOne(syncResult, "selector:\"", "\"}");
+                if (Api.isEmpty(selector)) {
+                    msgIdList.clear();
+                    Api.sleep(3 * 1000);
                     continue;
                 }
-            }
 
-            if (Api.isEmpty(selector)) {
-                msgIdList.clear();
-                Api.sleep(5 * 1000);
-                continue;
-            }
+                if (!selector.equals("0")) {//有消息
+                    if (mNewMsgListener != null) {
+                        //获取新消息
+                        String data2 = "{\"BaseRequest\":{\"Uin\":\"" + weChat.wxuin + "\",\"Sid\":\"" + weChat.wxsid + "\",\"Skey\":\"" + weChat.skey + "\",\"DeviceID\":\"" + weChat.deviceId + "\"},\"SyncKey\":"
+                                + weChat.gson.toJson(weChat.initbean.getSyncKey()) + ",\"rr\":" + System.currentTimeMillis() + "}";
+                        String newMsg = hc.post(weChat.baseUrl + "/webwxsync?sid=" + weChat.wxsid + "&skey=" + weChat.skey + "&pass_ticket=" + weChat.pass_ticket, data2);//
+                        //同步键更新
+                        weChat.syncKeys(newMsg);
 
-            if (!selector.equals("0")) {//有消息
-                if (mNewMsgListener != null) {
-                    //获取新消息
-                    String data2 = "{\"BaseRequest\":{\"Uin\":\"" + weChat.wxuin + "\",\"Sid\":\"" + weChat.wxsid + "\",\"Skey\":\"" + weChat.skey + "\",\"DeviceID\":\"" + weChat.deviceId + "\"},\"SyncKey\":"
-                            + weChat.gson.toJson(weChat.initbean.getSyncKey()) + ",\"rr\":" + System.currentTimeMillis() + "}";
-                    String newMsg = hc.post(weChat.baseUrl + "/webwxsync?sid=" + weChat.wxsid + "&skey=" + weChat.skey + "&pass_ticket=" + weChat.pass_ticket, data2);//
-                    //同步键更新
-                    weChat.syncKeys(newMsg);
-
-                    //获取消息
-                    MsgBean msgBean = gson.fromJson(newMsg, MsgBean.class);
-                    List<AddMsgListEntity> msgList = msgBean.getAddMsgList();
-                    for (AddMsgListEntity addMsgListEntity : msgList) {
-                        // 只处理群消息
-                        if (addMsgListEntity.getFromUserName().startsWith("@@")) {
-                            String fromUser = addMsgListEntity.getFromUserName();
-                            String toUser = addMsgListEntity.getToUserName();
-                            String msg = addMsgListEntity.getContent();
-                            msg = msg.substring(msg.indexOf("<br/>") + 5);
-                            mNewMsgListener.onNewMsg(fromUser, toUser, msg);
-                        } else if ( addMsgListEntity.getToUserName().equalsIgnoreCase(weChat.kFromUser)) {
-                            String msgId = addMsgListEntity.getMsgId();
-                            String fromUser = addMsgListEntity.getFromUserName();
-                            String nickName = weChat.mapFriendAndGroup2.get(fromUser);
-                            if (!Api.isEmpty(nickName) && !msgIdList.contains(msgId)) {
+                        //获取消息
+                        MsgBean msgBean = gson.fromJson(newMsg, MsgBean.class);
+                        List<AddMsgListEntity> msgList = msgBean.getAddMsgList();
+                        for (AddMsgListEntity addMsgListEntity : msgList) {
+                            // 只处理群消息
+                            if (addMsgListEntity.getFromUserName().startsWith("@@")) {
+                                String fromUser = addMsgListEntity.getFromUserName();
                                 String toUser = addMsgListEntity.getToUserName();
                                 String msg = addMsgListEntity.getContent();
-                                msg = "@王布衣 " + msg.trim();
-                                msgIdList.add(msgId);
+                                msg = msg.substring(msg.indexOf("<br/>") + 5);
                                 mNewMsgListener.onNewMsg(fromUser, toUser, msg);
+                            } else if (addMsgListEntity.getToUserName().equalsIgnoreCase(weChat.kFromUser)) {
+                                String msgId = addMsgListEntity.getMsgId();
+                                String fromUser = addMsgListEntity.getFromUserName();
+                                String nickName = weChat.mapFriendAndGroup2.get(fromUser);
+                                if (!Api.isEmpty(nickName) && !msgIdList.contains(msgId)) {
+                                    String toUser = addMsgListEntity.getToUserName();
+                                    String msg = addMsgListEntity.getContent();
+                                    msg = "@王布衣 " + msg.trim();
+                                    msgIdList.add(msgId);
+                                    mNewMsgListener.onNewMsg(fromUser, toUser, msg);
+                                }
                             }
                         }
                     }
                 }
+            } catch (Exception e) {
+                //
             }
         }
     }

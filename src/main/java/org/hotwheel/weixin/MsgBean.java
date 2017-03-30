@@ -5,7 +5,10 @@ import org.hotwheel.weixin.bean.AddMsgListEntity;
 import java.util.List;
 
 /**
+ * 消息
+ *
  * Created by hua on 2016/3/19.
+ * @version 2.0.0
  */
 public class MsgBean {
     /**
