@@ -21,8 +21,8 @@ import java.util.Map;
  *
  * @version 1.0.2
  */
-public class WeChatApp {
-    private static Logger logger = LoggerFactory.getLogger(WeChatApp.class);
+public class WeChat {
+    private static Logger logger = LoggerFactory.getLogger(WeChat.class);
     private final static String kGroupId = "股友会";
     boolean isBeat = false;
     //************** 一些变量
@@ -32,7 +32,7 @@ public class WeChatApp {
     public String wxsid;
     public String pass_ticket;
     public String wxuin;
-    public String keyString;
+    public String syncKey;
     public BaseResponeBean initbean;
     public String deviceId;
     public String kFromUser;
@@ -56,7 +56,7 @@ public class WeChatApp {
     /**
      * 构造方法
      */
-    public WeChatApp() {
+    public WeChat() {
         long randomId = System.nanoTime();
         String str = "" + System.currentTimeMillis() + "" + randomId;
         deviceId = "e" + str.substring(2, 17);
@@ -90,7 +90,7 @@ public class WeChatApp {
                     mQrCodeListener.onLoadSuccess(imageBytes);
                 }
                 //二维码下载完成，开启轮询线程等待扫描二维码和登陆
-                WaitScanAndLoginThread loginThread = new WaitScanAndLoginThread(uuid, WeChatApp.this);
+                WaitScanAndLoginThread loginThread = new WaitScanAndLoginThread(uuid, WeChat.this);
                 loginThread.setmScanListener(mScanListener);
                 loginThread.start();
             }
@@ -103,7 +103,7 @@ public class WeChatApp {
      * 在成功登陆后初始化微信相关参数
      */
     void init() {
-        for (int i = 0; i < 2; i++) {//开5个线程去初始化
+        for (int i = 0; i < 1; i++) {//开5个线程去初始化
             new InitThread().start();
         }
 
@@ -274,14 +274,14 @@ public class WeChatApp {
     /**
      * 同步syncKeys，每次获取到新消息后都要同步
      */
-    public void syncKeys(String reslut) {
+    public void syncKeys(final String reslut) {
         initbean = gson.fromJson(reslut, BaseResponeBean.class);
-        keyString = "";
+        String tmpSyncKey = "";
         List<SyncKeyEntity.ListEntity> keyList = initbean.getSyncKey().getList();
         for (SyncKeyEntity.ListEntity listEntity : keyList) {
-            keyString += listEntity.getKey() + "_" + listEntity.getVal() + "|";
+            tmpSyncKey += "|" + listEntity.getKey() + "_" + listEntity.getVal();
         }
-        keyString = keyString.substring(0, keyString.length() - 1);
+        syncKey = tmpSyncKey.substring(1);
     }
 
     //设置各种监听器
@@ -318,7 +318,7 @@ public class WeChatApp {
                 //同步keys
                 syncKeys(initResult);
                 //开启心跳线程
-                HeartBeatThread heartBeatThread = new HeartBeatThread(WeChatApp.this);
+                HeartBeatThread heartBeatThread = new HeartBeatThread(WeChat.this);
                 heartBeatThread.setmNewMsgListener(mNewMsgListener);
                 heartBeatThread.start();
                 isBeat = true;

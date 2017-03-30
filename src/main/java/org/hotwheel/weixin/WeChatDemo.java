@@ -6,7 +6,7 @@ import org.hotwheel.weixin.WaitScanAndLoginThread.OnScanListener;
 public class WeChatDemo {
 
     public static void main(String[] args) {
-        WeChatApp weChat = new WeChatApp();
+        WeChat weChat = new WeChat();
         weChat.setmScanListener(new OnScanListener() {
 
             @Override

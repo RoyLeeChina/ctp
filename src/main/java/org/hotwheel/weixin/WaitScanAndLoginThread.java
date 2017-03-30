@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 等待线程
+ * @version 2.0.0
  */
 public class WaitScanAndLoginThread extends Thread {
     private static Logger logger = LoggerFactory.getLogger(WaitScanAndLoginThread.class);
@@ -15,7 +16,7 @@ public class WaitScanAndLoginThread extends Thread {
     private WxHttpClient hc = WxHttpClient.getInstance();
     private StringSubClass ss = new StringSubClass();
     private OnScanListener mScanListener;
-    private WeChatApp wechat;
+    private WeChat wechat;
 
     /**
      * 登陆的监听器
@@ -31,7 +32,7 @@ public class WaitScanAndLoginThread extends Thread {
         this.mScanListener = mScanListener;
     }
 
-    WaitScanAndLoginThread(String uuid, WeChatApp wechat) {
+    WaitScanAndLoginThread(String uuid, WeChat wechat) {
         this.uuid = uuid;
         this.wechat = wechat;
 
