@@ -74,30 +74,32 @@ public class HeartBeatThread extends Thread {
                         String data2 = "{\"BaseRequest\":{\"Uin\":\"" + weChat.wxuin + "\",\"Sid\":\"" + weChat.wxsid + "\",\"Skey\":\"" + weChat.skey + "\",\"DeviceID\":\"" + weChat.deviceId + "\"},\"SyncKey\":"
                                 + weChat.gson.toJson(weChat.initbean.getSyncKey()) + ",\"rr\":" + System.currentTimeMillis() + "}";
                         String newMsg = hc.post(weChat.baseUrl + "/webwxsync?sid=" + weChat.wxsid + "&skey=" + weChat.skey + "&pass_ticket=" + weChat.pass_ticket, data2);//
-                        //同步键更新
-                        weChat.syncKeys(newMsg);
+                        if (!Api.isEmpty(newMsg)) {
+                            //同步键更新
+                            weChat.syncKeys(newMsg);
 
-                        //获取消息
-                        MsgBean msgBean = gson.fromJson(newMsg, MsgBean.class);
-                        List<AddMsgListEntity> msgList = msgBean.getAddMsgList();
-                        for (AddMsgListEntity addMsgListEntity : msgList) {
-                            // 只处理群消息
-                            if (addMsgListEntity.getFromUserName().startsWith("@@")) {
-                                String fromUser = addMsgListEntity.getFromUserName();
-                                String toUser = addMsgListEntity.getToUserName();
-                                String msg = addMsgListEntity.getContent();
-                                msg = msg.substring(msg.indexOf("<br/>") + 5);
-                                mNewMsgListener.onNewMsg(fromUser, toUser, msg);
-                            } else if (addMsgListEntity.getToUserName().equalsIgnoreCase(weChat.kFromUser)) {
-                                String msgId = addMsgListEntity.getMsgId();
-                                String fromUser = addMsgListEntity.getFromUserName();
-                                String nickName = weChat.mapFriendAndGroup2.get(fromUser);
-                                if (!Api.isEmpty(nickName) && !msgIdList.contains(msgId)) {
+                            //获取消息
+                            MsgBean msgBean = gson.fromJson(newMsg, MsgBean.class);
+                            List<AddMsgListEntity> msgList = msgBean.getAddMsgList();
+                            for (AddMsgListEntity addMsgListEntity : msgList) {
+                                // 只处理群消息
+                                if (addMsgListEntity.getFromUserName().startsWith("@@")) {
+                                    String fromUser = addMsgListEntity.getFromUserName();
                                     String toUser = addMsgListEntity.getToUserName();
                                     String msg = addMsgListEntity.getContent();
-                                    msg = "@王布衣 " + msg.trim();
-                                    msgIdList.add(msgId);
+                                    msg = msg.substring(msg.indexOf("<br/>") + 5);
                                     mNewMsgListener.onNewMsg(fromUser, toUser, msg);
+                                } else if (addMsgListEntity.getToUserName().equalsIgnoreCase(weChat.kFromUser)) {
+                                    String msgId = addMsgListEntity.getMsgId();
+                                    String fromUser = addMsgListEntity.getFromUserName();
+                                    String nickName = weChat.mapFriendAndGroup2.get(fromUser);
+                                    if (!Api.isEmpty(nickName) && !msgIdList.contains(msgId)) {
+                                        String toUser = addMsgListEntity.getToUserName();
+                                        String msg = addMsgListEntity.getContent();
+                                        msg = "@王布衣 " + msg.trim();
+                                        msgIdList.add(msgId);
+                                        mNewMsgListener.onNewMsg(fromUser, toUser, msg);
+                                    }
                                 }
                             }
                         }

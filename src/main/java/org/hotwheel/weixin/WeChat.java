@@ -275,13 +275,20 @@ public class WeChat {
      * 同步syncKeys，每次获取到新消息后都要同步
      */
     public void syncKeys(final String reslut) {
-        initbean = gson.fromJson(reslut, BaseResponeBean.class);
-        String tmpSyncKey = "";
-        List<SyncKeyEntity.ListEntity> keyList = initbean.getSyncKey().getList();
-        for (SyncKeyEntity.ListEntity listEntity : keyList) {
-            tmpSyncKey += "|" + listEntity.getKey() + "_" + listEntity.getVal();
+        BaseResponeBean tmpBean = gson.fromJson(reslut, BaseResponeBean.class);
+        if (tmpBean != null) {
+            initbean = tmpBean;
         }
-        syncKey = tmpSyncKey.substring(1);
+        String tmpSyncKey = "";
+        if (initbean != null && initbean.getSyncKey() != null) {
+            List<SyncKeyEntity.ListEntity> keyList = initbean.getSyncKey().getList();
+            if (keyList != null && keyList.size() > 0) {
+                for (SyncKeyEntity.ListEntity listEntity : keyList) {
+                    tmpSyncKey += "|" + listEntity.getKey() + "_" + listEntity.getVal();
+                }
+                syncKey = tmpSyncKey.substring(1);
+            }
+        }
     }
 
     //设置各种监听器
