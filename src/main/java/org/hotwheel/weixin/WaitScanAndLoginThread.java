@@ -14,7 +14,7 @@ public class WaitScanAndLoginThread extends Thread {
     private String uuid;
     private boolean running = true;
     private WxHttpClient hc = WxHttpClient.getInstance();
-    private StringSubClass ss = new StringSubClass();
+    private StringSub ss = new StringSub();
     private OnScanListener mScanListener;
     private WeChat wechat;
 
@@ -59,19 +59,16 @@ public class WaitScanAndLoginThread extends Thread {
                     String redirect_uri = ss.subStringOne(result, "window.redirect_uri=\"", "\";");
                     running = false;
                     String loginResult = hc.get(redirect_uri + "&fun=new");
-                    wechat.skey = ss.subStringOne(loginResult, "<skey>", "</skey>");
-                    wechat.wxsid = ss.subStringOne(loginResult, "<wxsid>", "</wxsid>");
+                    wechat.wxSkey = ss.subStringOne(loginResult, "<wxSkey>", "</wxSkey>");
+                    wechat.wxSid = ss.subStringOne(loginResult, "<wxSid>", "</wxSid>");
                     wechat.pass_ticket = ss.subStringOne(loginResult, "<pass_ticket>", "</pass_ticket>");
-                    wechat.wxuin = ss.subStringOne(loginResult, "<wxuin>", "</wxuin>");
+                    wechat.wxUin = ss.subStringOne(loginResult, "<wxUin>", "</wxUin>");
                     wechat.baseUrl = redirect_uri.substring(0, redirect_uri.lastIndexOf("/"));
                     mScanListener.onSure();
                     wechat.init();
-
                 }
             }
 
         }//while
-
     }
-
 }

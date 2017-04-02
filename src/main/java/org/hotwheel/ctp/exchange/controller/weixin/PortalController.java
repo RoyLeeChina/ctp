@@ -137,7 +137,7 @@ public class PortalController {
 
                 @Override
                 public void onNewMsg(final String groupId, String fromUser, String toUser, String text) {
-                    String nickName = weChat.mapFriendAndGroup2.get(fromUser);
+                    String nickName = weChat.mapUserToNick.get(fromUser);
                     String phone = null;
                     if (!Api.isEmpty(nickName)) {
                         phone = userService.getPhone(nickName);
@@ -157,8 +157,8 @@ public class PortalController {
                                 if (groupId == null) {
                                     weChat.sendMessage(nickName, message);
                                 } else {
-                                    String groupName = weChat.mapFriendAndGroup2.get(groupId);
-                                    nickName = weChat.mapFriendAndGroup2.get(toUser);
+                                    String groupName = weChat.mapUserToNick.get(groupId);
+                                    nickName = weChat.mapUserToNick.get(toUser);
                                     weChat.sendGroupMessage(groupName, nickName, message);
                                 }
                             } else if (command.equalsIgnoreCase("查询") || command.equalsIgnoreCase("cx")) {
