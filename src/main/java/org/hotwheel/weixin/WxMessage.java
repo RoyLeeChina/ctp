@@ -10,7 +10,7 @@ import java.util.List;
  * Created by hua on 2016/3/19.
  * @version 2.0.0
  */
-public class MsgBean {
+public class WxMessage {
     /**
      * MsgId : 8820250664544778582
      * FromUserName : @56d03149f1b5527c892fea59983532586fb8139c9b0307e2eb4d82f4b6dece2c

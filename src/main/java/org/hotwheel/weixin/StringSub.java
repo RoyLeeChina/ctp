@@ -6,7 +6,7 @@ import org.hotwheel.assembly.Api;
  * 字符串工具
  * @version 2.0.0
  */
-public class StringSubClass {
+public class StringSub {
 
     /**
      * 截取字符串

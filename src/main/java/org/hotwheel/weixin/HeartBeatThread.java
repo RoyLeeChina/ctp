@@ -16,7 +16,7 @@ import java.util.Set;
  */
 public class HeartBeatThread extends Thread {
     private WxHttpClient hc = WxHttpClient.getInstance();
-    private StringSubClass ss = new StringSubClass();
+    private StringSub ss = new StringSub();
     private Gson gson = new Gson();
     private boolean beat = true;
     private OnNewMsgListener mNewMsgListener;
@@ -52,10 +52,10 @@ public class HeartBeatThread extends Thread {
                 //window.synccheck={retcode:"0",selector:"7"}
                 String syncResult = "";
                 String selector = "";
-                syncResult = hc.get("https://" + host + "/cgi-bin/mmwebwx-bin/synccheck?skey=" + weChat.skey
-                        + "&sid=" + weChat.wxsid
-                        + "&uin=" + weChat.wxuin
-                        + "&deviceId=" + weChat.deviceId + ""
+                syncResult = hc.get("https://" + host + "/cgi-bin/mmwebwx-bin/synccheck?wxSkey=" + weChat.wxSkey
+                        + "&sid=" + weChat.wxSid
+                        + "&uin=" + weChat.wxUin
+                        + "&wxDeviceId=" + weChat.wxDeviceId + ""
                         + "&synckey=" + weChat.syncKey
                         + "&r=" + System.currentTimeMillis()
                         + "&_=" + System.currentTimeMillis()
@@ -71,16 +71,16 @@ public class HeartBeatThread extends Thread {
                 if (!selector.equals("0")) {//有消息
                     if (mNewMsgListener != null) {
                         //获取新消息
-                        String data2 = "{\"BaseRequest\":{\"Uin\":\"" + weChat.wxuin + "\",\"Sid\":\"" + weChat.wxsid + "\",\"Skey\":\"" + weChat.skey + "\",\"DeviceID\":\"" + weChat.deviceId + "\"},\"SyncKey\":"
+                        String data2 = "{\"BaseRequest\":{\"Uin\":\"" + weChat.wxUin + "\",\"Sid\":\"" + weChat.wxSid + "\",\"Skey\":\"" + weChat.wxSkey + "\",\"DeviceID\":\"" + weChat.wxDeviceId + "\"},\"SyncKey\":"
                                 + weChat.gson.toJson(weChat.initbean.getSyncKey()) + ",\"rr\":" + System.currentTimeMillis() + "}";
-                        String newMsg = hc.post(weChat.baseUrl + "/webwxsync?sid=" + weChat.wxsid + "&skey=" + weChat.skey + "&pass_ticket=" + weChat.pass_ticket, data2);//
+                        String newMsg = hc.post(weChat.baseUrl + "/webwxsync?sid=" + weChat.wxSid + "&wxSkey=" + weChat.wxSkey + "&pass_ticket=" + weChat.pass_ticket, data2);//
                         if (!Api.isEmpty(newMsg)) {
                             //同步键更新
                             weChat.syncKeys(newMsg);
 
                             //获取消息
-                            MsgBean msgBean = gson.fromJson(newMsg, MsgBean.class);
-                            List<AddMsgListEntity> msgList = msgBean.getAddMsgList();
+                            WxMessage wxMessage = gson.fromJson(newMsg, WxMessage.class);
+                            List<AddMsgListEntity> msgList = wxMessage.getAddMsgList();
                             for (AddMsgListEntity addMsgListEntity : msgList) {
                                 // 只处理群消息
                                 if (addMsgListEntity.getFromUserName().startsWith("@@")) {
@@ -95,7 +95,7 @@ public class HeartBeatThread extends Thread {
                                     String groupId = null;
                                     String msgId = addMsgListEntity.getMsgId();
                                     String fromUser = addMsgListEntity.getFromUserName();
-                                    String nickName = weChat.mapFriendAndGroup2.get(fromUser);
+                                    String nickName = weChat.mapUserToNick.get(fromUser);
                                     if (!Api.isEmpty(nickName) && !msgIdList.contains(msgId)) {
                                         String toUser = addMsgListEntity.getToUserName();
                                         String msg = addMsgListEntity.getContent();
