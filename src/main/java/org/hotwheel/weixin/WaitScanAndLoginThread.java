@@ -16,7 +16,7 @@ public class WaitScanAndLoginThread extends Thread {
     private WxHttpClient hc = WxHttpClient.getInstance();
     private StringSub ss = new StringSub();
     private OnScanListener mScanListener;
-    private WeChat wechat;
+    private OldWeChat wechat;
 
     /**
      * 登陆的监听器
@@ -32,7 +32,7 @@ public class WaitScanAndLoginThread extends Thread {
         this.mScanListener = mScanListener;
     }
 
-    WaitScanAndLoginThread(String uuid, WeChat wechat) {
+    WaitScanAndLoginThread(String uuid, OldWeChat wechat) {
         this.uuid = uuid;
         this.wechat = wechat;
 

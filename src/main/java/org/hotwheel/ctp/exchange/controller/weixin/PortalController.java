@@ -7,8 +7,8 @@ import org.hotwheel.io.ActionStatus;
 import org.hotwheel.io.DataStream;
 import org.hotwheel.weixin.DownLoadQrCodeThread;
 import org.hotwheel.weixin.HeartBeatThread;
+import org.hotwheel.weixin.OldWeChat;
 import org.hotwheel.weixin.WaitScanAndLoginThread;
-import org.hotwheel.weixin.WeChat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,7 +116,7 @@ public class PortalController {
         @Override
         public void run() {
             logger.info("starting...");
-            final WeChat weChat = new WeChat();
+            final OldWeChat weChat = new OldWeChat();
             weChat.setmScanListener(new WaitScanAndLoginThread.OnScanListener() {
 
                 @Override
