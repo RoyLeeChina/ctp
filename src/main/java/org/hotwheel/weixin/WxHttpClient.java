@@ -19,6 +19,7 @@ import java.util.Map;
  */
 public class WxHttpClient {
     private static Logger logger = LoggerFactory.getLogger(WxHttpClient.class);
+    private final static String kUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36";
 
     CookieManager ca = new CookieManager();
     String sessionID = "";
@@ -55,7 +56,7 @@ public class WxHttpClient {
             }
             httpConn.setConnectTimeout(10 * 1000);
             httpConn.setReadTimeout(10 * 1000);
-            httpConn.setRequestProperty("User-agent", "Mozilla/5.0 (Linux; Android 4.2.1; Nexus 7 Build/JOP40D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166  Safari/535.19");
+            httpConn.setRequestProperty("User-agent", kUserAgent);
             if (!sessionID.equals("")) {
                 httpConn.setRequestProperty("Cookie", sessionID);
             }
@@ -112,7 +113,7 @@ public class WxHttpClient {
             httpConn = (HttpURLConnection) httpURL.openConnection();
             httpConn.setDoOutput(true);
             httpConn.setDoInput(true);
-            httpConn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko LBBROWSER");
+            httpConn.setRequestProperty("User-Agent", kUserAgent);
             httpConn.setInstanceFollowRedirects(isRedirects);//设置自动跳转
             if (referer != null) {
                 httpConn.setRequestProperty("Referer", referer);

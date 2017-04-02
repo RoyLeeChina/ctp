@@ -1,8 +1,13 @@
 package org.hotwheel.weixin;
 
+import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import org.hotwheel.assembly.Api;
+import org.hotwheel.util.StringUtils;
 import org.hotwheel.weixin.bean.AddMsgListEntity;
+import org.hotwheel.weixin.bean.SyncResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.List;
@@ -15,12 +20,14 @@ import java.util.Set;
  * @version 1.0.2
  */
 public class HeartBeatThread extends Thread {
+    private static Logger logger = LoggerFactory.getLogger(HeartBeatThread.class);
+    private final static long kHeartSleep = 20 * 1000;
     private WxHttpClient hc = WxHttpClient.getInstance();
     private StringSub ss = new StringSub();
     private Gson gson = new Gson();
     private boolean beat = true;
     private OnNewMsgListener mNewMsgListener;
-    private WeChat weChat;
+    private OldWeChat weChat;
     private static Set<String> msgIdList = new HashSet<>();
 
     /**
@@ -33,7 +40,7 @@ public class HeartBeatThread extends Thread {
         void startBeat();
     }
 
-    public HeartBeatThread(WeChat wechat) {
+    public HeartBeatThread(OldWeChat wechat) {
         this.weChat = wechat;
     }
 
@@ -48,6 +55,7 @@ public class HeartBeatThread extends Thread {
         }
         while (beat) {
             try {
+                long tm = System.currentTimeMillis();
                 String host = "webpush.wx.qq.com";
                 //window.synccheck={retcode:"0",selector:"7"}
                 String syncResult = "";
@@ -60,6 +68,9 @@ public class HeartBeatThread extends Thread {
                         + "&r=" + System.currentTimeMillis()
                         + "&_=" + System.currentTimeMillis()
                 );
+                logger.debug("synccheck={}", syncResult);
+                syncResult = StringUtils.replace(syncResult, "window.synccheck=", "");
+                SyncResponse syncResp = JSON.parseObject(syncResult, SyncResponse.class);
 
                 selector = ss.subStringOne(syncResult, "selector:\"", "\"}");
                 if (Api.isEmpty(selector)) {
@@ -107,6 +118,10 @@ public class HeartBeatThread extends Thread {
                             }
                         }
                     }
+                }
+                tm = kHeartSleep - tm;
+                if (tm > 0) {
+                    Api.sleep(tm);
                 }
             } catch (Exception e) {
                 //
