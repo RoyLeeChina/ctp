@@ -24,7 +24,7 @@ public class WeChatDemo {
         weChat.setmNewMsgListener(new OnNewMsgListener() {
 
             @Override
-            public void onNewMsg(final String fromUser, final String toUser, String text) {//只处理群消息
+            public void onNewMsg(final String groupId, final String fromUser, final String toUser, String text) {//只处理群消息
                 System.out.println("接收到消息:" + text);
 
             }

@@ -28,7 +28,7 @@ public class HeartBeatThread extends Thread {
      */
     public interface OnNewMsgListener {
 
-        void onNewMsg(final String fromUser, final String toUser, String text);
+        void onNewMsg(final String groupId, final String fromUser, final String toUser, String text);
 
         void startBeat();
     }
@@ -84,12 +84,15 @@ public class HeartBeatThread extends Thread {
                             for (AddMsgListEntity addMsgListEntity : msgList) {
                                 // 只处理群消息
                                 if (addMsgListEntity.getFromUserName().startsWith("@@")) {
-                                    String fromUser = addMsgListEntity.getFromUserName();
+                                    String groupId = addMsgListEntity.getFromUserName();
                                     String toUser = addMsgListEntity.getToUserName();
                                     String msg = addMsgListEntity.getContent();
-                                    msg = msg.substring(msg.indexOf("<br/>") + 5);
-                                    mNewMsgListener.onNewMsg(fromUser, toUser, msg);
+                                    int pos = msg.indexOf("<br/>");
+                                    String fromUser = msg.substring(0, pos);
+                                    msg = msg.substring(pos + 5);
+                                    mNewMsgListener.onNewMsg(groupId, fromUser, toUser, msg);
                                 } else if (addMsgListEntity.getToUserName().equalsIgnoreCase(weChat.kFromUser)) {
+                                    String groupId = null;
                                     String msgId = addMsgListEntity.getMsgId();
                                     String fromUser = addMsgListEntity.getFromUserName();
                                     String nickName = weChat.mapFriendAndGroup2.get(fromUser);
@@ -98,7 +101,7 @@ public class HeartBeatThread extends Thread {
                                         String msg = addMsgListEntity.getContent();
                                         msg = "@王布衣 " + msg.trim();
                                         msgIdList.add(msgId);
-                                        mNewMsgListener.onNewMsg(fromUser, toUser, msg);
+                                        mNewMsgListener.onNewMsg(groupId, fromUser, toUser, msg);
                                     }
                                 }
                             }
