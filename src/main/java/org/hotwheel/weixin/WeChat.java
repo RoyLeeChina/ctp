@@ -98,7 +98,6 @@ public class WeChat {
         qrCodeThread.start();
     }
 
-
     /**
      * 在成功登陆后初始化微信相关参数
      */

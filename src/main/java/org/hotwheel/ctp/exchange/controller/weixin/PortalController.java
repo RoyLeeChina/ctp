@@ -136,7 +136,7 @@ public class PortalController {
                 private final static String kPrefix = "【CTP微信助手】";
 
                 @Override
-                public void onNewMsg(String fromUser, String toUser, String text) {
+                public void onNewMsg(final String groupId, String fromUser, String toUser, String text) {
                     String nickName = weChat.mapFriendAndGroup2.get(fromUser);
                     String phone = null;
                     if (!Api.isEmpty(nickName)) {
@@ -144,17 +144,23 @@ public class PortalController {
                     }
                     logger.info("{}->{}: {}", nickName, toUser, text);
                     if (text.startsWith("@王布衣")) {
-                        String msg = text.replaceAll("( )+"," ");
+                        String msg = text.trim().replaceAll("( )+"," ");
                         String[] args = msg.split(" ");
-                        if (args.length >= 3) {
+                        if (args.length >= 2) {
 
-                            String command = args[1];
-                            String params = args[2];
+                            String command = args[1].trim();
+                            String params = args.length>=3 ? args[2].trim() : "";
                             String message = null;
                             if (command.equalsIgnoreCase("help")) {
                                 // 帮助信息
-                                message = "CTP策略订阅帮助信息:\r\n1)订阅个股预警信息: at 王布衣 订阅 股票代码";
-                                weChat.sendMessage(nickName, message);
+                                message = "CTP策略订阅帮助信息:\r\n1)注册股票预警功能: @王布衣 zc 手机号码\n2)订阅个股预警信息: @王布衣 dy 股票代码\n";
+                                if (groupId == null) {
+                                    weChat.sendMessage(nickName, message);
+                                } else {
+                                    String groupName = weChat.mapFriendAndGroup2.get(groupId);
+                                    nickName = weChat.mapFriendAndGroup2.get(toUser);
+                                    weChat.sendGroupMessage(groupName, nickName, message);
+                                }
                             } else if (command.equalsIgnoreCase("查询") || command.equalsIgnoreCase("cx")) {
                                 if (params.equalsIgnoreCase("id")) {
                                     // 查询用户ID
