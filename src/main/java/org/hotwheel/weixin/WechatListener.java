@@ -21,7 +21,7 @@ public class WechatListener {
 	 * @param weChat
 	 * @param context
 	 */
-	public void start(final WeChat weChat, WeChatContext context){
+	public void start(final WeChat weChat, final WeChatContext context){
 
 		Thread thread = new Thread(new Runnable() {
 			@Override
@@ -41,10 +41,31 @@ public class WechatListener {
 					} else if(sync.retcode == 0){
 						if(sync.selector == 2){
 							// 新消息
-							List<AddMsgListEntity> data = weChat.webwxsync();
-							for (AddMsgListEntity msg : data) {
-								//context.handleMessage(data);
-								//weChat.handleMsg(wechatMeta, data);
+							WxMessage wxMessage = weChat.webwxsync();
+							List<AddMsgListEntity> msgList = wxMessage.getAddMsgList();
+							for (AddMsgListEntity addMsgListEntity : msgList) {
+								// 只处理群消息
+								if (addMsgListEntity.getFromUserName().startsWith("@@")) {
+									String groupId = addMsgListEntity.getFromUserName();
+									String toUser = addMsgListEntity.getToUserName();
+									String msg = addMsgListEntity.getContent();
+									int pos = msg.indexOf("<br/>");
+									String fromUser = msg.substring(0, pos);
+									msg = msg.substring(pos + 5);
+									context.handleMessage(groupId, fromUser, toUser, msg);
+								} else if (addMsgListEntity.getToUserName().equalsIgnoreCase(weChat.kFromUser)) {
+									String groupId = null;
+									String msgId = addMsgListEntity.getMsgId();
+									String fromUser = addMsgListEntity.getFromUserName();
+									String nickName = weChat.mapUserToNick.get(fromUser);
+									if (!Api.isEmpty(nickName)) {
+										String toUser = addMsgListEntity.getToUserName();
+										String msg = addMsgListEntity.getContent();
+										msg = "@王布衣 " + msg.trim();
+										//msgIdList.add(msgId);
+										context.handleMessage(groupId, fromUser, toUser, msg);
+									}
+								}
 							}
 						} else if(sync.selector == 6) {
 							// 红包

@@ -50,15 +50,15 @@ public class WeChat {
     private String cookies = null;
 
     // 自己的用户名
-    private String kFromUser;
+    public String kFromUser;
     // 自己的昵称
-    private String kNickName;
+    public String kNickName;
 
     // 好友列表, 昵称-用户名
-    private Map<String, String> mapNickToUser = new HashMap<>();
+    public Map<String, String> mapNickToUser = new HashMap<>();
     // 好友列表, 用户名-昵称
-    private Map<String, String> mapUserToNick = new HashMap<>();
-    private Map<String, String> mapGroupMember = new HashMap<>();
+    public Map<String, String> mapUserToNick = new HashMap<>();
+    public Map<String, String> mapGroupMember = new HashMap<>();
     private final static String kGroupId = "股友会";
     public final static long kHeartSleep = 20 * 1000;
 
@@ -552,8 +552,8 @@ public class WeChat {
      * 同步消息
      * @return
      */
-    public List<AddMsgListEntity> webwxsync() {
-        List<AddMsgListEntity> retMsg = new ArrayList<>();
+    public WxMessage webwxsync() {
+        WxMessage message = null;
         String url = base_uri + "/webwxsync";
         url += "?skey=" + Api.urlEncode(wxSkey);
         url += "&sid=" + Api.urlEncode(wxSid);
@@ -578,20 +578,23 @@ public class WeChat {
                     reloadSyncKey(objSync);
                     JSONArray msgList = resp.getJSONArray("AddMsgList");
                     if (msgList != null && msgList.size() > 0) {
+                        message = new WxMessage();
+                        List<AddMsgListEntity> list = new ArrayList<>();
                         for (int i = 0; i < msgList.size(); i++) {
                             msgList.get(i);
                         }
                         for (Object obj : msgList) {
                             JSONObject tmp = (JSONObject) obj;
-                            retMsg.add(tmp.toJavaObject(AddMsgListEntity.class));
+                            list.add(tmp.toJavaObject(AddMsgListEntity.class));
                         }
+                        message.setAddMsgList(list);
                     }
                 }
             } catch (Exception e) {
                 //
             }
         }
-        return retMsg;
+        return message;
     }
 
     public String sendGroupMessage(String nickName, String message) {
