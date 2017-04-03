@@ -1,7 +1,7 @@
 package org.hotwheel.ctp.exchange.task;
 
 import org.hotwheel.spring.scheduler.SchedulerContext;
-import org.hotwheel.weixin.backup.OldWeChat;
+import org.hotwheel.weixin.WeChat;
 
 /**
  * 进一步封装消息
@@ -10,13 +10,13 @@ import org.hotwheel.weixin.backup.OldWeChat;
  * @version 1.0.3
  */
 public abstract class CTPContext extends SchedulerContext {
-    protected static OldWeChat weChat = null;
+    protected static WeChat weChat = null;
 
-    public static OldWeChat getWeChat() {
+    public static WeChat getWeChat() {
         return weChat;
     }
 
-    public static void setWeChat(OldWeChat weChat) {
+    public static void setWeChat(WeChat weChat) {
         CTPContext.weChat = weChat;
     }
 }

@@ -70,7 +70,6 @@ public class PortalController implements WeChatContext {
     @RequestMapping("/start.wx")
     @ResponseBody
     public void scheduleDownload(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-        //String html = "";
         response.setCharacterEncoding("UTF-8");
         try {
             request.setCharacterEncoding("UTF-8");
@@ -95,6 +94,7 @@ public class PortalController implements WeChatContext {
     }
 
     private final static String kPrefix = "【CTP微信助手】";
+    private final static String kToMe = "@王布衣";
 
     @Override
     public void handleMessage(String groupId, String fromUser, String toUser, String text) {
@@ -104,13 +104,13 @@ public class PortalController implements WeChatContext {
             phone = userService.getPhone(nickName);
         }
         logger.info("{}->{}: {}", nickName, toUser, text);
-        if (text.startsWith("@王布衣")) {
+        if (text.startsWith(kToMe)) {
+            text = text.substring(kToMe.length()).trim();
             String msg = text.trim().replaceAll("( )+"," ");
             String[] args = msg.split(" ");
-            if (args.length >= 2) {
-
-                String command = args[1].trim();
-                String params = args.length>=3 ? args[2].trim() : "";
+            if (args.length >= 1) {
+                String command = args[0].trim();
+                String params = args.length>=2 ? args[1].trim() : "";
                 String message = null;
                 if (command.equalsIgnoreCase("help")) {
                     // 帮助信息

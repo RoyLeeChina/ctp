@@ -1,6 +1,6 @@
 package org.hotwheel.weixin;
 
-import org.hotwheel.weixin.bean.AddMsgListEntity;
+import org.hotwheel.weixin.bean.MessageEntity;
 
 import java.util.List;
 
@@ -40,13 +40,13 @@ public class WxMessage {
      * NewMsgId : 8820250664544778582
      */
 
-    private List<AddMsgListEntity> AddMsgList;
+    private List<MessageEntity> AddMsgList;
 
-    public void setAddMsgList(List<AddMsgListEntity> AddMsgList) {
+    public void setAddMsgList(List<MessageEntity> AddMsgList) {
         this.AddMsgList = AddMsgList;
     }
 
-    public List<AddMsgListEntity> getAddMsgList() {
+    public List<MessageEntity> getAddMsgList() {
         return AddMsgList;
     }
 }
