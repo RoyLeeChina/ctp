@@ -5,14 +5,14 @@ package org.hotwheel.weixin.bean;
  * @version 1.0.2
  */
 public class SyncKeyEntity {
-    private int Count;
+    public int Count;
     /**
      * Key : 1
      * Val : 641466310
      */
 
-    private java.util.List<ListEntity> List;
-
+    public java.util.List<ListEntity> List;
+/*
     public void setCount(int Count) {
         this.Count = Count;
     }
@@ -28,11 +28,11 @@ public class SyncKeyEntity {
     public java.util.List<ListEntity> getList() {
         return List;
     }
-
+*/
     public static class ListEntity {
-        private int Key;
-        private int Val;
-
+        public int Key;
+        public int Val;
+/*
         public void setKey(int Key) {
             this.Key = Key;
         }
@@ -48,5 +48,6 @@ public class SyncKeyEntity {
         public int getVal() {
             return Val;
         }
+        */
     }
 }

@@ -5,7 +5,7 @@ package org.hotwheel.weixin.bean;
  * Created by wangfeng on 2017/3/28.
  * @version 1.0.2
  */
-public class AddMsgListEntity {
+public class MessageEntity {
     private String MsgId;
     private String FromUserName;
     private String ToUserName;

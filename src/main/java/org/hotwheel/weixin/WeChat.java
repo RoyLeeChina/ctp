@@ -5,10 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.hotwheel.assembly.Api;
 import org.hotwheel.ctp.util.HttpUtils;
-import org.hotwheel.weixin.bean.AddMsgListEntity;
-import org.hotwheel.weixin.bean.BaseRequest;
-import org.hotwheel.weixin.bean.BaseResponseEntity;
-import org.hotwheel.weixin.bean.SyncResponse;
+import org.hotwheel.weixin.bean.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +36,7 @@ public class WeChat {
     private String wxSid;
     private String wxUin;
     private String syncKey;
+    private SyncKeyEntity jsonSyncKey;
     private String pass_ticket;
 
     //private WxHttpClient httpClient = WxHttpClient.getInstance();
@@ -59,7 +57,8 @@ public class WeChat {
     // 好友列表, 用户名-昵称
     public Map<String, String> mapUserToNick = new HashMap<>();
     public Map<String, String> mapGroupMember = new HashMap<>();
-    private final static String kGroupId = "股友会";
+    //private final static String kGroupId = "股友会";
+    private final static String kGroupId = "CTP内测";
     public final static long kHeartSleep = 20 * 1000;
 
     static {
@@ -69,6 +68,7 @@ public class WeChat {
         long randomId = System.nanoTime();
         String str = "" + System.currentTimeMillis() + "" + randomId;
         kDeviceId = "e" + str.substring(2, 17);
+        //TypeUtils.compatibleWithJavaBean = true;
     }
 
     /**
@@ -78,6 +78,9 @@ public class WeChat {
 
     }
 
+    public boolean isRunning() {
+        return mapGroupMember.size() > 0;
+    }
     /**
      * 匹配字符串
      * @param str
@@ -279,6 +282,7 @@ public class WeChat {
         StringBuffer sb = new StringBuffer();
         try {
             JSONArray list = objSyncKey.getJSONArray("List");
+            jsonSyncKey = objSyncKey.toJavaObject(SyncKeyEntity.class);
             for (int i = 0, len = list.size(); i < len; i++) {
                 JSONObject item = (JSONObject) list.get(i);
                 sb.append("|" + item.getIntValue("Key") + "_" + item.getIntValue("Val"));
@@ -447,7 +451,6 @@ public class WeChat {
         TreeMap<String, Object> msg = new TreeMap<>();
         msg.put("Count", 1);
         msg.put("List", Arrays.asList(group));
-
         params.put("msg", msg);
 
         String groupResult = HttpUtils.request(url, JSON.toJSONString(params));
@@ -544,19 +547,19 @@ public class WeChat {
                 response.retcode = Api.valueOf(int.class, retcode);
                 response.selector = Api.valueOf(int.class, selector);
             }
+            //cookies = HttpUtils.getCookies();
         }
         return response;
     }
 
-    /**
-     * 同步消息
-     * @return
-     */
     public WxMessage webwxsync() {
-        WxMessage message = null;
         String url = base_uri + "/webwxsync";
-        url += "?skey=" + Api.urlEncode(wxSkey);
-        url += "&sid=" + Api.urlEncode(wxSid);
+
+        url += "?sid=" + Api.urlEncode(wxSid);
+        url += "&skey=" + Api.urlEncode(wxSkey);
+        url += "&pass_ticket=" + Api.urlEncode(pass_ticket);
+
+        WxMessage message = null;
 
         BaseRequest baseRequest = new BaseRequest();
         baseRequest.Uin = wxUin;
@@ -566,8 +569,9 @@ public class WeChat {
 
         TreeMap<String, Object> params = new TreeMap<>();
         params.put("BaseRequest", baseRequest);
-        params.put("SyncKey", syncKey);
-        params.put("rr", System.currentTimeMillis());
+        params.put("SyncKey", jsonSyncKey);
+        long tm = System.currentTimeMillis() / 1000;
+        params.put("rr", ~tm);
 
         String result = HttpUtils.request(url, JSON.toJSONString(params), cookies);
         if (!Api.isEmpty(result)) {
@@ -579,15 +583,13 @@ public class WeChat {
                     JSONArray msgList = resp.getJSONArray("AddMsgList");
                     if (msgList != null && msgList.size() > 0) {
                         message = new WxMessage();
-                        List<AddMsgListEntity> list = new ArrayList<>();
-                        for (int i = 0; i < msgList.size(); i++) {
-                            msgList.get(i);
-                        }
+                        List<MessageEntity> list = new ArrayList<>();
                         for (Object obj : msgList) {
                             JSONObject tmp = (JSONObject) obj;
-                            list.add(tmp.toJavaObject(AddMsgListEntity.class));
+                            list.add(tmp.toJavaObject(MessageEntity.class));
                         }
                         message.setAddMsgList(list);
+                        cookies = HttpUtils.getCookies();
                     }
                 }
             } catch (Exception e) {
@@ -597,53 +599,84 @@ public class WeChat {
         return message;
     }
 
-    public String sendGroupMessage(String nickName, String message) {
-        return sendGroupMessage(kGroupId, nickName, message);
-    }
-
-    public String sendGroupMessage(String groupId, String userId, String context) {
-        String result = "";
-        try {
-            long tt = genMsgId();
-            String from = kFromUser;
-            String to = mapNickToUser.get(groupId);
-            StringBuffer sb = new StringBuffer();
-            sb.append("@");
-            if (Api.isEmpty(userId)) {
-                sb.append("all");
-            } else {
-                sb.append(userId.trim());
-            }
-            String message = sb.toString() + ' ' + context;
-            //String msg = "\"Msg\":{\"Type\":1,\"Content\":\"要发送的消息\",\"FromUserName\":\""+wxUin+"\",\"ToUserName\":\""+wxUin+"\",\"LocalID\":\""+tt+"\",\"ClientMsgId\":\""+tt+"\"}";
-            String msg = "\"Msg\":{\"Type\":1,\"Content\":\"" + message + "\",\"FromUserName\":\"" + from + "\",\"ToUserName\":\"" + to + "\",\"LocalID\":\"" + tt + "\",\"ClientMsgId\":\"" + tt + "\"}";
-            //String data = "{\"BaseRequest\":{\"Uin\":\"" + wxUin + "\",\"Sid\":\"" + wxSid + "\",\"Skey\":\"" + wxSkey + "\",\"DeviceID\":\"" + wxDeviceId + "\"}," + msg + "}";
-            //httpClient.contentType = "application/json; charset=UTF-8";
-            //result = httpClient.post(baseUrl + "/webwxsendmsg?pass_ticket=" + pass_ticket, data);
-        } catch (Exception e) {
-            //
-        }
-        return result;
+    /**
+     * 发送 群消息
+     * @param nickName
+     * @param message
+     * @return
+     */
+    public void sendGroupMessage(String nickName, String message) {
+        //return sendGroupMessage(kGroupId, nickName, message);
     }
 
     /**
-     * 发送消息 webwxsendmsg?pass_ticket=xxx
-     *
-     * @param message
+     * 发送 群消息
+     * @param groupId
+     * @param toUserId
+     * @param context
+     * @return
      */
-    public void sendMessage(String userId, String message) {
-        //statusNotify();
-        long tt = genMsgId();
-        String from = kFromUser;
-        String to = mapNickToUser.get(userId);
-        if (!Api.isEmpty(to)) {
-            //String msg = "\"Msg\":{\"Type\":1,\"Content\":\"要发送的消息\",\"FromUserName\":\""+wxUin+"\",\"ToUserName\":\""+wxUin+"\",\"LocalID\":\""+tt+"\",\"ClientMsgId\":\""+tt+"\"}";
-            String msg = "\"Msg\":{\"Type\":1,\"Content\":\"" + message + "\",\"FromUserName\":\"" + from + "\",\"ToUserName\":\"" + to + "\",\"LocalID\":\"" + tt + "\",\"ClientMsgId\":\"" + tt + "\"}";
-            //String data="{\"BaseRequest\":{\"Uin\":\""+wxUin+"\",\"Sid\":\""+wxSid+"\",\"Skey\":\""+wxSkey+"\",\"DeviceID\":\"" + wxDeviceId + "\"},"+msg+",\"Scene\":0}";
-            //e110854731714634
-            //String data = "{\"BaseRequest\":{\"Uin\":\"" + wxUin + "\",\"Sid\":\"" + wxSid + "\",\"Skey\":\"" + wxSkey + "\",\"DeviceID\":\"" + wxDeviceId + "\"}," + msg + "}";
-            //httpClient.contentType = "application/json; charset=UTF-8";
-            //String initResult = httpClient.post(baseUrl + "/webwxsendmsg?pass_ticket=" + pass_ticket, data);
+    public void sendGroupMessage(final String groupId, final String toUserId, final String context) {
+        String nmTO = mapGroupMember.get(toUserId);
+        if (Api.isEmpty(nmTO) && toUserId.equals(kFromUser)) {
+            nmTO = "王布衣";
         }
+        boolean bSend = false;
+        //String to = mapNickToUser.get(groupId);
+        StringBuffer sb = new StringBuffer();
+        sb.append("@");
+        if (Api.isEmpty(toUserId)) {
+            sb.append("all");
+            bSend = true;
+        } else if (!Api.isEmpty(nmTO)){
+            sb.append(nmTO);
+            bSend = true;
+        }
+        if (bSend) {
+            String message = sb.toString() + ' ' + context;
+            sendMessageByUserId(groupId, message);
+        }
+    }
+
+    /**
+     * 发送 消息
+     * @param toUserId 用户名
+     * @param message 消息文本
+     */
+    public void sendMessageByUserId(final String toUserId, final String message) {
+        long msgId = genMsgId();
+        String fromUserId = kFromUser;
+        if (!Api.isEmpty(toUserId)) {
+            String url = base_uri + "/webwxsendmsg";
+            url += "?pass_ticket=" + Api.urlEncode(pass_ticket);
+            BaseRequest baseRequest = new BaseRequest();
+            baseRequest.Uin = wxUin;
+            baseRequest.Sid = wxSid;
+            baseRequest.Skey = wxSkey;
+            baseRequest.DeviceID = kDeviceId;
+
+            Map<String, Object> body = new HashMap<>();
+            body.put("Type", WxMsgType.TEXT);
+            body.put("Content", message);
+            body.put("FromUserName", fromUserId);
+            body.put("ToUserName", toUserId);
+            body.put("LocalID", msgId);
+            body.put("ClientMsgId", msgId);
+
+            TreeMap<String, Object> params = new TreeMap<>();
+            params.put("BaseRequest", baseRequest);
+            params.put("Msg", body);
+            HttpUtils.request(url, JSON.toJSONString(params), cookies);
+        }
+    }
+
+    /**
+     * 发送 消息
+     * @param nickName 用户昵称
+     * @param message 消息文本
+     */
+    public void sendMessage(final String nickName, final String message) {
+        String toUserId = mapNickToUser.get(nickName);
+        sendMessageByUserId(toUserId, message);
     }
 }
