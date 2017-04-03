@@ -103,6 +103,9 @@ public class PortalController implements WeChatContext {
         if (!Api.isEmpty(nickName)) {
             phone = userService.getPhone(nickName);
         }
+        if (!Api.isEmpty(phone)) {
+            phone = phone.trim();
+        }
         logger.info("{}->{}: {}", nickName, toUser, text);
         if (text.startsWith(kToMe)) {
             text = text.substring(kToMe.length()).trim();

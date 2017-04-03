@@ -14,6 +14,7 @@
                 <value>classpath:/runtime.properties</value>
             </list>
         </property>
+        <property name="fileEncoding" value="UTF-8"/>
     </bean>
 
     <!-- ==================== 实时数据 =========================== -->

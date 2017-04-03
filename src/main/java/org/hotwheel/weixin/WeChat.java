@@ -327,6 +327,8 @@ public class WeChat {
                             if (user != null) {
                                 kFromUser = (String) user.get("UserName");
                                 kNickName = (String) user.get("NickName");
+                                mapNickToUser.put(kNickName, kFromUser);
+                                mapUserToNick.put(kFromUser, kNickName);
                             }
                             JSONObject objSyncKey = resp.getJSONObject("SyncKey");
                             reloadSyncKey(objSyncKey);
