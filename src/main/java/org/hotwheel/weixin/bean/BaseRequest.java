@@ -6,11 +6,12 @@ package org.hotwheel.weixin.bean;
  * @version 2.0.0
  */
 public class BaseRequest {
-    private String Uin;
-    private String Sid;
-    private String Skey;
-    private String DeviceID;
+    public String Uin;
+    public String Sid;
+    public String Skey;
+    public String DeviceID;
 
+    /*
     public String getUin() {
         return Uin;
     }
@@ -42,4 +43,5 @@ public class BaseRequest {
     public void setDeviceID(String deviceID) {
         DeviceID = deviceID;
     }
+    */
 }

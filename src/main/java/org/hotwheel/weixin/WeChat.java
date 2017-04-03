@@ -1,7 +1,14 @@
 package org.hotwheel.weixin;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.hotwheel.assembly.Api;
 import org.hotwheel.ctp.util.HttpUtils;
+import org.hotwheel.weixin.bean.AddMsgListEntity;
+import org.hotwheel.weixin.bean.BaseRequest;
+import org.hotwheel.weixin.bean.BaseResponseEntity;
+import org.hotwheel.weixin.bean.SyncResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +17,8 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,7 +32,8 @@ public class WeChat {
     private static Logger logger = LoggerFactory.getLogger(WeChat.class);
 
     private final static String kAppId = "wx782c26e4c19acffb";
-    private String baseUrl = null;
+    private final static String kLoginUrl = "https://login.weixin.qq.com/cgi-bin/mmwebwx-bin/login";
+    private final static String kDeviceId;
     private static String uuid = null;
     private String wxSkey;
     private String wxSid;
@@ -32,11 +41,41 @@ public class WeChat {
     private String syncKey;
     private String pass_ticket;
 
-    private WxHttpClient httpClient = WxHttpClient.getInstance();
+    //private WxHttpClient httpClient = WxHttpClient.getInstance();
+    private WechatListener wechatListener = new WechatListener();
+    private int tip = 1;
+    private String redirect_uri = null;
+    private String base_uri = null;
+
+    private String cookies = null;
+
+    // 自己的用户名
+    private String kFromUser;
+    // 自己的昵称
+    private String kNickName;
+
+    // 好友列表, 昵称-用户名
+    private Map<String, String> mapNickToUser = new HashMap<>();
+    // 好友列表, 用户名-昵称
+    private Map<String, String> mapUserToNick = new HashMap<>();
+    private Map<String, String> mapGroupMember = new HashMap<>();
+    private final static String kGroupId = "股友会";
+    public final static long kHeartSleep = 20 * 1000;
 
     static {
         System.setProperty("https.protocols", "TLSv1");
         System.setProperty("jsse.enableSNIExtension", "false");
+
+        long randomId = System.nanoTime();
+        String str = "" + System.currentTimeMillis() + "" + randomId;
+        kDeviceId = "e" + str.substring(2, 17);
+    }
+
+    /**
+     * 构造方法
+     */
+    public WeChat() {
+
     }
 
     /**
@@ -55,6 +94,55 @@ public class WeChat {
         return defaultValue;
     }
 
+    public static String match(String exp, String str) {
+        return match(str, exp, "");
+    }
+
+    public void start(WeChatContext context) {
+        while (!waitForLogin()) {
+            Api.sleep(2000);
+        }
+        login();
+        logger.info("微信登录成功");
+
+        logger.info("微信初始化...");
+        wxInit();
+        logger.info("微信初始化成功");
+
+        logger.info("开启状态通知...");
+        openStatusNotify();
+        logger.info("开启状态通知成功");
+
+        logger.info("获取联系人...");
+        getContact();
+        logger.info("获取联系人成功");
+        //logger.info("共有 {} 位联系人", Constant.CONTACT.getContactList().size());
+
+        // 监听消息
+        wechatListener.start(this, context);
+    }
+
+    private static volatile long sn = 0;
+    private static volatile long timestamp = 0;
+
+    private static AtomicLong atomicLong = new AtomicLong(0);
+
+    /**
+     * 生成消息id
+     * @return
+     */
+    public static long genMsgId() {
+        long lRet = 0;
+        long tm = System.currentTimeMillis();
+        if (timestamp < tm) {
+            timestamp = tm;
+            atomicLong.getAndSet(0);
+        }
+        sn = atomicLong.getAndIncrement();
+        lRet = timestamp * 10000 + sn;
+        return lRet;
+    }
+
     /**
      * 获取UUID
      */
@@ -67,11 +155,8 @@ public class WeChat {
         params.put("fun", "new");
         params.put("_", System.currentTimeMillis());
 
-        String result = HttpUtils.request(url, null, params);
+        String result = HttpUtils.request(url, params);
         if (!Api.isEmpty(result)) {
-            //String result = httpClient.post("https://login.weixin.qq.com/jslogin",
-            //        "appid=wx782c26e4c19acffb&fun=new&lang=zh_CN&_=" + System.currentTimeMillis());
-            //uuid = ss.subStringOne(result, ".uuid = \"", "\";");//得到uuid
             String code = match(result, "window.QRLogin.code = (\\d+);", "");
             if (null != code) {
                 if (code.equals("200")) {
@@ -118,5 +203,444 @@ public class WeChat {
             logger.info("二维码已生成");
         }
         return baImage;
+    }
+
+    /**
+     * 扫码登录
+     * @return
+     */
+    public boolean waitForLogin() {
+        boolean bRet = false;
+        TreeMap<String, Object> params = new TreeMap<>();
+        // 0-已扫描,1-未扫描
+        params.put("tip", tip);
+        params.put("uuid", uuid);
+        params.put("_", System.currentTimeMillis());
+
+        logger.info("等待登录...");
+        String result = HttpUtils.request(kLoginUrl, params);
+        if (!Api.isEmpty(result)) {
+            String code = match("window.code=(\\d+);", result);
+            if (!Api.isEmpty(code)) {
+                if (code.equals("201")) {
+                    logger.info("成功扫描,请在手机上点击确认以登录");
+                    tip = 0;
+                } else if (code.equals("200")) {
+                    logger.info("正在登录...");
+                    String pm = match("window.redirect_uri=\"(\\S+?)\";", result);
+                    redirect_uri = pm + "&fun=new";
+
+                    base_uri = redirect_uri.substring(0, redirect_uri.lastIndexOf("/"));
+
+                    logger.debug("redirect_uri={}", redirect_uri);
+                    logger.debug("base_uri={}", base_uri);
+                } else if (code.equals("408")) {
+                    //throw new WechatException("登录超时");
+                    logger.error("登录超时");
+                } else {
+                    logger.info("扫描code={}", code);
+                }
+                bRet = code.equals("200");
+            }
+        }
+
+        return bRet;
+    }
+
+    /**
+     * 重新登录
+     */
+    public void login() {
+        String url = redirect_uri;
+        TreeMap<String, Object> params = new TreeMap<>();
+        String result = HttpUtils.request(url, params);
+        cookies = null;
+        //wechatMeta.setCookie(CookieUtil.getCookie(request));
+        //request.disconnect();
+        if (!Api.isEmpty(result)) {
+            wxSkey = match("<skey>(\\S+)</skey>", result);
+            wxSid = match("<wxsid>(\\S+)</wxsid>", result);
+            wxUin = match("<wxuin>(\\S+)</wxuin>", result);
+            pass_ticket = match("<pass_ticket>(\\S+)</pass_ticket>", result);
+
+            logger.debug("skey [{}]", wxSkey);
+            logger.debug("wxsid [{}]", wxSid);
+            logger.debug("wxuin [{}]", wxUin);
+            logger.debug("pass_ticket [{}]", pass_ticket);
+            cookies = HttpUtils.getCookies();
+        }
+    }
+
+    /**
+     * 重新加载SyncKey
+     * @param objSyncKey
+     */
+    private void reloadSyncKey(final JSONObject objSyncKey) {
+        StringBuffer sb = new StringBuffer();
+        try {
+            JSONArray list = objSyncKey.getJSONArray("List");
+            for (int i = 0, len = list.size(); i < len; i++) {
+                JSONObject item = (JSONObject) list.get(i);
+                sb.append("|" + item.getIntValue("Key") + "_" + item.getIntValue("Val"));
+            }
+            if (sb.length() > 3) {
+                syncKey = sb.substring(1);
+            }
+        } catch (Exception e) {
+            //
+        }
+    }
+
+    /**
+     * 初始化
+     */
+    private void wxInit() {
+        String url = base_uri + "/webwxinit";
+        url += "?r=" + System.currentTimeMillis();
+        url += "&pass_ticket" + Api.urlEncode(pass_ticket);
+        url += "&skey" + Api.urlEncode(wxSkey);
+
+        BaseRequest baseRequest = new BaseRequest();
+        baseRequest.Uin = wxUin;
+        baseRequest.Sid = wxSid;
+        baseRequest.Skey = wxSkey;
+        baseRequest.DeviceID = kDeviceId;
+
+        TreeMap<String, Object> params = new TreeMap<>();
+        params.put("BaseRequest", baseRequest);
+
+        String body = JSON.toJSONString(params);
+        String result = HttpUtils.request(url, body);
+        if (!Api.isEmpty(result)) {
+            try {
+                JSONObject resp = JSON.parseObject(result);
+                if (resp != null && resp.size() > 0) {
+                    JSONObject baseResp = resp.getJSONObject("BaseResponse");
+                    if (null != baseResp) {
+                        int ret = baseResp.getIntValue("Ret");
+                        if (ret == 0) {
+                            JSONObject user = resp.getJSONObject("User");
+                            if (user != null) {
+                                kFromUser = (String) user.get("UserName");
+                                kNickName = (String) user.get("NickName");
+                            }
+                            JSONObject objSyncKey = resp.getJSONObject("SyncKey");
+                            reloadSyncKey(objSyncKey);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("解析json失败", e);
+            }
+        }
+    }
+
+    private void openStatusNotify() {
+        String url = base_uri + "/webwxstatusnotify";
+        url += "?lang=zh_CN&pass_ticket=" + Api.urlEncode(pass_ticket);
+
+        BaseRequest baseRequest = new BaseRequest();
+        baseRequest.Uin = wxUin;
+        baseRequest.Sid = wxSid;
+        baseRequest.Skey = wxSkey;
+        baseRequest.DeviceID = kDeviceId;
+
+        TreeMap<String, Object> params = new TreeMap<>();
+        params.put("BaseRequest", baseRequest);
+        params.put("Code", 3);
+        params.put("FromUserName", kFromUser);
+        params.put("ToUserName", kFromUser);
+        params.put("ClientMsgId", genMsgId());
+
+        String body = JSON.toJSONString(params);
+        String result = HttpUtils.request(url, body);
+        if (!Api.isEmpty(result)) {
+            try {
+                JSONObject response = JSON.parseObject(result);
+                if (response != null) {
+                    BaseResponseEntity baseResponse = response.getObject("BaseResponse", BaseResponseEntity.class);
+                    if (baseResponse.getRet() != 0) {
+                        logger.info("状态通知开启失败，ret：" + baseResponse.getRet());
+                    }
+                }
+
+            } catch (Exception e) {
+                logger.error("", e);
+            }
+        }
+    }
+
+    private void getContact() {
+        String url = base_uri + "/webwxgetcontact";
+        url += "?r=" + System.currentTimeMillis();
+        url += "&pass_ticket=" + Api.urlEncode(pass_ticket);
+        url += "&skey=" + Api.urlEncode(wxSkey);
+        BaseRequest baseRequest = new BaseRequest();
+        baseRequest.Uin = wxUin;
+        baseRequest.Sid = wxSid;
+        baseRequest.Skey = wxSkey;
+        baseRequest.DeviceID = kDeviceId;
+
+        TreeMap<String, Object> params = new TreeMap<>();
+        params.put("BaseRequest", baseRequest);
+        //params.put("Code", 3);
+        //params.put("FromUserName", kFromUser);
+        //params.put("ToUserName", kNickName);
+        //params.put("ClientMsgId", genMsgId());
+
+        String result = HttpUtils.request(url, JSON.toJSONString(params));
+
+        if (!Api.isEmpty(result)) {
+            Map<String, Object> resp = JSON.parseObject(result, HashMap.class);
+            if (resp != null) {
+                List<Map<String, Object>> userList = (List<Map<String, Object>>)resp.get("MemberList");
+                if (userList != null) {
+                    for (Map<String, Object> tu : userList) {
+                        String nm = (String)tu.get("NickName");
+                        String um = (String)tu.get("UserName");
+                        String rm = (String)tu.get("RemarkName");
+                        if (!Api.isEmpty(rm)) {
+                            nm = rm;
+                        }
+                        long verifyFlag = (int)tu.get("VerifyFlag");
+                        if (verifyFlag != 0) {
+                            // # 公众号/服务号
+                            logger.info("公众或服务号: {}, {}", nm, um);
+                        } else if (um.charAt(0) != '@') {
+                            // 特殊账号
+                            logger.info("特殊账号: {}", um);
+                        } else {
+                            mapNickToUser.put(nm, um);
+                            mapUserToNick.put(um, nm);
+                            if (um.startsWith("@@")) {
+                                logger.info("group: " + nm);
+                                if (nm.equalsIgnoreCase(kGroupId)) {
+                                    getGroupMemberList(um);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 获取群信息
+     */
+    public void getGroupMemberList(final String groupId) {
+        String url = base_uri + "/webwxbatchgetcontact?type=ex&r=" + System.currentTimeMillis();
+        url += "&pass_ticket=" + Api.urlEncode(pass_ticket);
+
+        BaseRequest baseRequest = new BaseRequest();
+        baseRequest.Uin = wxUin;
+        baseRequest.Sid = wxSid;
+        baseRequest.Skey = wxSkey;
+        baseRequest.DeviceID = kDeviceId;
+
+        TreeMap<String, Object> params = new TreeMap<>();
+        params.put("BaseRequest", baseRequest);
+
+        Map<String, Object> group = new HashMap<>();
+        group.put("UserName", groupId);
+        group.put("ChatRoomId", "");
+        TreeMap<String, Object> msg = new TreeMap<>();
+        msg.put("Count", 1);
+        msg.put("List", Arrays.asList(group));
+
+        params.put("msg", msg);
+
+        String groupResult = HttpUtils.request(url, JSON.toJSONString(params));
+        if (!Api.isEmpty(groupResult)) {
+            Map<String, Object> resp = JSON.parseObject(groupResult, HashMap.class);
+            if (resp != null) {
+                List<Map<String, Object>> contactList = (List<Map<String, Object>>)resp.get("ContactList");
+                if (contactList != null && contactList.size() == 1) {
+                    Map<String, Object> contact = contactList.get(0);
+                    List<Map<String, Object>> userList = (List<Map<String, Object>>) contact.get("MemberList");
+                    if (userList != null) {
+                        for (Map<String, Object> tu : userList) {
+                            String nm = (String) tu.get("NickName");
+                            String um = (String) tu.get("UserName");
+                            mapGroupMember.put(nm, um);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static final String[] SYNC_HOST = {
+            "webpush.weixin.qq.com",
+            "webpush2.weixin.qq.com",
+            "webpush.wechat.com",
+            "webpush1.wechat.com",
+            "webpush2.wechat.com",
+            "webpush1.wechatapp.com"
+    };
+
+    private String urlWebPush = null;
+
+    public void choiceSyncLine() {
+        boolean enabled = false;
+        for(String syncUrl : SYNC_HOST){
+            SyncResponse syncResponse = this.syncCheck(syncUrl);
+            if(syncResponse.retcode == 0){
+                String url = "https://" + syncUrl + "/cgi-bin/mmwebwx-bin";
+                urlWebPush = url;
+                logger.info("选择线路：[{}]", syncUrl);
+                enabled = true;
+                break;
+            }
+        }
+        if(!enabled){
+            //throw new WechatException("同步线路不通畅");
+        }
+    }
+
+    /**
+     * 获取指定长度的随机数字组成的字符串
+     *
+     * @param size
+     * @return
+     */
+    public static String getRandomNumber(int size) {
+        String num = "";
+        for (int i = 0; i < size; i++) {
+            double a = Math.random() * 9;
+            a = Math.ceil(a);
+            int randomNum = new Double(a).intValue();
+            num += randomNum;
+        }
+        return num;
+    }
+
+    /**
+     * 检测心跳
+     */
+    public SyncResponse syncCheck(final String uri) {
+        SyncResponse response = new SyncResponse();
+        String url;
+        if(null == uri){
+            url = urlWebPush + "/synccheck";
+        } else{
+            url = "https://" + uri + "/cgi-bin/mmwebwx-bin/synccheck";
+        }
+
+        url += "?skey=" + Api.urlEncode(wxSkey);
+        url += "&sid=" + Api.urlEncode(wxSid);
+        url += "&uin=" + Api.urlEncode(wxUin);
+        url += "&deviceid=" + Api.urlEncode(kDeviceId);
+        url += "&synckey=" + Api.urlEncode(syncKey);
+        url += "&r=" + System.currentTimeMillis();
+        url += "&_=" + System.currentTimeMillis();
+
+        String res = HttpUtils.request(url, "", cookies);
+        int[] arr = new int[]{-1, -1};
+        if (!Api.isEmpty(res)) {
+            String retcode = match("retcode:\"(\\d+)\",", res);
+            String selector = match("selector:\"(\\d+)\"}", res);
+            if (null != retcode && null != selector) {
+                response.retcode = Api.valueOf(int.class, retcode);
+                response.selector = Api.valueOf(int.class, selector);
+            }
+        }
+        return response;
+    }
+
+    /**
+     * 同步消息
+     * @return
+     */
+    public List<AddMsgListEntity> webwxsync() {
+        List<AddMsgListEntity> retMsg = new ArrayList<>();
+        String url = base_uri + "/webwxsync";
+        url += "?skey=" + Api.urlEncode(wxSkey);
+        url += "&sid=" + Api.urlEncode(wxSid);
+
+        BaseRequest baseRequest = new BaseRequest();
+        baseRequest.Uin = wxUin;
+        baseRequest.Sid = wxSid;
+        baseRequest.Skey = wxSkey;
+        baseRequest.DeviceID = kDeviceId;
+
+        TreeMap<String, Object> params = new TreeMap<>();
+        params.put("BaseRequest", baseRequest);
+        params.put("SyncKey", syncKey);
+        params.put("rr", System.currentTimeMillis());
+
+        String result = HttpUtils.request(url, JSON.toJSONString(params), cookies);
+        if (!Api.isEmpty(result)) {
+            try {
+                JSONObject resp = JSON.parseObject(result);
+                if (resp != null) {
+                    JSONObject objSync = resp.getJSONObject("SyncKey");
+                    reloadSyncKey(objSync);
+                    JSONArray msgList = resp.getJSONArray("AddMsgList");
+                    if (msgList != null && msgList.size() > 0) {
+                        for (int i = 0; i < msgList.size(); i++) {
+                            msgList.get(i);
+                        }
+                        for (Object obj : msgList) {
+                            JSONObject tmp = (JSONObject) obj;
+                            retMsg.add(tmp.toJavaObject(AddMsgListEntity.class));
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                //
+            }
+        }
+        return retMsg;
+    }
+
+    public String sendGroupMessage(String nickName, String message) {
+        return sendGroupMessage(kGroupId, nickName, message);
+    }
+
+    public String sendGroupMessage(String groupId, String userId, String context) {
+        String result = "";
+        try {
+            long tt = genMsgId();
+            String from = kFromUser;
+            String to = mapNickToUser.get(groupId);
+            StringBuffer sb = new StringBuffer();
+            sb.append("@");
+            if (Api.isEmpty(userId)) {
+                sb.append("all");
+            } else {
+                sb.append(userId.trim());
+            }
+            String message = sb.toString() + ' ' + context;
+            //String msg = "\"Msg\":{\"Type\":1,\"Content\":\"要发送的消息\",\"FromUserName\":\""+wxUin+"\",\"ToUserName\":\""+wxUin+"\",\"LocalID\":\""+tt+"\",\"ClientMsgId\":\""+tt+"\"}";
+            String msg = "\"Msg\":{\"Type\":1,\"Content\":\"" + message + "\",\"FromUserName\":\"" + from + "\",\"ToUserName\":\"" + to + "\",\"LocalID\":\"" + tt + "\",\"ClientMsgId\":\"" + tt + "\"}";
+            //String data = "{\"BaseRequest\":{\"Uin\":\"" + wxUin + "\",\"Sid\":\"" + wxSid + "\",\"Skey\":\"" + wxSkey + "\",\"DeviceID\":\"" + wxDeviceId + "\"}," + msg + "}";
+            //httpClient.contentType = "application/json; charset=UTF-8";
+            //result = httpClient.post(baseUrl + "/webwxsendmsg?pass_ticket=" + pass_ticket, data);
+        } catch (Exception e) {
+            //
+        }
+        return result;
+    }
+
+    /**
+     * 发送消息 webwxsendmsg?pass_ticket=xxx
+     *
+     * @param message
+     */
+    public void sendMessage(String userId, String message) {
+        //statusNotify();
+        long tt = genMsgId();
+        String from = kFromUser;
+        String to = mapNickToUser.get(userId);
+        if (!Api.isEmpty(to)) {
+            //String msg = "\"Msg\":{\"Type\":1,\"Content\":\"要发送的消息\",\"FromUserName\":\""+wxUin+"\",\"ToUserName\":\""+wxUin+"\",\"LocalID\":\""+tt+"\",\"ClientMsgId\":\""+tt+"\"}";
+            String msg = "\"Msg\":{\"Type\":1,\"Content\":\"" + message + "\",\"FromUserName\":\"" + from + "\",\"ToUserName\":\"" + to + "\",\"LocalID\":\"" + tt + "\",\"ClientMsgId\":\"" + tt + "\"}";
+            //String data="{\"BaseRequest\":{\"Uin\":\""+wxUin+"\",\"Sid\":\""+wxSid+"\",\"Skey\":\""+wxSkey+"\",\"DeviceID\":\"" + wxDeviceId + "\"},"+msg+",\"Scene\":0}";
+            //e110854731714634
+            //String data = "{\"BaseRequest\":{\"Uin\":\"" + wxUin + "\",\"Sid\":\"" + wxSid + "\",\"Skey\":\"" + wxSkey + "\",\"DeviceID\":\"" + wxDeviceId + "\"}," + msg + "}";
+            //httpClient.contentType = "application/json; charset=UTF-8";
+            //String initResult = httpClient.post(baseUrl + "/webwxsendmsg?pass_ticket=" + pass_ticket, data);
+        }
     }
 }
