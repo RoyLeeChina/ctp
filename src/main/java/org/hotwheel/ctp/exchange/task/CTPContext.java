@@ -1,7 +1,7 @@
 package org.hotwheel.ctp.exchange.task;
 
 import org.hotwheel.spring.scheduler.SchedulerContext;
-import org.hotwheel.weixin.OldWeChat;
+import org.hotwheel.weixin.backup.OldWeChat;
 
 /**
  * 进一步封装消息

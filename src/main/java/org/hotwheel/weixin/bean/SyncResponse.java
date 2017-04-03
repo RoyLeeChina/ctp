@@ -7,6 +7,6 @@ package org.hotwheel.weixin.bean;
  * @version 2.0.0
  */
 public class SyncResponse {
-    public int retcode;
-    public int selector;
+    public int retcode = -1;
+    public int selector = -1;
 }
