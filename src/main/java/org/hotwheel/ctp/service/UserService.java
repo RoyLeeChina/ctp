@@ -2,8 +2,10 @@ package org.hotwheel.ctp.service;
 
 import org.hotwheel.assembly.Api;
 import org.hotwheel.ctp.StockOptions;
+import org.hotwheel.ctp.dao.IStockCode;
 import org.hotwheel.ctp.dao.IStockSubscribe;
 import org.hotwheel.ctp.dao.IStockUser;
+import org.hotwheel.ctp.model.StockCode;
 import org.hotwheel.ctp.model.StockSubscribe;
 import org.hotwheel.ctp.model.UserInfo;
 import org.hotwheel.ctp.util.StockApi;
@@ -26,6 +28,7 @@ import java.util.Map;
 @Service("userService")
 public class UserService {
     private final static int kErrorCode = 10000;
+    private final static String kContactByError = "系统操作异常，请@王布衣。";
     private static Map<String, String> mapUsers = new HashMap<>();
 
     @Autowired
@@ -33,6 +36,9 @@ public class UserService {
 
     @Autowired
     private IStockSubscribe stockSubscribe;
+
+    @Autowired
+    private IStockCode stockCode;
 
     private void initUser() {
         if (mapUsers.size() < 1) {
@@ -60,7 +66,7 @@ public class UserService {
         int errno = kErrorCode + 1000;
         UserInfo info = stockUser.selectByWeixin(weixin);
         if (info == null) {
-            resp.set(errno + 1, "用户不存在，请联系管理员");
+            resp.set(errno + 1, "用户不存在");
         } else {
             resp.set(0, info.getPhone());
         }
@@ -78,7 +84,7 @@ public class UserService {
      */
     public ActionStatus register(String phone, String name, String weixin, String email) {
         ActionStatus resp = new ActionStatus();
-        int errno = 10000;
+        int errno = kErrorCode + 1100;
         String message = "用户已经存在";
         if (!Api.isEmpty(phone) && !Api.isEmpty(weixin)) {
             mapUsers.put(weixin, phone);
@@ -101,7 +107,7 @@ public class UserService {
             if (result == 1) {
                 resp.set(0, "SUCCESS");
             } else {
-                resp.set(errno + 1, "添加用户失败");
+                resp.set(errno + 1, "添加用户失败，" + kContactByError);
             }
         } else {
             user.setMemberName(name);
@@ -123,7 +129,7 @@ public class UserService {
      */
     public ActionStatus subscribe(String phone, String code) {
         ActionStatus resp = new ActionStatus();
-        int errno = 10000;
+        int errno = kErrorCode + 1200;
         String message = "订阅已经存在";
         String fullCode = StockApi.fixCode(code);
         if (Api.isEmpty(phone)) {
@@ -136,27 +142,37 @@ public class UserService {
             // 代码为空
             resp.set(errno + 3, "股票代码无效");
         } else {
-            StockSubscribe info = stockSubscribe.select(phone, fullCode);
-            int result = -1;
-            if (info == null) {
-                info = new StockSubscribe();
-                info.setFlag(StockOptions.kNormalState);
-                info.setPhone(phone);
-                info.setCode(fullCode);
-                result = stockSubscribe.insert(info);
-                if (result == 1) {
-                    resp.set(0, "SUCCESS");
-                } else {
-                    resp.set(errno + 1, "添加订阅失败");
-                }
+            StockCode scInfo = stockCode.select(code, fullCode);
+            if (scInfo == null) {
+                resp.set(errno + 4, "股票代码非法或暂未被CTP系统收录，如确系需要，请@王布衣");
+            } else if (!scInfo.getFlag().equals(StockOptions.kNormalState)) {
+                resp.set(errno + 5, scInfo.getName() + "(" + code + "), CTP暂停该股预警服务，如确系需要，请@王布衣");
             } else {
-                info.setCode(fullCode);
-                info.setCreateTime(new Date());
-                result = stockSubscribe.update(info);
-                if (result == 1) {
-                    resp.set(0, "SUCCESS");
+                StockSubscribe info = stockSubscribe.select(phone, fullCode);
+                int result = -1;
+                if (info == null) {
+                    info = new StockSubscribe();
+                    info.setFlag(StockOptions.kNormalState);
+                    info.setPhone(phone);
+                    info.setCode(fullCode);
+                    result = stockSubscribe.insert(info);
+                    if (result == 1) {
+                        resp.set(0, "SUCCESS");
+                    } else {
+                        resp.set(errno + 6, "添加订阅失败，" + kContactByError);
+                    }
+                } else if (info.getFlag().equals(StockOptions.kNormalState)) {
+                    resp.set(errno + 7, message);
                 } else {
-                    resp.set(errno, message);
+                    info.setFlag(StockOptions.kNormalState);
+                    info.setCode(fullCode);
+                    info.setCreateTime(new Date());
+                    result = stockSubscribe.update(info);
+                    if (result == 1) {
+                        resp.set(0, "早前订阅暂停，现已恢复。");
+                    } else {
+                        resp.set(errno + 8, "订阅信息更新失败，" + kContactByError);
+                    }
                 }
             }
         }
@@ -173,7 +189,7 @@ public class UserService {
      */
     public ActionStatus unsubscribe(String phone, String code) {
         ActionStatus resp = new ActionStatus();
-        int errno = 10000;
+        int errno = kErrorCode + 1300;
         String message = "没有订阅";
         String fullCode = StockApi.fixCode(code);
         if (Api.isEmpty(phone)) {
@@ -189,15 +205,17 @@ public class UserService {
             StockSubscribe info = stockSubscribe.select(phone, fullCode);
             int result = -1;
             if (info != null) {
-                info.setFlag("00");
+                info.setFlag(StockOptions.kNullState);
                 info.setCode(fullCode);
                 info.setCreateTime(new Date());
                 result = stockSubscribe.update(info);
                 if (result == 1) {
                     resp.set(0, "SUCCESS");
                 } else {
-                    resp.set(errno, "已退订");
+                    resp.set(errno + 4, "已退订");
                 }
+            } else {
+                resp.set(errno, message);
             }
         }
 

@@ -59,6 +59,7 @@ public class WeChat {
     public Map<String, String> mapGroupMember = new HashMap<>();
     //private final static String kGroupId = "股友会";
     private final static String kGroupId = "CTP内测";
+    private final static String kGroupList = "CTP内测|股友会|长江长江，我是黄河";
     public final static long kHeartSleep = 20 * 1000;
 
     static {
@@ -341,6 +342,9 @@ public class WeChat {
         }
     }
 
+    /**
+     * 开启状态同步
+     */
     private void openStatusNotify() {
         String url = base_uri + "/webwxstatusnotify";
         url += "?lang=zh_CN&pass_ticket=" + Api.urlEncode(pass_ticket);
@@ -374,6 +378,16 @@ public class WeChat {
                 logger.error("", e);
             }
         }
+    }
+
+    /**
+     * 群成员缓存昵称的key
+     * @param groupId
+     * @param memberId
+     * @return
+     */
+    private String keyMemberOfGroup(final String groupId, final String memberId) {
+        return String.format("%s|%s", groupId, memberId);
     }
 
     private void getContact() {
@@ -420,7 +434,7 @@ public class WeChat {
                             mapUserToNick.put(um, nm);
                             if (um.startsWith("@@")) {
                                 logger.info("group: " + nm);
-                                if (nm.equalsIgnoreCase(kGroupId)) {
+                                if (kGroupList.indexOf(nm)>=0) {
                                     getGroupMemberList(um);
                                 }
                             }
@@ -465,9 +479,10 @@ public class WeChat {
                     List<Map<String, Object>> userList = (List<Map<String, Object>>) contact.get("MemberList");
                     if (userList != null) {
                         for (Map<String, Object> tu : userList) {
-                            String nm = (String) tu.get("NickName");
-                            String um = (String) tu.get("UserName");
-                            mapGroupMember.put(nm, um);
+                            String nickName = (String) tu.get("NickName");
+                            String userName = (String) tu.get("UserName");
+                            String key = keyMemberOfGroup(groupId, userName);
+                            mapGroupMember.put(key, nickName);
                         }
                     }
                 }
@@ -613,28 +628,24 @@ public class WeChat {
 
     /**
      * 发送 群消息
-     * @param groupId
-     * @param toUserId
-     * @param context
+     * @param groupId 群用户名
+     * @param toUserId 目标用户名, toUserId为null时群全员
+     * @param context 文本消息
      * @return
      */
     public void sendGroupMessage(final String groupId, final String toUserId, final String context) {
-        String nmTO = mapGroupMember.get(toUserId);
-        if (Api.isEmpty(nmTO) && toUserId.equals(kFromUser)) {
-            nmTO = "王布衣";
-        }
-        boolean bSend = false;
-        //String to = mapNickToUser.get(groupId);
-        StringBuffer sb = new StringBuffer();
-        sb.append("@");
+        String key = keyMemberOfGroup(groupId, toUserId);
+        String nickName = mapGroupMember.get(key);
         if (Api.isEmpty(toUserId)) {
-            sb.append("all");
-            bSend = true;
-        } else if (!Api.isEmpty(nmTO)){
-            sb.append(nmTO);
-            bSend = true;
+            // 群全员
+            nickName = "所有人";
+        } else if (Api.isEmpty(nickName) && toUserId.equals(kFromUser)) {
+            // 给自己发
+            nickName = "王布衣";
         }
-        if (bSend) {
+        if (!Api.isEmpty(nickName)) {
+            StringBuffer sb = new StringBuffer();
+            sb.append("@" + nickName);
             String message = sb.toString() + ' ' + context;
             sendMessageByUserId(groupId, message);
         }
