@@ -40,7 +40,7 @@ public class WechatListener {
 							LOG.debug("[*] 你在其他地方登录了 WEB 版微信，再见");
 							break;
 						} else if (sync.retcode == 0) {
-							if (sync.selector == 2) {
+							if (sync.selector == 2 || sync.selector == 3) {
 								// 新消息
 								WxMessage wxMessage = weChat.webwxsync();
 								List<MessageEntity> msgList = wxMessage.getAddMsgList();
@@ -61,8 +61,8 @@ public class WechatListener {
 									} else if (toUserName.equalsIgnoreCase(weChat.kFromUser)) {
 										replyUserName = fromUserName;
 									}
-									String nmFrom = weChat.mapUserToNick.get(message.getFromUserName());
-									String nmTo = weChat.mapUserToNick.get(message.getToUserName());
+									String nmFrom = weChat.getkNickName(message.getFromUserName());
+									String nmTo = weChat.getkNickName(message.getToUserName());
 									if (WxMsgType.GROUPMANAGE.equals(msgType)) {
 										// 群管理 消息
 									} else if (msgType == WxMsgType.GOTCONTACT.intValue()) {
@@ -90,11 +90,14 @@ public class WechatListener {
 											String fromUser = args.length > 1 ? args[0]: "";
 											msg = args.length > 1 ? args[1] : msg;
 											LOG.info("name={}, message=[{}]", fromUser, msg);
+											if (args.length > 1) {
+												replyUserName = fromUser;
+											}
 											context.handleMessage(groupId, replyUserName, toUser, msg);
 										} else if (message.getToUserName().equalsIgnoreCase(weChat.kFromUser)) {
 											// 私聊给我的信息
 											String fromUser = message.getFromUserName();
-											String nickName = weChat.mapUserToNick.get(fromUser);
+											String nickName = weChat.getkNickName(fromUser);
 											if (!Api.isEmpty(nickName)) {
 												String toUser = message.getToUserName();
 												String msg = message.getContent();
@@ -115,9 +118,9 @@ public class WechatListener {
 								playWeChat += 1;
 								LOG.info("你在手机上玩微信被我发现了 {} 次", playWeChat);
 								weChat.webwxsync();
-							} else if (sync.selector == 3) {
+							} /*else if (sync.selector == 3) {
 								continue;
-							} else if (sync.selector == 0) {
+							} */else if (sync.selector == 0) {
 								continue;
 							}
 							continue;
