@@ -3,6 +3,7 @@ package org.hotwheel.ctp.exchange.controller.weixin;
 import org.hotwheel.assembly.Api;
 import org.hotwheel.ctp.service.UserService;
 import org.hotwheel.io.ActionStatus;
+import org.hotwheel.util.StringUtils;
 import org.hotwheel.weixin.WeChat;
 import org.hotwheel.weixin.WeChatContext;
 import org.slf4j.Logger;
@@ -98,7 +99,17 @@ public class PortalController implements WeChatContext {
 
     @Override
     public void handleMessage(String groupId, String fromUser, String toUser, String text) {
-        String nickName = weChat.mapUserToNick.get(fromUser);
+        /*if (!weChat.kFromUser.equalsIgnoreCase(toUser)) {
+            return;
+        }*/
+        boolean isFriend = true;
+        String groupName = weChat.getkNickName(groupId);
+        String nickName = weChat.getkNickName(fromUser);
+        if (Api.isEmpty(nickName)) {
+            // 不是好友
+            nickName = weChat.getkNickNameByGroupMember(groupId, fromUser);
+            isFriend = false;
+        }
         String phone = null;
         if (!Api.isEmpty(nickName)) {
             phone = userService.getPhone(nickName);
@@ -109,11 +120,13 @@ public class PortalController implements WeChatContext {
         logger.info("{}->{}: {}", nickName, toUser, text);
         if (text.startsWith(kToMe)) {
             text = text.substring(kToMe.length()).trim();
-            String msg = text.trim().replaceAll("( )+"," ");
+            text = StringUtils.trimWhitespace(text);
+            String msg = text.replaceAll("( )+"," ");
             String[] args = msg.split(" ");
             if (args.length >= 1) {
-                String command = args[0].trim();
-                String params = args.length>=2 ? args[1].trim() : "";
+                String command = StringUtils.trimWhitespace(args[0]);
+                String params = args.length>=2 ? args[1] : "";
+                params = StringUtils.trimWhitespace(params);
                 String message = null;
                 if (command.equalsIgnoreCase("help")) {
                     // 帮助信息
@@ -145,14 +158,22 @@ public class PortalController implements WeChatContext {
                         message = ": " + message;
                     }
                 }  else if (command.equalsIgnoreCase("注册") || command.equalsIgnoreCase("zc")) {
-                    // 查询用户ID
-                    ActionStatus resp = userService.query(nickName);
-                    if (resp.getStatus() != 0) {
-                        phone = params;
-                        resp = userService.register(phone, nickName, nickName, "");
-                        message = nickName + "注册: " + resp.getMessage();
+                    String nm = nickName;
+                    if (!isFriend) {
+                        nm = weChat.getkNickName(groupId, fromUser);
+                    }
+                    if (!Api.isEmpty(nm)) {
+                        // 查询用户ID
+                        ActionStatus resp = userService.query(nm);
+                        if (resp.getStatus() != 0) {
+                            phone = params;
+                            resp = userService.register(phone, nickName, nm, "");
+                            message = nickName + "注册: " + resp.getMessage();
+                        } else {
+                            message = nickName + "已注册过";
+                        }
                     } else {
-                        message = nickName + "已注册过";
+                        message = "群(" + groupName + ") 暂未开通微信助手功能";
                     }
                 } else if (Api.isEmpty(phone)) {
                     //weChat.sendMessage(nickName, kPrefix + nickName + " 未注册");

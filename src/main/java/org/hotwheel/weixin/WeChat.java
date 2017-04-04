@@ -53,10 +53,11 @@ public class WeChat {
     public String kNickName;
 
     // 好友列表, 昵称-用户名
-    public Map<String, String> mapNickToUser = new HashMap<>();
+    private Map<String, String> mapNickToUser = new HashMap<>();
     // 好友列表, 用户名-昵称
-    public Map<String, String> mapUserToNick = new HashMap<>();
-    public Map<String, String> mapGroupMember = new HashMap<>();
+    private Map<String, String> mapUserToNick = new HashMap<>();
+    private Map<String, String> mapGroupMember = new HashMap<>();
+    private Map<String, String> mapGroupFull = new HashMap<>();
     //private final static String kGroupId = "股友会";
     private final static String kGroupId = "CTP内测";
     private final static String kGroupList = "CTP内测|股友会|长江长江，我是黄河";
@@ -390,6 +391,38 @@ public class WeChat {
         return String.format("%s|%s", groupId, memberId);
     }
 
+    /**
+     * 获取好友昵称
+     * @param userId
+     * @return
+     */
+    public String getkNickName(final String userId) {
+        return mapUserToNick.get(userId);
+    }
+
+    /**
+     * 获得用户昵称
+     * @param groupId
+     * @param userId
+     * @return
+     */
+    public String getkNickName(final String groupId, final String userId) {
+        String sRet = null;
+        if (Api.isEmpty(groupId)) {
+            // 好友
+            sRet = mapUserToNick.get(userId);
+        } else {
+            String groupName = mapUserToNick.get(groupId);
+            String userName = getkNickNameByGroupMember(groupId, userId);
+            if (!Api.isEmpty(groupId) && !Api.isEmpty(userName)) {
+                sRet = userName + '@' + groupName;
+            }
+        }
+        return sRet;
+
+    }
+
+
     private void getContact() {
         String url = base_uri + "/webwxgetcontact";
         url += "?r=" + System.currentTimeMillis();
@@ -435,7 +468,7 @@ public class WeChat {
                             if (um.startsWith("@@")) {
                                 logger.info("group: " + nm);
                                 if (kGroupList.indexOf(nm)>=0) {
-                                    getGroupMemberList(um);
+                                    getGroupMemberList(um, nm);
                                 }
                             }
                         }
@@ -448,8 +481,10 @@ public class WeChat {
     /**
      * 获取群信息
      */
-    public void getGroupMemberList(final String groupId) {
-        String url = base_uri + "/webwxbatchgetcontact?type=ex&r=" + System.currentTimeMillis();
+    public void getGroupMemberList(final String groupId, final String groupName) {
+        String url = base_uri + "/webwxbatchgetcontact";
+        url += "?type=ex";
+        url += "&r=" + System.currentTimeMillis();
         url += "&pass_ticket=" + Api.urlEncode(pass_ticket);
 
         BaseRequest baseRequest = new BaseRequest();
@@ -458,16 +493,17 @@ public class WeChat {
         baseRequest.Skey = wxSkey;
         baseRequest.DeviceID = kDeviceId;
 
-        TreeMap<String, Object> params = new TreeMap<>();
-        params.put("BaseRequest", baseRequest);
-
         Map<String, Object> group = new HashMap<>();
         group.put("UserName", groupId);
         group.put("ChatRoomId", "");
-        TreeMap<String, Object> msg = new TreeMap<>();
-        msg.put("Count", 1);
-        msg.put("List", Arrays.asList(group));
-        params.put("msg", msg);
+
+        List<Map<String, Object>> list = new ArrayList<>();
+        list.add(group);
+
+        TreeMap<String, Object> params = new TreeMap<>();
+        params.put("BaseRequest", baseRequest);
+        params.put("Count", 1);
+        params.put("List", list);
 
         String groupResult = HttpUtils.request(url, JSON.toJSONString(params));
         if (!Api.isEmpty(groupResult)) {
@@ -481,8 +517,14 @@ public class WeChat {
                         for (Map<String, Object> tu : userList) {
                             String nickName = (String) tu.get("NickName");
                             String userName = (String) tu.get("UserName");
+                            String remarkName = (String)tu.get("RemarkName");
+                            if (!Api.isEmpty(remarkName)) {
+                                nickName = remarkName;
+                            }
                             String key = keyMemberOfGroup(groupId, userName);
                             mapGroupMember.put(key, nickName);
+                            mapGroupFull.put(nickName + '@' + groupName, key);
+
                         }
                     }
                 }
@@ -623,7 +665,13 @@ public class WeChat {
      * @return
      */
     public void sendGroupMessage(String nickName, String message) {
-        //return sendGroupMessage(kGroupId, nickName, message);
+        sendGroupMessage(kGroupId, null, message);
+    }
+
+    public String getkNickNameByGroupMember(final String groupId, final String toUserId) {
+        String key = keyMemberOfGroup(groupId, toUserId);
+        String nickName = mapGroupMember.get(key);
+        return nickName;
     }
 
     /**
@@ -685,11 +733,32 @@ public class WeChat {
 
     /**
      * 发送 消息
-     * @param nickName 用户昵称
+     * @param fullName 用户昵称
      * @param message 消息文本
      */
-    public void sendMessage(final String nickName, final String message) {
-        String toUserId = mapNickToUser.get(nickName);
-        sendMessageByUserId(toUserId, message);
+    public void sendMessage(final String fullName, final String message) {
+        String[] args = fullName.split("@");
+        String nickName = args.length > 0 ? args[0] : fullName;
+        String groupName = args.length > 1 ? args[1] : "";
+
+        String groupId = null;
+        String toUserId = null;
+        if (!Api.isEmpty(groupName)) {
+            groupId = mapNickToUser.get(groupName);
+            String key = mapGroupFull.get(fullName);
+            if (!Api.isEmpty(key)) {
+                String[] gu = key.split("|");
+                if (gu.length == 2) {
+                    toUserId = gu[1];
+                }
+            }
+        } else {
+            toUserId = mapNickToUser.get(nickName);
+        }
+        if (!Api.isEmpty(toUserId) && !Api.isEmpty(groupId)) {
+            sendGroupMessage(groupId, toUserId, message);
+        } else {
+            sendMessageByUserId(toUserId, message);
+        }
     }
 }
