@@ -89,7 +89,7 @@
             <appender-ref ref="weixin-info" />
         </AsyncLogger>
         <!-- 配置日志的根节点 -->
-        <asyncRoot level="debug" includeLocation="true">
+        <asyncRoot level="info" includeLocation="true">
             <AppenderRef ref="runtime"/>
             <AppenderRef ref="error"/>
             <AppenderRef ref="debug"/>
