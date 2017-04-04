@@ -68,13 +68,13 @@ public class WechatListener {
 									} else if (msgType == WxMsgType.GOTCONTACT.intValue()) {
 										LOG.info("成功获取联系人信息");
 									} else if (WxMsgType.UNDO.equals(msgType)) {
-										// 回撤消息
+										/*// 回撤消息
 										String content = "干嘛撤回消息呢~~~";
 										if (Api.isEmpty(groupId)) {
 											weChat.sendMessageByUserId(toUserName, content);
 										} else {
 											weChat.sendGroupMessage(groupId, replyUserName, content);
-										}
+										}*/
 									} else if (msgType != WxMsgType.TEXT.intValue()) {
 										// 非 文本消息
 										//LOG.info("MsgType[{}]: from={}, to={}, message={}", msgType, nmFrom, nmTo, message.getContent());

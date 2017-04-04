@@ -107,7 +107,7 @@ public class PortalController implements WeChatContext {
         String nickName = weChat.getkNickName(fromUser);
         if (Api.isEmpty(nickName)) {
             // 不是好友
-            nickName = weChat.getkNickNameByGroupMember(groupId, fromUser);
+            nickName = weChat.getkNickName(groupId, fromUser);
             isFriend = false;
         }
         String phone = null;
@@ -121,6 +121,7 @@ public class PortalController implements WeChatContext {
         if (text.startsWith(kToMe)) {
             text = text.substring(kToMe.length()).trim();
             text = StringUtils.trimWhitespace(text);
+            text = text.replaceAll("<br/>"," ");
             String msg = text.replaceAll("( )+"," ");
             String[] args = msg.split(" ");
             if (args.length >= 1) {
