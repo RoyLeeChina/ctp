@@ -665,7 +665,8 @@ public class WeChat {
      * @return
      */
     public void sendGroupMessage(String nickName, String message) {
-        sendGroupMessage(kGroupId, null, message);
+        String groupId = mapNickToUser.get(kGroupId);
+        sendGroupMessage(groupId, null, message);
     }
 
     public String getkNickNameByGroupMember(final String groupId, final String toUserId) {
