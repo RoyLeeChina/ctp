@@ -261,8 +261,6 @@ public class WeChat {
         TreeMap<String, Object> params = new TreeMap<>();
         String result = HttpUtils.request(url, params);
         cookies = null;
-        //wechatMeta.setCookie(CookieUtil.getCookie(request));
-        //request.disconnect();
         if (!Api.isEmpty(result)) {
             wxSkey = match("<skey>(\\S+)</skey>", result);
             wxSid = match("<wxsid>(\\S+)</wxsid>", result);
@@ -437,10 +435,6 @@ public class WeChat {
 
         TreeMap<String, Object> params = new TreeMap<>();
         params.put("BaseRequest", baseRequest);
-        //params.put("Code", 3);
-        //params.put("FromUserName", kFromUser);
-        //params.put("ToUserName", kNickName);
-        //params.put("ClientMsgId", genMsgId());
 
         String result = HttpUtils.request(url, JSON.toJSONString(params));
 
