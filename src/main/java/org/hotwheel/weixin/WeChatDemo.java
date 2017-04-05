@@ -8,6 +8,19 @@ import org.hotwheel.util.StringUtils;
 public class WeChatDemo {
 
     public static void main(String[] args) {
+
+        String[] aa = "aaa|bbb|ccc".split("\\|");
+
+        aa = "abc@123".split("@");
+
+        //String[] aa = "aaa|bbb|ccc".split("\\|"); 这样才能得到正确的结果
+
+        for (int i = 0 ; i <aa.length ; i++ ) {
+
+            System.out.println("--"+aa[i]);
+
+        }
+
         String s = "dy 600111";
         char kg = 8197;
         s = kg + s;

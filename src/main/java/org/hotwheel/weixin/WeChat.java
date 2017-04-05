@@ -753,7 +753,7 @@ public class WeChat {
             // 根据 昵称@群名, 查 群id和用户id
             String key = mapGroupFull.get(fullName);
             if (!Api.isEmpty(key)) {
-                String[] gu = key.split("|");
+                String[] gu = key.split("\\|");
                 if (gu.length == 2) {
                     toUserId = gu[1];
                 }
