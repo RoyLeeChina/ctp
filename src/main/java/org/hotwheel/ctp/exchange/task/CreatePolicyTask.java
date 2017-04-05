@@ -145,6 +145,7 @@ public class CreatePolicyTask extends CTPContext {
                                         stockUser.finished(user);
                                     }
                                 }
+                                Api.sleep(1000);
                             }
                         }
                     }

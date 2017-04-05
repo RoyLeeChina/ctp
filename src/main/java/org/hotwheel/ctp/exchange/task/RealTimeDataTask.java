@@ -44,6 +44,10 @@ public class RealTimeDataTask extends CTPContext {
     @Override
     protected void service() {
         while (true) {
+            if (CTPContext.isServerCloseing()) {
+                logger.info("SERVER正在关闭, 线程{}->{}任务退出", taskName);
+                break;
+            }
             if (isTimeExpire()) {
                 logger.info("运行时间{}->{}到, 任务退出", taskStartTime, taskEndTime);
                 break;

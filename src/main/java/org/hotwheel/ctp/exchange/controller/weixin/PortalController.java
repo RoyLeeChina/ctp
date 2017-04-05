@@ -1,6 +1,7 @@
 package org.hotwheel.ctp.exchange.controller.weixin;
 
 import org.hotwheel.assembly.Api;
+import org.hotwheel.ctp.exchange.task.CTPContext;
 import org.hotwheel.ctp.service.UserService;
 import org.hotwheel.io.ActionStatus;
 import org.hotwheel.util.StringUtils;
@@ -46,6 +47,7 @@ public class PortalController implements WeChatContext {
 
     @PreDestroy
     public void close() {
+        CTPContext.setServerCloseing(true);
         logger.info("关闭...");
     }
 
