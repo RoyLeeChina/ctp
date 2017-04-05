@@ -747,7 +747,11 @@ public class WeChat {
 
         String groupId = null;
         String toUserId = null;
-        if (!Api.isEmpty(groupName)) {
+        if (!Api.isEmpty(nickName)) {
+            // 先尝试在好友中查询昵称
+            toUserId = mapNickToUser.get(nickName);
+        }
+        if (Api.isEmpty(toUserId) && !Api.isEmpty(groupName)) {
             // 根据群名称 查 username
             groupId = mapNickToUser.get(groupName);
             // 根据 昵称@群名, 查 群id和用户id
@@ -758,14 +762,14 @@ public class WeChat {
                     toUserId = gu[1];
                 }
             }
-        } else {
-            toUserId = mapNickToUser.get(nickName);
         }
         logger.info("fullName={}, group={},user={}, message={}", fullName, groupId, toUserId, message);
         if (!Api.isEmpty(toUserId) && !Api.isEmpty(groupId)) {
             sendGroupMessage(groupId, toUserId, message);
-        } else {
+        } else if (!Api.isEmpty(toUserId)){
             sendMessageByUserId(toUserId, message);
+        } else {
+            logger.info("接收信息的用户[{}]既不是好友，也不在三个圈定的群中, 忽略", fullName);
         }
     }
 }

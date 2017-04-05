@@ -151,6 +151,7 @@ public class CreatePolicyTask extends CTPContext {
                         }
                     }
                 }
+                Api.sleep(1000);
             }
             /*
             for (Map.Entry<String, PolicyMessage> entry : mapMessage.entrySet()) {
