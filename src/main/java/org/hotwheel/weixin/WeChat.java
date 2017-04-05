@@ -761,6 +761,7 @@ public class WeChat {
         } else {
             toUserId = mapNickToUser.get(nickName);
         }
+        logger.info("fullName={}, group={},user={}, message={}", fullName, groupId, toUserId, message);
         if (!Api.isEmpty(toUserId) && !Api.isEmpty(groupId)) {
             sendGroupMessage(groupId, toUserId, message);
         } else {
