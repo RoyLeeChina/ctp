@@ -108,7 +108,6 @@ public class CreatePolicyTask extends CTPContext {
                         logger.info(content);
                         String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
                         String title = prefix + "-CTP策略订阅早盘提示-" + stockName;
-                        //EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示-" + stockName, content);
                         content += StockOptions.kSuffixMessage;
                         weChat.sendGroupMessage("", title + ": " + content);
                     } else {
@@ -139,7 +138,6 @@ public class CreatePolicyTask extends CTPContext {
                                         String title = prefix + "-CTP策略订阅早盘提示";
                                         content += StockOptions.kSuffixMessage;
                                         if (!Api.isEmpty(user.getWeixin())) {
-                                            //weChat.sendGroupMessage(user.getWeixin(), title + ": " + content);
                                             weChat.sendMessage(user.getWeixin(), title + ": " + content);
                                         } else if (!Api.isEmpty(user.getEmail())) {
                                             EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示", content);
@@ -147,10 +145,12 @@ public class CreatePolicyTask extends CTPContext {
                                         stockUser.finished(user);
                                     }
                                 }
+                                Api.sleep(1000);
                             }
                         }
                     }
                 }
+                Api.sleep(1000);
             }
             /*
             for (Map.Entry<String, PolicyMessage> entry : mapMessage.entrySet()) {

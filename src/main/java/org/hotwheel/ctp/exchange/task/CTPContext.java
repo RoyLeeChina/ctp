@@ -12,11 +12,24 @@ import org.hotwheel.weixin.WeChat;
 public abstract class CTPContext extends SchedulerContext {
     protected static WeChat weChat = null;
 
+    /**
+     * 服务器是否正在关闭
+     */
+    protected static boolean serverIsCloseing = false;
+
     public static WeChat getWeChat() {
         return weChat;
     }
 
     public static void setWeChat(WeChat weChat) {
         CTPContext.weChat = weChat;
+    }
+
+    public static boolean isServerCloseing() {
+        return serverIsCloseing;
+    }
+
+    public static void setServerCloseing(boolean serverIsCloseing) {
+        CTPContext.serverIsCloseing = serverIsCloseing;
     }
 }
