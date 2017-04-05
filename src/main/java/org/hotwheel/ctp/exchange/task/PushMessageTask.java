@@ -6,7 +6,6 @@ import org.hotwheel.ctp.dao.IStockMessage;
 import org.hotwheel.ctp.dao.IStockUser;
 import org.hotwheel.ctp.model.StockMessage;
 import org.hotwheel.ctp.model.UserInfo;
-import org.hotwheel.spring.scheduler.SchedulerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,7 +22,7 @@ import java.util.List;
  * @version 1.0.2
  */
 @Service("pushMessageTask")
-public class PushMessageTask extends SchedulerContext {
+public class PushMessageTask extends CTPContext {
     private static Logger logger = LoggerFactory.getLogger(PushMessageTask.class);
 
     //@Autowired
@@ -43,6 +41,10 @@ public class PushMessageTask extends SchedulerContext {
                 logger.info("运行时间{}->{}到, 任务退出", taskStartTime, taskEndTime);
                 break;
             }
+            if (weChat == null || !weChat.isRunning()) {
+                Api.sleep(StockOptions.kRealTimenterval);
+                continue;
+            }
             stockMessage.cleanAll();
             // 捡出全部未发送的消息
             List<StockMessage> messageList = stockMessage.selectAll("00");
@@ -55,12 +57,19 @@ public class PushMessageTask extends SchedulerContext {
                     if (userInfo == null) {
                         type = "97";
                     } else {
+                        String name = userInfo.getMemberName();
+                        String weixin = userInfo.getWeixin();
                         String toMail = userInfo.getEmail();
-                        String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
-                        String subject = prefix + " CTP策略提示";
                         String content = message.getRemark();
-                        logger.info("{}({}): {} {}", content, toMail, subject, content);
-                        boolean bResult = sendMail(toMail, subject, content);
+                        boolean bResult = false;
+                        if (!Api.isEmpty(weixin)) {
+                            weChat.sendMessage(weixin, content);
+                            logger.info("{}({}): {}", name, weixin, content);
+                            bResult = true;
+                        } else if (Api.isEmpty(toMail)) {
+                            bResult = sendMail(toMail, "CTP策略提示", content);
+                            logger.info("{}({}): {}", name, toMail, content);
+                        }
                         if (bResult) {
                             type = "01";
                         } else {
