@@ -523,8 +523,10 @@ public class WeChat {
                                 nickName = remarkName;
                             }
                             String key = keyMemberOfGroup(groupId, userName);
+                            String value = nickName + '@' + groupName;
                             mapGroupMember.put(key, nickName);
-                            mapGroupFull.put(nickName + '@' + groupName, key);
+                            mapGroupFull.put(value, key);
+                            logger.info("group-member: {}->{}", key, value);
 
                         }
                     }
@@ -746,7 +748,9 @@ public class WeChat {
         String groupId = null;
         String toUserId = null;
         if (!Api.isEmpty(groupName)) {
+            // 根据群名称 查 username
             groupId = mapNickToUser.get(groupName);
+            // 根据 昵称@群名, 查 群id和用户id
             String key = mapGroupFull.get(fullName);
             if (!Api.isEmpty(key)) {
                 String[] gu = key.split("|");
