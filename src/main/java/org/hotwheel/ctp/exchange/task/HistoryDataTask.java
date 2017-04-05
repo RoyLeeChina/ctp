@@ -44,15 +44,6 @@ public class HistoryDataTask extends SchedulerContext {
             }
             // 捡出全部股票的策略
             List<String> allCodes = stockCode.getAll();
-            /*
-            allCodes = new ArrayList<>();
-            // 上证指数
-            allCodes.register("sh000001");
-            // 深证成指
-            allCodes.register("sz399001");
-            // 创业板指数
-            allCodes.register("sz399006");
-            */
             for (String code : allCodes) {
                 logger.info("code={}", code);
                 Date lastDay = stockHistory.getLastDate(code);
