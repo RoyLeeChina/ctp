@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.hotwheel.assembly.Api;
+import org.hotwheel.ctp.exchange.task.CTPContext;
 import org.hotwheel.ctp.util.HttpUtils;
 import org.hotwheel.weixin.bean.*;
 import org.slf4j.Logger;
@@ -122,7 +123,7 @@ public class WeChat {
         getContact();
         logger.info("获取联系人成功");
         //logger.info("共有 {} 位联系人", Constant.CONTACT.getContactList().size());
-
+        CTPContext.setWeChat(this);
         // 监听消息
         wechatListener.start(this, context);
     }
