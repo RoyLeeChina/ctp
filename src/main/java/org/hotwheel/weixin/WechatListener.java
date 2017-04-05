@@ -1,6 +1,7 @@
 package org.hotwheel.weixin;
 
 import org.hotwheel.assembly.Api;
+import org.hotwheel.ctp.exchange.task.CTPContext;
 import org.hotwheel.weixin.bean.MessageEntity;
 import org.hotwheel.weixin.bean.SyncResponse;
 import org.slf4j.Logger;
@@ -22,7 +23,7 @@ public class WechatListener {
 	 * @param context
 	 */
 	public void start(final WeChat weChat, final WeChatContext context){
-
+		CTPContext.setWeChat(weChat);
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
