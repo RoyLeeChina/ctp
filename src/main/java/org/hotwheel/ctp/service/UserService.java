@@ -209,7 +209,7 @@ public class UserService {
                 info.setCode(fullCode);
                 info.setCreateTime(new Date());
                 result = stockSubscribe.update(info);
-                if (result == 1) {
+                if (result > 0) {
                     resp.set(0, "SUCCESS");
                 } else {
                     resp.set(errno + 4, "已退订");
