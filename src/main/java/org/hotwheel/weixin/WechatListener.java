@@ -16,6 +16,80 @@ public class WechatListener {
 	
 	int playWeChat = 0;
 
+	private boolean process(final WeChat weChat, final WeChatContext context, final WxMessage wxMessage) {
+		boolean haveMessage = false;
+		if (wxMessage != null) {
+			List<MessageEntity> msgList = wxMessage.getAddMsgList();
+			if (msgList != null) {
+				haveMessage = true;
+				for (MessageEntity message : msgList) {
+					int msgType = message.getMsgType();
+					String fromUserName = message.getFromUserName();
+					String toUserName = message.getToUserName();
+					String groupId = null;
+					String replyUserName = null;
+					if (fromUserName.startsWith("@@")) {
+						groupId = fromUserName;
+						replyUserName = toUserName;
+					} else if (toUserName.startsWith("@@")) {
+						groupId = toUserName;
+						replyUserName = fromUserName;
+					} else if (fromUserName.equalsIgnoreCase(weChat.kFromUser)) {
+						replyUserName = toUserName;
+					} else if (toUserName.equalsIgnoreCase(weChat.kFromUser)) {
+						replyUserName = fromUserName;
+					}
+					String nmFrom = weChat.getkNickName(message.getFromUserName());
+					String nmTo = weChat.getkNickName(message.getToUserName());
+					if (WxMsgType.GROUPMANAGE.equals(msgType)) {
+						// 群管理 消息
+					} else if (msgType == WxMsgType.GOTCONTACT.intValue()) {
+						LOG.info("成功获取联系人信息");
+					} else if (WxMsgType.UNDO.equals(msgType)) {
+						/*// 回撤消息
+						String content = "干嘛撤回消息呢~~~";
+						if (Api.isEmpty(groupId)) {
+							weChat.sendMessageByUserId(toUserName, content);
+						} else {
+							weChat.sendGroupMessage(groupId, replyUserName, content);
+						}*/
+					} else if (msgType != WxMsgType.TEXT.intValue()) {
+						// 非 文本消息
+						//LOG.info("MsgType[{}]: from={}, to={}, message={}", msgType, nmFrom, nmTo, message.getContent());
+						LOG.info("非文本消息");
+						continue;
+					} else {
+						LOG.info("MsgType[{}]: from={}, to={}, message={}", msgType, nmFrom, nmTo, message.getContent());
+						if (!Api.isEmpty(groupId)) {
+							// 群消息
+							String toUser = message.getToUserName();
+							String msg = message.getContent();
+							String[] args = msg.split(":<br/>");
+							String fromUser = args.length > 1 ? args[0] : "";
+							msg = args.length > 1 ? args[1] : msg;
+							LOG.info("name={}, message=[{}]", fromUser, msg);
+							if (args.length > 1) {
+								replyUserName = fromUser;
+							}
+							context.handleMessage(groupId, replyUserName, toUser, msg);
+						} else if (message.getToUserName().equalsIgnoreCase(weChat.kFromUser)) {
+							// 私聊给我的信息
+							String fromUser = message.getFromUserName();
+							String nickName = weChat.getkNickName(fromUser);
+							if (!Api.isEmpty(nickName)) {
+								String toUser = message.getToUserName();
+								String msg = message.getContent();
+								msg = "@王布衣 " + msg.trim();
+								context.handleMessage(groupId, replyUserName, toUser, msg);
+							}
+						}
+					}
+				}
+			}
+		}
+		return haveMessage;
+	}
+
 	/**
 	 * 启动监听器
 	 * @param weChat
@@ -30,6 +104,7 @@ public class WechatListener {
 				weChat.choiceSyncLine();
 				while(true){
 					long tmCheckPoint = System.currentTimeMillis();
+					boolean haveMessage = false;
 					try {
 						SyncResponse sync = weChat.syncCheck(null);
 						LOG.debug("retcode={}, selector={}", sync.retcode, sync.selector);
@@ -43,76 +118,7 @@ public class WechatListener {
 							if (sync.selector == 2 || sync.selector == 3) {
 								// 新消息
 								WxMessage wxMessage = weChat.webwxsync();
-								if (wxMessage != null) {
-									List<MessageEntity> msgList = wxMessage.getAddMsgList();
-									if (msgList != null) {
-										for (MessageEntity message : msgList) {
-											int msgType = message.getMsgType();
-											String fromUserName = message.getFromUserName();
-											String toUserName = message.getToUserName();
-											String groupId = null;
-											String replyUserName = null;
-											if (fromUserName.startsWith("@@")) {
-												groupId = fromUserName;
-												replyUserName = toUserName;
-											} else if (toUserName.startsWith("@@")) {
-												groupId = toUserName;
-												replyUserName = fromUserName;
-											} else if (fromUserName.equalsIgnoreCase(weChat.kFromUser)) {
-												replyUserName = toUserName;
-											} else if (toUserName.equalsIgnoreCase(weChat.kFromUser)) {
-												replyUserName = fromUserName;
-											}
-											String nmFrom = weChat.getkNickName(message.getFromUserName());
-											String nmTo = weChat.getkNickName(message.getToUserName());
-											if (WxMsgType.GROUPMANAGE.equals(msgType)) {
-												// 群管理 消息
-											} else if (msgType == WxMsgType.GOTCONTACT.intValue()) {
-												LOG.info("成功获取联系人信息");
-											} else if (WxMsgType.UNDO.equals(msgType)) {
-										/*// 回撤消息
-										String content = "干嘛撤回消息呢~~~";
-										if (Api.isEmpty(groupId)) {
-											weChat.sendMessageByUserId(toUserName, content);
-										} else {
-											weChat.sendGroupMessage(groupId, replyUserName, content);
-										}*/
-											} else if (msgType != WxMsgType.TEXT.intValue()) {
-												// 非 文本消息
-												//LOG.info("MsgType[{}]: from={}, to={}, message={}", msgType, nmFrom, nmTo, message.getContent());
-												LOG.info("非文本消息");
-												continue;
-											} else {
-												LOG.info("MsgType[{}]: from={}, to={}, message={}", msgType, nmFrom, nmTo, message.getContent());
-												if (!Api.isEmpty(groupId)) {
-													// 群消息
-													String toUser = message.getToUserName();
-													String msg = message.getContent();
-													String[] args = msg.split(":<br/>");
-													String fromUser = args.length > 1 ? args[0] : "";
-													msg = args.length > 1 ? args[1] : msg;
-													LOG.info("name={}, message=[{}]", fromUser, msg);
-													if (args.length > 1) {
-														replyUserName = fromUser;
-													}
-													context.handleMessage(groupId, replyUserName, toUser, msg);
-												} else if (message.getToUserName().equalsIgnoreCase(weChat.kFromUser)) {
-													// 私聊给我的信息
-													String fromUser = message.getFromUserName();
-													String nickName = weChat.getkNickName(fromUser);
-													if (!Api.isEmpty(nickName)) {
-														String toUser = message.getToUserName();
-														String msg = message.getContent();
-														msg = "@王布衣 " + msg.trim();
-														//msgIdList.add(msgId);
-														context.handleMessage(groupId, replyUserName, toUser, msg);
-														//weChat.sendMessage("娘子", "要水了.");
-													}
-												}
-											}
-										}
-									}
-								}
+								haveMessage = process(weChat, context, wxMessage);
 							} else if (sync.selector == 6) {
 								// 红包
 								//weChat.webwxsync();
@@ -131,6 +137,9 @@ public class WechatListener {
 							//continue;
 						} else {
 							//
+						}
+						if (haveMessage) {
+							continue;
 						}
 					} catch (Exception e) {
 						LOG.error("", e);
