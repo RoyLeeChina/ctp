@@ -62,7 +62,7 @@ public class WeChat {
     private final static String kGroupId = "股友会";
     //private final static String kGroupId = "CTP内测";
     private final static String kGroupList = "CTP内测|股友会|长江长江，我是黄河";
-    public final static long kHeartSleep = 20 * 1000;
+    public final static long kHeartSleep = 10 * 1000;
 
     static {
         System.setProperty("https.protocols", "TLSv1");
