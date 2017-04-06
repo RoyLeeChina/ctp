@@ -282,14 +282,21 @@ public class WeChat {
     private void reloadSyncKey(final JSONObject objSyncKey) {
         StringBuffer sb = new StringBuffer();
         try {
-            JSONArray list = objSyncKey.getJSONArray("List");
-            jsonSyncKey = objSyncKey.toJavaObject(SyncKeyEntity.class);
-            for (int i = 0, len = list.size(); i < len; i++) {
-                JSONObject item = (JSONObject) list.get(i);
-                sb.append("|" + item.getIntValue("Key") + "_" + item.getIntValue("Val"));
-            }
-            if (sb.length() > 3) {
-                syncKey = sb.substring(1);
+            if (objSyncKey != null) {
+                JSONArray list = objSyncKey.getJSONArray("List");
+                SyncKeyEntity tmpSyncKey = objSyncKey.toJavaObject(SyncKeyEntity.class);
+                if (tmpSyncKey != null && tmpSyncKey.Count > 0) {
+                    jsonSyncKey = tmpSyncKey;
+                }
+                if (list != null) {
+                    for (int i = 0, len = list.size(); i < len; i++) {
+                        JSONObject item = (JSONObject) list.get(i);
+                        sb.append("|" + item.getIntValue("Key") + "_" + item.getIntValue("Val"));
+                    }
+                    if (sb.length() > 3) {
+                        syncKey = sb.substring(1);
+                    }
+                }
             }
         } catch (Exception e) {
             //
