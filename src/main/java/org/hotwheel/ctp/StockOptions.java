@@ -78,7 +78,7 @@ public final class StockOptions {
     public final static String urlHistory = "http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData";
 
     public final static String kPrefixMessage = "【CTP微信助手】";
-    public final static String kSuffixMessage = " \r\n--以上内容，不构成任何投资建议，据此进行相关操作风险自担。";
+    public final static String kSuffixMessage = " \r\n--以上内容，不构成任何投资建议，据此进行相关操作，风险自担。";
 
     public static Map<String, Object> historyParams(final String code) {
         TreeMap<String, Object> params = new TreeMap<>();
