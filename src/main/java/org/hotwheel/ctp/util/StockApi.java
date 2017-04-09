@@ -43,6 +43,7 @@ public final class StockApi {
 
     /**
      * 价格转字符串
+     *
      * @param price
      * @return
      */

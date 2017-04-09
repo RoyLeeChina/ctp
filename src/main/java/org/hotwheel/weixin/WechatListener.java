@@ -14,7 +14,7 @@ import java.util.List;
 public class WechatListener {
 	private static final Logger LOG = LoggerFactory.getLogger(WechatListener.class);
 	
-	int playWeChat = 0;
+	private int playWeChat = 0;
 
 	private boolean process(final WeChat weChat, final WeChatContext context, final WxMessage wxMessage) {
 		boolean haveMessage = false;
