@@ -97,10 +97,11 @@ public class PortalController implements WeChatContext {
     }
 
     private final static String kPrefix = "【CTP微信助手】";
-    private final static String kToMe = "@王布衣";
 
     @Override
     public void handleMessage(String groupId, String fromUser, String toUser, String text) {
+        String kToMe = "@"  + weChat.kNickName;
+
         /*if (!weChat.kFromUser.equalsIgnoreCase(toUser)) {
             return;
         }*/
@@ -134,8 +135,8 @@ public class PortalController implements WeChatContext {
                 if (command.equalsIgnoreCase("help")) {
                     // 帮助信息
                     message = "帮助信息:";
-                    message += "\n1)注册股票预警功能: @王布衣 zc 手机号码";
-                    message += "\n2)订阅个股预警信息: @王布衣 dy 股票代码";
+                    message += "\n1)注册股票预警功能: " + kToMe + " zc 手机号码";
+                    message += "\n2)订阅个股预警信息: " + kToMe + " dy 股票代码";
                 } else if (command.equalsIgnoreCase("查询") || command.equalsIgnoreCase("cx")) {
                     if (params.equalsIgnoreCase("id")) {
                         // 查询用户ID
