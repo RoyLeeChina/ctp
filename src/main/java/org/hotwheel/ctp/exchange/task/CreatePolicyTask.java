@@ -7,15 +7,13 @@ import org.hotwheel.ctp.model.*;
 import org.hotwheel.ctp.util.DateUtils;
 import org.hotwheel.ctp.util.EmailApi;
 import org.hotwheel.ctp.util.PolicyApi;
+import org.hotwheel.weixin.bean.ContactInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 生成当天策略任务
@@ -74,6 +72,8 @@ public class CreatePolicyTask extends CTPContext {
             if (stockList != null && stockList.size() > 0) {
                 allCode.addAll(stockList);
             }
+            //allCode.clear();
+            //allCode.add("sz000088");
             for (String code : allCode) {
                 // 查询现存历史记录
                 List<StockHistory> shList = stockHistory.selectOne(code);
@@ -112,15 +112,25 @@ public class CreatePolicyTask extends CTPContext {
                         weChat.sendGroupMessage("", title + ": " + content);
                     } else {
                         List<StockSubscribe> tmpSubscribe = stockSubscribe.queryByCode(code);
-                        if (tmpSubscribe == null) {
+                        if (tmpSubscribe == null || tmpSubscribe.size() < 1) {
                             logger.info("{} 暂无用户订阅");
                         } else {
+                            Map<String, StringBuffer> mapGroupMessage = new HashMap<>();
+                            String content = String.format("%s(%s): %s~%s/%s~%s, 阻力位%s, 止损位%s。",
+                                    stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
+                                    info.getResistance(), info.getStop());
+
+                            String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
+                            String title = prefix + "-CTP策略早盘提示";
+                            content += StockOptions.kSuffixMessage;
+                            String message = title + ": " + content;
                             for (StockSubscribe userSubscribe : tmpSubscribe) {
                                 UserInfo user = stockUser.select(userSubscribe.getPhone());
                                 if (user == null) {
                                     logger.info("not found user={}", userSubscribe.getPhone());
                                 } else {
                                     boolean bSent = true;
+                                    logger.info("{}: {}", user.getMemberName(), content);
                                     Date tmpDate = user.getSendDate();
                                     Date sendDate = DateUtils.getZero(tmpDate);
                                     Date today = DateUtils.getZero(new Date());
@@ -129,23 +139,46 @@ public class CreatePolicyTask extends CTPContext {
                                         bSent = false;
                                     }
                                     if (!bSent) {
-                                        String content = String.format("%s(%s): %s~%s/%s~%s, 阻力位%s, 止损位%s。",
-                                                stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
-                                                info.getResistance(), info.getStop());
-                                        logger.info("{}: {}", user.getMemberName(), content);
-                                        String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
-                                        String title = prefix + "-CTP策略订阅早盘提示";
-                                        content += StockOptions.kSuffixMessage;
-                                        if (!Api.isEmpty(user.getWeixin())) {
-                                            weChat.sendMessage(user.getWeixin(), title + ": " + content);
+                                        String fullName = user.getWeixin();
+                                        if (!Api.isEmpty(fullName)) {
+                                            ContactInfo contactInfo = weChat.parseContact(fullName);
+                                            if (contactInfo == null) {
+                                                logger.info("weixin={}, 好友和群信息无法识别, 不能推送");
+                                            } else if (Api.isEmpty(contactInfo.getGroupId())){
+                                                // 如果不是群消息
+                                                weChat.sendMessageByUserId(contactInfo.getToUserName(), message);
+                                            } else {
+                                                // 非好友, 发信息到群里
+                                                String groupId = contactInfo.getGroupId();
+                                                StringBuffer sb = mapGroupMessage.get(groupId);
+                                                if (sb == null) {
+                                                    sb = new StringBuffer();
+                                                }
+                                                sb.append("@" + contactInfo.getNickName() + " ");
+                                                mapGroupMessage.put(groupId, sb);
+                                            }
                                         } else if (!Api.isEmpty(user.getEmail())) {
                                             EmailApi.send(user.getEmail(), prefix + "-CTP策略订阅早盘提示", content);
                                         }
                                         stockUser.finished(user);
                                     }
                                 }
-                                Api.sleep(1000);
                             }
+                            // 合并发送
+                            if (mapGroupMessage.size() > 0) {
+                                for (Map.Entry<String, StringBuffer> entry : mapGroupMessage.entrySet()) {
+                                    String groupId = entry.getKey();
+                                    StringBuffer sb = entry.getValue();
+                                    if (!Api.isEmpty(groupId) && !Api.isEmpty(sb.toString())) {
+                                        String groupName = weChat.getNickName(groupId);
+                                        String toUser = sb.toString();
+                                        logger.info("推送群消息[{}]: {}=>{}", groupName, toUser, message);
+                                        weChat.sendMessageByUserId(groupId, toUser + message);
+                                    }
+                                }
+                                mapGroupMessage.clear();
+                            }
+                            //Api.sleep(1000);
                         }
                     }
                 }
