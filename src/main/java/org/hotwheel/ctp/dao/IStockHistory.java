@@ -71,5 +71,10 @@ public interface IStockHistory {
      */
     public int deleteOne(@Param("code") String code) throws DataAccessException;
 
+    /**
+     * 插入一组历史记录
+     * @param historyList
+     * @return
+     */
     int insertBatch(List<StockHistory > historyList);
 }
