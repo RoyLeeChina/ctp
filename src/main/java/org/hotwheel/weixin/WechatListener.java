@@ -47,8 +47,8 @@ public class WechatListener {
 					} else if (toUserName.equalsIgnoreCase(weChat.kFromUser)) {
 						replyUserName = fromUserName;
 					}
-					String nmFrom = weChat.getkNickName(message.getFromUserName());
-					String nmTo = weChat.getkNickName(message.getToUserName());
+					String nmFrom = weChat.getNickName(message.getFromUserName());
+					String nmTo = weChat.getNickName(message.getToUserName());
 					if (WxMsgType.GROUPMANAGE.equals(msgType)) {
 						// 群管理 消息
 					} else if (msgType == WxMsgType.GOTCONTACT.intValue()) {
@@ -83,7 +83,7 @@ public class WechatListener {
 						} else if (message.getToUserName().equalsIgnoreCase(weChat.kFromUser)) {
 							// 私聊给我的信息
 							String fromUser = message.getFromUserName();
-							String nickName = weChat.getkNickName(fromUser);
+							String nickName = weChat.getNickName(fromUser);
 							if (!Api.isEmpty(nickName)) {
 								String toUser = message.getToUserName();
 								String msg = message.getContent();

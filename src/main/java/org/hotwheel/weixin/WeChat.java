@@ -58,9 +58,10 @@ public class WeChat {
     private Map<String, String> mapUserToNick = new HashMap<>();
     private Map<String, String> mapGroupMember = new HashMap<>();
     private Map<String, String> mapGroupFull = new HashMap<>();
-    private final static String kGroupId = "股友会";
-    //private final static String kGroupId = "CTP内测";
-    private final static String kGroupList = "CTP内测|股友会|长江长江，我是黄河";
+    //private final static String kGroupId = "股友会";
+    private final static String kGroupId = "CTP内测";
+    //private final static String kGroupList = "CTP内测|股友会|长江长江，我是黄河";
+    private final static String kGroupList = "CTP内测";
     public final static long kHeartSleep = 10 * 1000;
 
     static {
@@ -402,7 +403,7 @@ public class WeChat {
      * @param userId
      * @return
      */
-    public String getkNickName(final String userId) {
+    public String getNickName(final String userId) {
         return mapUserToNick.get(userId);
     }
 
@@ -412,7 +413,7 @@ public class WeChat {
      * @param userId
      * @return
      */
-    public String getkNickName(final String groupId, final String userId) {
+    public String getNickName(final String groupId, final String userId) {
         String sRet = null;
         if (Api.isEmpty(groupId)) {
             // 好友
@@ -465,13 +466,16 @@ public class WeChat {
                             // 特殊账号
                             logger.info("特殊账号: {}", um);
                         } else {
-                            mapNickToUser.put(nm, um);
-                            mapUserToNick.put(um, nm);
                             if (um.startsWith("@@")) {
                                 logger.info("group: " + nm);
                                 if (kGroupList.indexOf(nm)>=0) {
+                                    mapNickToUser.put(nm, um);
+                                    mapUserToNick.put(um, nm);
                                     getGroupMemberList(um, nm);
                                 }
+                            } else {
+                                mapNickToUser.put(nm, um);
+                                mapUserToNick.put(um, nm);
                             }
                         }
                     }
@@ -737,6 +741,43 @@ public class WeChat {
             params.put("Msg", body);
             HttpUtils.request(url, JSON.toJSONString(params), cookies);
         }
+    }
+
+    /**
+     * 解析微信完整的昵称
+     * @param fullName
+     * @return 微信联系人对象
+     */
+    public ContactInfo parseContact(final String fullName) {
+        ContactInfo info = null;
+        String[] args = fullName.split("@");
+        String nickName = args.length > 0 ? args[0] : fullName;
+        String groupName = args.length > 1 ? args[1] : "";
+
+        String groupId = null;
+        String toUserId = null;
+        if (!Api.isEmpty(nickName)) {
+            // 先尝试在好友中查询昵称
+            toUserId = mapNickToUser.get(nickName);
+        }
+        // 如果不是好友, 群昵称不为空, 查询群id
+        if (Api.isEmpty(toUserId) && !Api.isEmpty(groupName)) {
+            groupId = mapNickToUser.get(groupName);
+        }
+
+        if (!Api.isEmpty(toUserId) || !Api.isEmpty(groupId)) {
+            info = new ContactInfo();
+            info.setUserId(toUserId);
+            info.setNickName(nickName);
+            info.setGroupId(groupId);
+            info.setGroupName(groupName);
+            if (!Api.isEmpty(toUserId)) {
+                info.setToUserName(toUserId);
+            } else {
+                info.setToUserName(groupId);
+            }
+        }
+        return info;
     }
 
     /**

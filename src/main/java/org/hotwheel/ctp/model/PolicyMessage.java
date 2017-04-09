@@ -7,6 +7,10 @@ package org.hotwheel.ctp.model;
  * @version 1.0.2
  */
 public class PolicyMessage {
+    private String userName;
+    private String nickName;
+    private String groupName;
+    private String message;
     private String title;
     private StringBuffer buffer = new StringBuffer();
 
@@ -24,5 +28,37 @@ public class PolicyMessage {
 
     public void setBuffer(StringBuffer buffer) {
         this.buffer = buffer;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

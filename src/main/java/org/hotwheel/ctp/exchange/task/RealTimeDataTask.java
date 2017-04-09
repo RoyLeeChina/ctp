@@ -132,7 +132,7 @@ public class RealTimeDataTask extends CTPContext {
                                     if (!Api.isEmpty(keywords)) {
                                         List<StockSubscribe> tmpSubscribe = stockSubscribe.queryByCode(stockCode);
                                         //logger.info("{}({}) {}, 现价{}, 涨跌幅{}%.", stockName, stockCode, keywords, tmpPrice, zf);
-                                        if (tmpSubscribe == null) {
+                                        if (tmpSubscribe == null || tmpSubscribe.size() < 1) {
                                             logger.info("{} 暂无用户订阅");
                                         } else {
                                             for (StockSubscribe userSubscribe : tmpSubscribe) {

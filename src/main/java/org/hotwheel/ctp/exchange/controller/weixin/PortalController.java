@@ -101,16 +101,12 @@ public class PortalController implements WeChatContext {
     @Override
     public void handleMessage(String groupId, String fromUser, String toUser, String text) {
         String kToMe = "@"  + weChat.kNickName;
-
-        /*if (!weChat.kFromUser.equalsIgnoreCase(toUser)) {
-            return;
-        }*/
         boolean isFriend = true;
-        String groupName = weChat.getkNickName(groupId);
-        String nickName = weChat.getkNickName(fromUser);
+        String groupName = weChat.getNickName(groupId);
+        String nickName = weChat.getNickName(fromUser);
         if (Api.isEmpty(nickName)) {
             // 不是好友
-            nickName = weChat.getkNickName(groupId, fromUser);
+            nickName = weChat.getNickName(groupId, fromUser);
             isFriend = false;
         }
         String phone = null;
@@ -121,7 +117,7 @@ public class PortalController implements WeChatContext {
             phone = phone.trim();
         }
         logger.info("{}->{}: {}", nickName, toUser, text);
-        if (text.startsWith(kToMe)) {
+        if (text.toUpperCase().startsWith(kToMe)) {
             text = text.substring(kToMe.length()).trim();
             text = StringUtils.trimWhitespace(text);
             text = text.replaceAll("<br/>"," ");
@@ -164,7 +160,7 @@ public class PortalController implements WeChatContext {
                 }  else if (command.equalsIgnoreCase("注册") || command.equalsIgnoreCase("zc")) {
                     String nm = nickName;
                     if (!isFriend) {
-                        nm = weChat.getkNickName(groupId, fromUser);
+                        nm = weChat.getNickName(groupId, fromUser);
                     }
                     if (!Api.isEmpty(nm)) {
                         // 查询用户ID
