@@ -547,6 +547,9 @@ public class WeChat {
 
     private String urlWebPush = null;
 
+    /**
+     * 选择线路
+     */
     public void choiceSyncLine() {
         boolean enabled = false;
         for(String syncUrl : SYNC_HOST){

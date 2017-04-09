@@ -100,7 +100,6 @@ public class TestController {
         mailMessage.setFrom(fromUser);
         mailMessage.setSubject("CTP策略-测试消息");
         mailMessage.setText("这是一封测试邮件");
-        //setBody(mailMessage, "This is a test!\r\n123.");
         // 传送邮件
         mailSender.send(mailMessage);
         return "OK";
