@@ -8,7 +8,6 @@ import org.hotwheel.util.StringUtils;
 public class WeChatDemo {
 
     public static void main(String[] args) {
-
         String[] aa = "aaa|bbb|ccc".split("\\|");
 
         aa = "abc@123".split("@");
