@@ -40,7 +40,6 @@ public class WeChat {
     private SyncKeyEntity jsonSyncKey;
     private String pass_ticket;
 
-    //private WxHttpClient httpClient = WxHttpClient.getInstance();
     private WechatListener wechatListener = new WechatListener();
     private int tip = 1;
     private String redirect_uri = null;
@@ -84,6 +83,7 @@ public class WeChat {
     public boolean isRunning() {
         return mapGroupMember.size() > 0;
     }
+
     /**
      * 匹配字符串
      * @param str

@@ -16,6 +16,14 @@ public class WechatListener {
 	
 	private int playWeChat = 0;
 
+	/**
+	 * 消息处理
+	 *
+	 * @param weChat
+	 * @param context
+	 * @param wxMessage
+	 * @return
+	 */
 	private boolean process(final WeChat weChat, final WeChatContext context, final WxMessage wxMessage) {
 		boolean haveMessage = false;
 		if (wxMessage != null) {
