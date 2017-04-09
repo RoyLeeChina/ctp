@@ -87,7 +87,7 @@ public class WechatListener {
 							if (!Api.isEmpty(nickName)) {
 								String toUser = message.getToUserName();
 								String msg = message.getContent();
-								msg = "@王布衣 " + msg.trim();
+								msg = "@" + weChat.kNickName + " " + msg.trim();
 								context.handleMessage(groupId, replyUserName, toUser, msg);
 							}
 						}
