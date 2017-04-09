@@ -694,7 +694,7 @@ public class WeChat {
             nickName = "所有人";
         } else if (Api.isEmpty(nickName) && toUserId.equals(kFromUser)) {
             // 给自己发
-            nickName = null;//"王布衣";
+            nickName = null;
         }
         if (!Api.isEmpty(nickName)) {
             StringBuffer sb = new StringBuffer();
