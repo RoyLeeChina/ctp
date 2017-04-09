@@ -128,7 +128,6 @@ public class CreatePolicyTask extends CTPContext {
                                     if (bSent && today.after(sendDate)) {
                                         bSent = false;
                                     }
-                                    bSent = false;
                                     if (!bSent) {
                                         String content = String.format("%s(%s): %s~%s/%s~%s, 阻力位%s, 止损位%s。",
                                                 stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
