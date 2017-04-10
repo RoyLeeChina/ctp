@@ -123,16 +123,16 @@ public class WechatListener {
 							LOG.debug("[*] 你在其他地方登录了 WEB 版微信，再见");
 							break;
 						} else if (sync.retcode == 0) {
-							if (sync.selector == 2 || sync.selector == 3 ) {
+							if (sync.selector == 2 || sync.selector == 3 || sync.selector == 6) {
 								// 新消息
 								WxMessage wxMessage = weChat.webwxsync();
 								haveMessage = process(weChat, context, wxMessage);
-							} else if (sync.selector == 6) {
+							} /*else if (sync.selector == 6) {
 								// 红包
 								//weChat.webwxsync();
 								//weChat.handleMsg(wechatMeta, data);
 								Api.sleep(10 * 1000);
-							} else if (sync.selector == 7) {
+							}*/ else if (sync.selector == 7) {
 								// 手机上操作
 								playWeChat += 1;
 								LOG.info("你在手机上玩微信被我发现了 {} 次", playWeChat);
