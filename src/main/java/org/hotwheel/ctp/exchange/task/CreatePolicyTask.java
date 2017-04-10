@@ -138,6 +138,8 @@ public class CreatePolicyTask extends CTPContext {
                                     if (bSent && today.after(sendDate)) {
                                         bSent = false;
                                     }
+                                    // 暂时全部打开, 每只股票的已经推送的状态没有设置 [wangfeng on 2017/4/11 07:39]
+                                    bSent = false;
                                     if (!bSent) {
                                         String fullName = user.getWeixin();
                                         if (!Api.isEmpty(fullName)) {

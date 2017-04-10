@@ -3,6 +3,7 @@ package org.hotwheel.weixin;
 import org.hotwheel.assembly.Api;
 import org.hotwheel.weixin.bean.MessageEntity;
 import org.hotwheel.weixin.bean.SyncResponse;
+import org.hotwheel.weixin.bean.UserRecommendInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,12 +64,18 @@ public class WechatListener {
 						}*/
 					} else if (WxMsgType.FriendRequest.equals(msgType)) {
 						// 好友请求
-						String username = message.getUserName();
-						String ticket = message.getTicket();
-						boolean bRet = weChat.verifyuser(username, ticket);
-						if (bRet) {
-							// 发送帮助信息
-							context.sendHelp(username);
+						UserRecommendInfo recommendInfo = message.getRecommendInfo();
+						if (recommendInfo != null) {
+							String username = recommendInfo.getUserName();
+							String ticket = recommendInfo.getTicket();
+							if (!Api.isEmpty(username) && !Api.isEmpty(ticket)) {
+								boolean bRet = weChat.verifyuser(username, ticket);
+								if (bRet) {
+									// 发送帮助信息
+									context.sendHelp(username);
+									weChat.addFriend(username, recommendInfo.getNickName());
+								}
+							}
 						}
 					} else if (msgType != WxMsgType.TEXT.intValue()) {
 						// 非 文本消息
