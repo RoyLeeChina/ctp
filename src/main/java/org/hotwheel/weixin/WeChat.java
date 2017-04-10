@@ -58,8 +58,8 @@ public class WeChat {
     private Map<String, String> mapUserToNick = new HashMap<>();
     private Map<String, String> mapGroupMember = new HashMap<>();
     private Map<String, String> mapGroupFull = new HashMap<>();
-    //private final static String kGroupId = "股友会";
-    private final static String kGroupId = "CTP内测";
+    private final static String kGroupId = "股友会";
+    //private final static String kGroupId = "CTP内测";
     private final static String kGroupList = "CTP内测|股友会|长江长江，我是黄河";
     //private final static String kGroupList = "CTP内测";
     public final static long kHeartSleep = 10 * 1000;
@@ -432,6 +432,16 @@ public class WeChat {
 
     }
 
+    /**
+     * 添加好友到缓存
+     * @param userName
+     * @param nickName
+     */
+    public void addFriend(final String userName, final String nickName) {
+        mapUserToNick.put(userName, nickName);
+        mapNickToUser.put(nickName, userName);
+    }
+
 
     private void getContact() {
         String url = base_uri + "/webwxgetcontact";
@@ -577,7 +587,7 @@ public class WeChat {
         params.put("SceneList", new int[]{33});
         params.put("skey", wxSkey);
 
-        String result = HttpUtils.request(url, params);
+        String result = HttpUtils.request(url, JSON.toJSONString(params));
         if (!Api.isEmpty(result)) {
             try {
                 JSONObject resp = JSON.parseObject(result);

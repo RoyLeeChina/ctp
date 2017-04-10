@@ -52,7 +52,7 @@ public class UserService {
         }
     }
 
-    public String getPhone(final String weixin) {
+    public String getPhone1(final String weixin) {
         initUser();
         String sRet = mapUsers.get(weixin);
         if (Api.isEmpty(sRet)) {
@@ -64,6 +64,15 @@ public class UserService {
                     break;
                 }
             }
+        }
+        return sRet;
+    }
+
+    public String getPhone(final String weixin) {
+        String sRet = null;
+        UserInfo info = stockUser.selectByWeixin(weixin);
+        if (info != null) {
+            sRet = info.getPhone();
         }
         return sRet;
     }

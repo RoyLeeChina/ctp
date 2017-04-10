@@ -23,13 +23,8 @@ public class MessageEntity {
     private int AppMsgType;
     private int StatusNotifyCode;
     private String StatusNotifyUserName;
-    private String UserName;
-    private String NickName;
-    private String Province;
-    private String City;
-    private String Signature;
-    private String Ticket;
-    private int OpCode;
+
+    private UserRecommendInfo RecommendInfo;
 
     public void setMsgId(String MsgId) {
         this.MsgId = MsgId;
@@ -167,59 +162,11 @@ public class MessageEntity {
         return StatusNotifyUserName;
     }
 
-    public String getUserName() {
-        return UserName;
+    public UserRecommendInfo getRecommendInfo() {
+        return RecommendInfo;
     }
 
-    public void setUserName(String userName) {
-        UserName = userName;
-    }
-
-    public String getNickName() {
-        return NickName;
-    }
-
-    public void setNickName(String nickName) {
-        NickName = nickName;
-    }
-
-    public String getProvince() {
-        return Province;
-    }
-
-    public void setProvince(String province) {
-        Province = province;
-    }
-
-    public String getCity() {
-        return City;
-    }
-
-    public void setCity(String city) {
-        City = city;
-    }
-
-    public String getSignature() {
-        return Signature;
-    }
-
-    public void setSignature(String signature) {
-        Signature = signature;
-    }
-
-    public String getTicket() {
-        return Ticket;
-    }
-
-    public void setTicket(String ticket) {
-        Ticket = ticket;
-    }
-
-    public int getOpCode() {
-        return OpCode;
-    }
-
-    public void setOpCode(int opCode) {
-        OpCode = opCode;
+    public void setRecommendInfo(UserRecommendInfo recommendInfo) {
+        this.RecommendInfo = recommendInfo;
     }
 }
