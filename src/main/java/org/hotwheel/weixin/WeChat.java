@@ -423,7 +423,7 @@ public class WeChat {
             sRet = mapUserToNick.get(userId);
         } else {
             String groupName = mapUserToNick.get(groupId);
-            String userName = getkNickNameByGroupMember(groupId, userId);
+            String userName = getNickNameByGroupMember(groupId, userId);
             if (!Api.isEmpty(groupId) && !Api.isEmpty(userName)) {
                 sRet = userName + '@' + groupName;
             }
@@ -541,6 +541,61 @@ public class WeChat {
                 }
             }
         }
+    }
+
+    /**
+     * 验证好友请求
+     * @param username
+     * @param ticket
+     */
+    public boolean verifyuser(final String username, final String ticket) {
+        boolean bRet = false;
+        String url = base_uri + "/webwxverifyuser";
+        url += "?r=" + System.currentTimeMillis();
+
+        BaseRequest baseRequest = new BaseRequest();
+        baseRequest.Uin = wxUin;
+        baseRequest.Sid = wxSid;
+        baseRequest.Skey = wxSkey;
+        baseRequest.DeviceID = kDeviceId;
+
+        Map<String, String> user = new HashMap<>();
+        user.put("Value", username);
+        user.put("VerifyUserTicket", ticket);
+
+        List<Map<String, String>> userList = new ArrayList<>();
+        userList.add(user);
+
+        TreeMap<String, Object> params = new TreeMap<>();
+        params.put("BaseRequest", baseRequest);
+        params.put("Opcode", 3);
+        params.put("VerifyUserListSize", userList.size());
+        params.put("VerifyUserList", userList);
+        params.put("VerifyContent", "");
+
+        params.put("SceneListCount", 1);
+        params.put("SceneList", new int[]{33});
+        params.put("skey", wxSkey);
+
+        String result = HttpUtils.request(url, params);
+        if (!Api.isEmpty(result)) {
+            try {
+                JSONObject resp = JSON.parseObject(result);
+                if (resp != null) {
+                    JSONObject baseResponse = resp.getJSONObject("BaseResponse");
+                    if (baseResponse != null) {
+                        int ret = baseResponse.getIntValue("Ret");
+                        if (ret == 0) {
+                            bRet = true;
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("通过好友验证失败: ", e);
+            }
+        }
+
+        return bRet;
     }
 
     private static final String[] SYNC_HOST = {
@@ -683,7 +738,7 @@ public class WeChat {
         sendGroupMessage(groupId, null, message);
     }
 
-    public String getkNickNameByGroupMember(final String groupId, final String toUserId) {
+    public String getNickNameByGroupMember(final String groupId, final String toUserId) {
         String key = keyMemberOfGroup(groupId, toUserId);
         String nickName = mapGroupMember.get(key);
         return nickName;
