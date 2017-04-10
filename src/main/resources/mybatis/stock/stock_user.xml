@@ -15,7 +15,7 @@
 
     <!-- 用微信昵称查询一个用户是否存在 -->
     <select id="selectByWeixin" resultType="org.hotwheel.ctp.model.UserInfo">
-        SELECT * FROM stock_user WHERE flag='01' AND weixin=#{weixin} LIMIT 0,1
+        SELECT * FROM stock_user WHERE flag='01' AND weixin=#{weixin} OR weixin like #{weixin} '@%' LIMIT 0,1
     </select>
 
     <!-- 插入一个用户 -->
