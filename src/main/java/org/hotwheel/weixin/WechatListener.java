@@ -61,6 +61,15 @@ public class WechatListener {
 						} else {
 							weChat.sendGroupMessage(groupId, replyUserName, content);
 						}*/
+					} else if (WxMsgType.FriendRequest.equals(msgType)) {
+						// 好友请求
+						String username = message.getUserName();
+						String ticket = message.getTicket();
+						boolean bRet = weChat.verifyuser(username, ticket);
+						if (bRet) {
+							// 发送帮助信息
+							context.sendHelp(username);
+						}
 					} else if (msgType != WxMsgType.TEXT.intValue()) {
 						// 非 文本消息
 						//LOG.info("MsgType[{}]: from={}, to={}, message={}", msgType, nmFrom, nmTo, message.getContent());

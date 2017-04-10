@@ -99,6 +99,18 @@ public class PortalController implements WeChatContext {
     private final static String kPrefix = "【CTP微信助手】";
 
     @Override
+    public void sendHelp(String toUser) {
+        String message = "帮助信息:";
+        message += "\n1)注册股票预警功能: zc 手机号码";
+        message += "\n2)查询注册id: cx id\n";
+        message += "\n3)查询订阅信息: cx dy";
+        message += "\n4)订阅个股信息: dy 股票代码";
+        message += "\n5)退订个股信息: td 股票代码";
+
+        weChat.sendMessageByUserId(toUser, message);
+    }
+
+    @Override
     public void handleMessage(String groupId, String fromUser, String toUser, String text) {
         String kToMe = "@"  + weChat.kNickName;
         boolean isFriend = true;
