@@ -12,6 +12,7 @@ import org.hotwheel.ctp.util.DateUtils;
 import org.hotwheel.ctp.util.EmailApi;
 import org.hotwheel.ctp.util.PolicyApi;
 import org.hotwheel.ctp.util.StockApi;
+import org.hotwheel.weixin.bean.ContactInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,6 +136,12 @@ public class RealTimeDataTask extends CTPContext {
                                         if (tmpSubscribe == null || tmpSubscribe.size() < 1) {
                                             logger.info("{} 暂无用户订阅");
                                         } else {
+                                            Map<String, StringBuffer> mapGroupMessage = new HashMap<>();
+                                            String title = StockOptions.kPrefixMessage + "盘中策略提醒";
+                                            String content = String.format("%s(%s) ,现价%.2f %s, 涨跌幅%s%%.",
+                                                    stockName, stockCode, tmpPrice, keywords, zf);
+                                            String message = title + ": " + content;
+                                            logger.info(content);
                                             for (StockSubscribe userSubscribe : tmpSubscribe) {
                                                 Policy policy = PolicyApi.get(userSubscribe.getRemark());
                                                 boolean bSent = true;
@@ -161,13 +168,26 @@ public class RealTimeDataTask extends CTPContext {
                                                     } else {
                                                         // 如果没有发送, 设置发送状态
                                                         Api.setValue(policy, field, true);
-                                                        String title = StockOptions.kPrefixMessage + "盘中策略提醒";
-                                                        String content = String.format("%s: %s(%s) ,现价%.2f %s, 涨跌幅%s%%.",
-                                                                userSubscribe.getPhone(), stockName, stockCode, tmpPrice, keywords, zf);
-                                                        logger.info(content);
                                                         bSent = false;
-                                                        if (!Api.isEmpty(user.getWeixin())) {
-                                                            weChat.sendMessage(user.getWeixin(), title + ": " + content);
+                                                        String fullName = user.getWeixin();
+                                                        if (!Api.isEmpty(fullName)) {
+                                                            //weChat.sendMessage(user.getWeixin(), title + ": " + content);
+                                                            ContactInfo contactInfo = weChat.parseContact(fullName);
+                                                            if (contactInfo == null) {
+                                                                logger.info("weixin={}, 好友和群信息无法识别, 不能推送", fullName);
+                                                            } else if (Api.isEmpty(contactInfo.getGroupId())){
+                                                                // 如果不是群消息
+                                                                weChat.sendMessageByUserId(contactInfo.getToUserName(), message);
+                                                            } else {
+                                                                // 非好友, 发信息到群里
+                                                                String groupId = contactInfo.getGroupId();
+                                                                StringBuffer sb = mapGroupMessage.get(groupId);
+                                                                if (sb == null) {
+                                                                    sb = new StringBuffer();
+                                                                }
+                                                                sb.append("@" + contactInfo.getNickName() + " ");
+                                                                mapGroupMessage.put(groupId, sb);
+                                                            }
                                                             bSent = true;
                                                         } else if (!Api.isEmpty(user.getEmail())) {
                                                             if (EmailApi.send(user.getEmail(), title, content)) {
@@ -181,6 +201,20 @@ public class RealTimeDataTask extends CTPContext {
                                                         }
                                                     }
                                                 }
+                                            }
+                                            // 合并发送
+                                            if (mapGroupMessage.size() > 0) {
+                                                for (Map.Entry<String, StringBuffer> entry : mapGroupMessage.entrySet()) {
+                                                    String groupId = entry.getKey();
+                                                    StringBuffer sb = entry.getValue();
+                                                    if (!Api.isEmpty(groupId) && !Api.isEmpty(sb.toString())) {
+                                                        String groupName = weChat.getNickName(groupId);
+                                                        String toUser = sb.toString();
+                                                        logger.info("推送群消息[{}]: {}=>{}", groupName, toUser, message);
+                                                        weChat.sendMessageByUserId(groupId, toUser + message);
+                                                    }
+                                                }
+                                                mapGroupMessage.clear();
                                             }
                                         }
                                     }

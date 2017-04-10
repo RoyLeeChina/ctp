@@ -750,32 +750,36 @@ public class WeChat {
      */
     public ContactInfo parseContact(final String fullName) {
         ContactInfo info = null;
-        String[] args = fullName.split("@");
-        String nickName = args.length > 0 ? args[0] : fullName;
-        String groupName = args.length > 1 ? args[1] : "";
+        try {
+            String[] args = fullName.split("@");
+            String nickName = args.length > 0 ? args[0] : fullName;
+            String groupName = args.length > 1 ? args[1] : "";
 
-        String groupId = null;
-        String toUserId = null;
-        if (!Api.isEmpty(nickName)) {
-            // 先尝试在好友中查询昵称
-            toUserId = mapNickToUser.get(nickName);
-        }
-        // 如果不是好友, 群昵称不为空, 查询群id
-        if (Api.isEmpty(toUserId) && !Api.isEmpty(groupName)) {
-            groupId = mapNickToUser.get(groupName);
-        }
-
-        if (!Api.isEmpty(toUserId) || !Api.isEmpty(groupId)) {
-            info = new ContactInfo();
-            info.setUserId(toUserId);
-            info.setNickName(nickName);
-            info.setGroupId(groupId);
-            info.setGroupName(groupName);
-            if (!Api.isEmpty(toUserId)) {
-                info.setToUserName(toUserId);
-            } else {
-                info.setToUserName(groupId);
+            String groupId = null;
+            String toUserId = null;
+            if (!Api.isEmpty(nickName)) {
+                // 先尝试在好友中查询昵称
+                toUserId = mapNickToUser.get(nickName);
             }
+            // 如果不是好友, 群昵称不为空, 查询群id
+            if (Api.isEmpty(toUserId) && !Api.isEmpty(groupName)) {
+                groupId = mapNickToUser.get(groupName);
+            }
+
+            if (!Api.isEmpty(toUserId) || !Api.isEmpty(groupId)) {
+                info = new ContactInfo();
+                info.setUserId(toUserId);
+                info.setNickName(nickName);
+                info.setGroupId(groupId);
+                info.setGroupName(groupName);
+                if (!Api.isEmpty(toUserId)) {
+                    info.setToUserName(toUserId);
+                } else {
+                    info.setToUserName(groupId);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("", e);
         }
         return info;
     }

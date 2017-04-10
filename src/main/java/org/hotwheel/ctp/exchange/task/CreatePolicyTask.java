@@ -143,7 +143,7 @@ public class CreatePolicyTask extends CTPContext {
                                         if (!Api.isEmpty(fullName)) {
                                             ContactInfo contactInfo = weChat.parseContact(fullName);
                                             if (contactInfo == null) {
-                                                logger.info("weixin={}, 好友和群信息无法识别, 不能推送");
+                                                logger.info("weixin={}, 好友和群信息无法识别, 不能推送", fullName);
                                             } else if (Api.isEmpty(contactInfo.getGroupId())){
                                                 // 如果不是群消息
                                                 weChat.sendMessageByUserId(contactInfo.getToUserName(), message);
