@@ -73,6 +73,8 @@ public class RealTimeDataTask extends CTPContext {
                 if (allCodes == null || allCodes.size() < 1) {
                     //
                 } else {
+                    //allCodes.clear();
+                    //allCodes.add("sz000088");
                     List<StockRealTime> stockRealTimeList = StockApi.getRealTime(Lists.newArrayList(allCodes));
                     if (stockRealTimeList != null && stockRealTimeList.size() > 0) {
                         for (StockRealTime realTime : stockRealTimeList) {
@@ -105,7 +107,7 @@ public class RealTimeDataTask extends CTPContext {
                                     double pressure2 = Api.valueOf(double.class, sm.getPressure2());
                                     double stop = Api.valueOf(double.class, sm.getStop());
                                     double resistance = Api.valueOf(double.class, sm.getResistance());
-
+                                    //tmpPrice = 100.00;
                                     String zf = String.format("%.2f", 100 * (tmpPrice - close) / close);
                                     String keywords = null;
                                     String field = null;

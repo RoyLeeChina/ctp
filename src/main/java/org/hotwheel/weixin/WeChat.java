@@ -60,8 +60,8 @@ public class WeChat {
     private Map<String, String> mapGroupFull = new HashMap<>();
     //private final static String kGroupId = "股友会";
     private final static String kGroupId = "CTP内测";
-    //private final static String kGroupList = "CTP内测|股友会|长江长江，我是黄河";
-    private final static String kGroupList = "CTP内测";
+    private final static String kGroupList = "CTP内测|股友会|长江长江，我是黄河";
+    //private final static String kGroupList = "CTP内测";
     public final static long kHeartSleep = 10 * 1000;
 
     static {
@@ -105,6 +105,10 @@ public class WeChat {
         return match(str, exp, "");
     }
 
+    /**
+     * 启动
+     * @param context
+     */
     public void start(WeChatContext context) {
         while (!waitForLogin()) {
             Api.sleep(2000);
@@ -123,7 +127,6 @@ public class WeChat {
         logger.info("获取联系人...");
         getContact();
         logger.info("获取联系人成功");
-        //logger.info("共有 {} 位联系人", Constant.CONTACT.getContactList().size());
         CTPContext.setWeChat(this);
         // 监听消息
         wechatListener.start(this, context);
