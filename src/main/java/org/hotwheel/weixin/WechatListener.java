@@ -123,7 +123,7 @@ public class WechatListener {
 							LOG.debug("[*] 你在其他地方登录了 WEB 版微信，再见");
 							break;
 						} else if (sync.retcode == 0) {
-							if (sync.selector == 2 || sync.selector == 3) {
+							if (sync.selector == 2 || sync.selector == 3 ) {
 								// 新消息
 								WxMessage wxMessage = weChat.webwxsync();
 								haveMessage = process(weChat, context, wxMessage);
