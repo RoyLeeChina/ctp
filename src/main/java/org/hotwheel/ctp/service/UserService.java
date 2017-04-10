@@ -54,7 +54,18 @@ public class UserService {
 
     public String getPhone(final String weixin) {
         initUser();
-        return mapUsers.get(weixin);
+        String sRet = mapUsers.get(weixin);
+        if (Api.isEmpty(sRet)) {
+            for (Map.Entry<String, String> entry : mapUsers.entrySet()) {
+                String wx = entry.getKey();
+                String phone = entry.getValue();
+                if (wx.startsWith(weixin + "@")) {
+                    sRet = phone;
+                    break;
+                }
+            }
+        }
+        return sRet;
     }
 
     /**
