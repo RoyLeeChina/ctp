@@ -160,7 +160,7 @@ public class WechatListener {
 							}
 							//continue;
 						} else {
-							//
+							weChat.getContact();
 						}
 						if (haveMessage) {
 							continue;

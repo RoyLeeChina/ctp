@@ -442,8 +442,10 @@ public class WeChat {
         mapNickToUser.put(nickName, userName);
     }
 
-
-    private void getContact() {
+    /**
+     * 获取联系人
+     */
+    public void getContact() {
         String url = base_uri + "/webwxgetcontact";
         url += "?r=" + System.currentTimeMillis();
         url += "&pass_ticket=" + Api.urlEncode(pass_ticket);
