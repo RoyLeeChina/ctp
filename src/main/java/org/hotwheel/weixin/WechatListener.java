@@ -53,7 +53,7 @@ public class WechatListener {
 					if (WxMsgType.GROUPMANAGE.equals(msgType)) {
 						// 群管理 消息
 					} else if (msgType == WxMsgType.GOTCONTACT.intValue()) {
-						weChat.getContact();
+						//weChat.getContact();
 						LOG.info("成功获取联系人信息");
 					} else if (WxMsgType.UNDO.equals(msgType)) {
 						/*// 回撤消息
@@ -161,7 +161,7 @@ public class WechatListener {
 							}
 							//continue;
 						} else {
-							//weChat.getContact();
+							weChat.getContact();
 						}
 						if (haveMessage) {
 							continue;
