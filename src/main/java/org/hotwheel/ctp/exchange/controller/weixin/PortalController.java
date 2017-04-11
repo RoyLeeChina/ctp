@@ -102,7 +102,7 @@ public class PortalController implements WeChatContext {
     public void sendHelp(String toUser) {
         String message = "帮助信息:";
         message += "\n1)注册股票预警功能: zc 手机号码";
-        message += "\n2)查询注册id: cx id\n";
+        message += "\n2)查询注册id: cx id";
         message += "\n3)查询订阅信息: cx dy";
         message += "\n4)订阅个股信息: dy 股票代码";
         message += "\n5)退订个股信息: td 股票代码";
@@ -148,6 +148,9 @@ public class PortalController implements WeChatContext {
                     message = "帮助信息:";
                     message += "\n1)注册股票预警功能: " + kToMe + " zc 手机号码";
                     message += "\n2)订阅个股预警信息: " + kToMe + " dy 股票代码";
+                    message += "\n3)查询订阅信息: " + kToMe + "cx dy";
+                    message += "\n4)订阅个股信息: " + kToMe + "dy 股票代码";
+                    message += "\n5)退订个股信息: " + kToMe + "td 股票代码";
                 } else if (command.equalsIgnoreCase("查询") || command.equalsIgnoreCase("cx")) {
                     if (params.equalsIgnoreCase("id")) {
                         // 查询用户ID
@@ -191,7 +194,7 @@ public class PortalController implements WeChatContext {
                         message = "群(" + groupName + ") 暂未开通微信助手功能";
                     }
                 } else if (Api.isEmpty(phone)) {
-                    //weChat.sendMessage(nickName, kPrefix + nickName + " 未注册");
+                    message = nickName + " 未注册";
                 } else if (command.equalsIgnoreCase("订阅") || command.equalsIgnoreCase("dy")){
                     ActionStatus resp = userService.subscribe(phone, params);
                     message = nickName + "，订阅" + params;
