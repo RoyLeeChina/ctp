@@ -112,7 +112,7 @@ public class PortalController implements WeChatContext {
 
     @Override
     public void handleMessage(String groupId, String fromUser, String toUser, String text) {
-        String kToMe = !Api.isEmpty(groupId) ? "@"  + weChat.kNickName : "";
+        String kToMe = "@"  + weChat.kNickName;
         boolean isFriend = true;
         String groupName = weChat.getNickName(groupId);
         String nickName = weChat.getNickName(fromUser);
@@ -140,6 +140,9 @@ public class PortalController implements WeChatContext {
                 String params = args.length>=2 ? args[1] : "";
                 params = StringUtils.trimWhitespace(params);
                 String message = null;
+                if (Api.isEmpty(groupId)) {
+                    kToMe = "";
+                }
                 if (command.equalsIgnoreCase("help")) {
                     // 帮助信息
                     message = "帮助信息:";

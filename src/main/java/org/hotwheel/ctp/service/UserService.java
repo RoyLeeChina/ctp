@@ -10,7 +10,6 @@ import org.hotwheel.ctp.model.StockSubscribe;
 import org.hotwheel.ctp.model.UserInfo;
 import org.hotwheel.ctp.util.StockApi;
 import org.hotwheel.io.ActionStatus;
-import org.hotwheel.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -252,7 +251,16 @@ public class UserService {
         String sRet = null;
         List<String> list = stockSubscribe.checkoutByPhone(phone);
         if (list != null && list.size() > 0) {
-            sRet = StringUtils.collectionToDelimitedString(list, ",");
+            StringBuffer sb = new StringBuffer();
+            for (String code: list) {
+                StockCode sc = stockCode.select(code, code);
+                if (sc != null) {
+                    sb.append(",");
+                    sb.append(sc.getName()).append("(").append(sc.getCode()).append(")");
+                }
+            }
+            //sRet = StringUtils.collectionToDelimitedString(list, ",");
+            sRet = sb.substring(1);
         }
 
         return sRet;

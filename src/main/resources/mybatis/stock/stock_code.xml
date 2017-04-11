@@ -12,7 +12,7 @@
         SELECT * FROM stock_code WHERE code=#{code} OR full_code=#{full_code} LIMIT 0,1
     </select>
 
-    <!-- 插入一个用户 -->
+    <!-- 插入一个股票代码 -->
     <insert id="insert" parameterType="org.hotwheel.ctp.model.StockCode">
         INSERT INTO stock_code (flag,code,full_code,`name`,`operator`,`createTime`)
         VALUES (#{flag},#{code},#{full_code},#{name},#{operator},now())
