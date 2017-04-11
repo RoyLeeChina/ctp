@@ -161,7 +161,7 @@ public class WechatListener {
 							}
 							//continue;
 						} else {
-							weChat.getContact();
+							//weChat.getContact();
 						}
 						if (haveMessage) {
 							continue;
