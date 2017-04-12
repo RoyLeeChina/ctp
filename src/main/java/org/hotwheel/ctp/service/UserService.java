@@ -2,12 +2,9 @@ package org.hotwheel.ctp.service;
 
 import org.hotwheel.assembly.Api;
 import org.hotwheel.ctp.StockOptions;
-import org.hotwheel.ctp.dao.IStockCode;
-import org.hotwheel.ctp.dao.IStockSubscribe;
-import org.hotwheel.ctp.dao.IStockUser;
-import org.hotwheel.ctp.model.StockCode;
-import org.hotwheel.ctp.model.StockSubscribe;
-import org.hotwheel.ctp.model.UserInfo;
+import org.hotwheel.ctp.dao.*;
+import org.hotwheel.ctp.model.*;
+import org.hotwheel.ctp.util.PolicyApi;
 import org.hotwheel.ctp.util.StockApi;
 import org.hotwheel.io.ActionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +36,12 @@ public class UserService {
 
     @Autowired
     private IStockCode stockCode;
+
+    @Autowired
+    private IStockMonitor stockMonitor;
+
+    @Autowired
+    private IStockHistory stockHistory;
 
     private void initUser() {
         if (mapUsers.size() < 1) {
@@ -264,5 +267,27 @@ public class UserService {
         }
 
         return sRet;
+    }
+
+    /**
+     * 查询策略
+     * @param code
+     * @return
+     */
+    public StockMonitor queryPolicy(String code) {
+        StockMonitor info = null;
+        if (!Api.isEmpty(code)) {
+            code = StockApi.fixCode(code);
+            info = stockMonitor.query(code);
+            if (info == null) {
+                List<StockHistory> shList = stockHistory.selectOne(code);
+                info = PolicyApi.dxcl(shList);
+                if (info != null) {
+                    info.setCode(code);
+                    int result = stockMonitor.insert(info);
+                }
+            }
+        }
+        return info;
     }
 }
