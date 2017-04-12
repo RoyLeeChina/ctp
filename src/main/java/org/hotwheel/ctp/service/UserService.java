@@ -28,7 +28,7 @@ import java.util.Map;
 public class UserService {
     private final static int kErrorCode = 10000;
     private final static String kMeNickname = "CTP助手";
-    private final static String kContactByError = "系统操作异常，请@" + kMeNickname + "。";
+    private final static String kContactByError = "系统操作异常，请@王布衣。";
     private static Map<String, String> mapUsers = new HashMap<>();
 
     @Autowired
@@ -164,9 +164,9 @@ public class UserService {
         } else {
             StockCode scInfo = stockCode.select(code, fullCode);
             if (scInfo == null) {
-                resp.set(errno + 4, "股票代码非法或暂未被CTP系统收录，如确系需要，请@"  + kMeNickname);
+                resp.set(errno + 4, "股票代码非法或暂未被CTP系统收录，如确系需要，请@王布衣");
             } else if (!scInfo.getFlag().equals(StockOptions.kNormalState)) {
-                resp.set(errno + 5, scInfo.getName() + "(" + code + "), CTP暂停该股预警服务，如确系需要，请@"  + kMeNickname);
+                resp.set(errno + 5, scInfo.getName() + "(" + code + "), CTP暂停该股预警服务，如确系需要，请@王布衣");
             } else {
                 StockSubscribe info = stockSubscribe.select(phone, fullCode);
                 int result = -1;
