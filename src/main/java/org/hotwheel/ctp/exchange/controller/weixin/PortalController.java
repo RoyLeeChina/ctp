@@ -119,7 +119,10 @@ public class PortalController implements WeChatContext {
         if (Api.isEmpty(nickName)) {
             // 不是好友
             nickName = weChat.getNickName(groupId, fromUser);
+            logger.info("群昵称: {}", nickName);
             isFriend = false;
+        } else {
+            logger.info("好友昵称: {}", nickName);
         }
         String phone = null;
         if (!Api.isEmpty(nickName)) {
