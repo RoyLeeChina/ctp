@@ -208,7 +208,7 @@ public class PortalController implements WeChatContext {
                     } else {
                         message  =   "1) 查询注册id: "  + kToMe + "cx id";
                         message += "\n2) 查询订阅信息: " + kToMe + "cx dy";
-                        message += "\n3) 查询订阅信息: " + kToMe + "cx 股票代码";
+                        message += "\n3) 查询个股策略: " + kToMe + "cx 股票代码";
                         message = ": " + message;
                     }
                 }  else if (command.equalsIgnoreCase("注册") || command.equalsIgnoreCase("zc")) {
