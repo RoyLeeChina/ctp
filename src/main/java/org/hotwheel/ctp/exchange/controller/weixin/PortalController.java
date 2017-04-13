@@ -114,8 +114,9 @@ public class PortalController implements WeChatContext {
         message += "\n1)注册股票预警功能: zc 手机号码";
         message += "\n2)查询注册id: cx id";
         message += "\n3)查询订阅信息: cx dy";
-        message += "\n4)订阅个股信息: dy 股票代码";
-        message += "\n5)退订个股信息: td 股票代码";
+        message += "\n4)查询个股策略: cx 股票代码";
+        message += "\n5)订阅个股信息: dy 股票代码";
+        message += "\n6)退订个股信息: td 股票代码";
 
         weChat.sendMessageByUserId(toUser, message);
     }
@@ -160,10 +161,11 @@ public class PortalController implements WeChatContext {
                     // 帮助信息
                     message = "帮助信息:";
                     message += "\n1)注册股票预警功能: " + kToMe + " zc 手机号码";
-                    message += "\n2)订阅个股预警信息: " + kToMe + " dy 股票代码";
+                    message += "\n2)查询注册id: " + kToMe + "cx id";
                     message += "\n3)查询订阅信息: " + kToMe + "cx dy";
-                    message += "\n4)订阅个股信息: " + kToMe + "dy 股票代码";
-                    message += "\n5)退订个股信息: " + kToMe + "td 股票代码";
+                    message += "\n4)查询个股策略: " + kToMe + "cx 股票代码";
+                    message += "\n5)订阅个股信息: " + kToMe + "dy 股票代码";
+                    message += "\n6)退订个股信息: " + kToMe + "td 股票代码";
                 } else if (command.equalsIgnoreCase("查询") || command.equalsIgnoreCase("cx")) {
                     String fullCode = StockApi.fixCode(params);
                     if (params.equalsIgnoreCase("id")) {
