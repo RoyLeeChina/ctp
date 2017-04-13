@@ -1,9 +1,14 @@
 package org.hotwheel.ctp.exchange.controller.weixin;
 
 import org.hotwheel.assembly.Api;
+import org.hotwheel.ctp.StockOptions;
+import org.hotwheel.ctp.dao.IStockCode;
 import org.hotwheel.ctp.exchange.task.CTPContext;
+import org.hotwheel.ctp.model.StockCode;
 import org.hotwheel.ctp.model.StockMonitor;
 import org.hotwheel.ctp.service.UserService;
+import org.hotwheel.ctp.util.StockApi;
+import org.hotwheel.ctp.util.Validate;
 import org.hotwheel.io.ActionStatus;
 import org.hotwheel.util.StringUtils;
 import org.hotwheel.weixin.WeChat;
@@ -21,6 +26,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -40,6 +46,9 @@ public class PortalController implements WeChatContext {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private IStockCode stockCode;
 
     @PostConstruct
     public void init() {
@@ -156,6 +165,7 @@ public class PortalController implements WeChatContext {
                     message += "\n4)订阅个股信息: " + kToMe + "dy 股票代码";
                     message += "\n5)退订个股信息: " + kToMe + "td 股票代码";
                 } else if (command.equalsIgnoreCase("查询") || command.equalsIgnoreCase("cx")) {
+                    String fullCode = StockApi.fixCode(params);
                     if (params.equalsIgnoreCase("id")) {
                         // 查询用户ID
                         ActionStatus resp = userService.query(nickName);
@@ -174,9 +184,29 @@ public class PortalController implements WeChatContext {
                             }
                         }
                         message = nickName + " 订阅信息: " + message;
+                    } else if (Api.isInteger(params) && fullCode != null) {
+                        StockMonitor info = userService.queryPolicy(fullCode);
+                        if (info == null) {
+                            message = nickName + "，暂无该股策略";
+                        } else {
+                            StockCode sc = stockCode.select(fullCode, fullCode);
+                            String stockName = null;
+                            if (sc != null) {
+                                stockName = sc.getName();
+                            }
+                            String content = String.format("%s(%s): 第2支撑位%s~第1支撑位%s/第1压力位%s~第2压力位%s, 阻力位%s, 止损位%s。",
+                                    stockName, sc.getCode(), info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
+                                    info.getResistance(), info.getStop());
+
+                            String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
+                            String title = prefix + "-CTP策略提示";
+                            content += StockOptions.kSuffixMessage;
+                            message = title + ": " + content;
+                        }
                     } else {
-                        message  = "1. 查询注册id: " +  kToMe + "cx id\n";
-                        message += "2. 查询订阅信息: " + kToMe + "cx dy";
+                        message  =   "1) 查询注册id: "  + kToMe + "cx id";
+                        message += "\n2) 查询订阅信息: " + kToMe + "cx dy";
+                        message += "\n3) 查询订阅信息: " + kToMe + "cx 股票代码";
                         message = ": " + message;
                     }
                 }  else if (command.equalsIgnoreCase("注册") || command.equalsIgnoreCase("zc")) {
@@ -184,7 +214,9 @@ public class PortalController implements WeChatContext {
                     if (!isFriend) {
                         nm = weChat.getNickName(groupId, fromUser);
                     }
-                    if (!Api.isEmpty(nm)) {
+                    if (Api.isEmpty(params) || !Validate.isPhoneNum(params)) {
+                        message = nickName + "输入了无效的手机号码";
+                    } else if (!Api.isEmpty(nm)) {
                         // 查询用户ID
                         ActionStatus resp = userService.query(nm);
                         if (resp.getStatus() != 0) {
