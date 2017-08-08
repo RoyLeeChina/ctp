@@ -66,9 +66,9 @@ public final class StockApi {
         String code = null;
         // 如果是纯数字
         if (stockCode.startsWith("6")) {
-            code = "sh" + code;
+            code = "sh" + stockCode;
         } else {
-            code = "sz" + code;
+            code = "sz" + stockCode;
         }
 
         return code;
