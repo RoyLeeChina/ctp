@@ -11,6 +11,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.hotwheel.asio.HttpApi;
 import org.hotwheel.assembly.Api;
+import org.hotwheel.assembly.RegExp;
 import org.hotwheel.ctp.StockOptions;
 import org.hotwheel.ctp.data.HistoryUtils;
 import org.hotwheel.ctp.data.RealTimeUtils;
@@ -38,8 +39,12 @@ import java.util.Map;
  * Created by wangfeng on 2017/3/12.
  */
 public final class StockApi {
-
     private static Logger logger = LoggerFactory.getLogger(StockApi.class);
+
+    // 正则: 完整的股票代码
+    private final static String expFullCode = "^s[hz]{1}[0-9]{6}$";
+    // 正则: 股票代码
+    private final static String expCode = "^[0-9]{6}$";
 
     /**
      * 价格转字符串
@@ -52,12 +57,50 @@ public final class StockApi {
     }
 
     /**
+     * 补全证券代码
+     * @param stockCode
+     * @return
+     * @since 2.0.1
+     */
+    private static String fillCode(final String stockCode) {
+        String code = null;
+        // 如果是纯数字
+        if (stockCode.startsWith("6")) {
+            code = "sh" + code;
+        } else {
+            code = "sz" + code;
+        }
+
+        return code;
+    }
+
+    /**
+     * 规范 代码
+     *
+     * @param fullCode
+     * @return 不合规范的代码 返回null
+     * @since 2.0.1
+     */
+    public static String fixCode(final String fullCode) {
+        String code = null;
+        if (RegExp.valid(fullCode, expFullCode)) {
+            // 8位完整的证券代码
+            code = fullCode;
+        } else if (RegExp.valid(fullCode, expCode)) {
+            // 6位代码, 需要补全
+            code = fillCode(fullCode);
+        }
+
+        return code;
+    }
+
+    /**
      * 规范 代码
      *
      * @param fullcode
      * @return 不合规范的代码 返回null
      */
-    public static String fixCode(final String fullcode) {
+    public static String fixCodeV1(final String fullcode) {
         String code = fullcode.toLowerCase().trim();
         if (code.startsWith("sh") || code.startsWith("sz")) {
             // 代码前缀正确

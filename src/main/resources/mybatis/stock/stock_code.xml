@@ -7,9 +7,15 @@
     <select id="getAll" resultType="java.lang.String">
         SELECT full_code FROM stock_code WHERE flag='01'
     </select>
-    <!-- 查询一个用户是否存在 -->
+
+    <!-- 根据证券代码查询一只股票是否存在 -->
     <select id="select" resultType="org.hotwheel.ctp.model.StockCode">
         SELECT * FROM stock_code WHERE code=#{code} OR full_code=#{full_code} LIMIT 0,1
+    </select>
+
+    <!-- 根据证券名称查询一只股票是否存在 -->
+    <select id="selectByName" resultType="org.hotwheel.ctp.model.StockCode">
+        SELECT * FROM stock_code WHERE name=#{name} LIMIT 0,1
     </select>
 
     <!-- 插入一个股票代码 -->

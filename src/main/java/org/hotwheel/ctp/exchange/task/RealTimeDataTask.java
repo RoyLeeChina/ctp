@@ -131,6 +131,8 @@ public class RealTimeDataTask extends CTPContext {
                                         field = "stop";
                                         keywords = "触及止损位" + stop;
                                     }
+                                    Date now = new Date();
+                                    String tm = Api.toString(now, StockOptions.TimeFormat);
                                     // 如果命中价格范围监控, 输出策略提醒的关键字
                                     if (!Api.isEmpty(keywords)) {
                                         List<StockSubscribe> tmpSubscribe = stockSubscribe.queryByCode(stockCode);
@@ -139,7 +141,7 @@ public class RealTimeDataTask extends CTPContext {
                                             logger.info("{} 暂无用户订阅");
                                         } else {
                                             Map<String, StringBuffer> mapGroupMessage = new HashMap<>();
-                                            String title = StockOptions.kPrefixMessage + "盘中策略提醒";
+                                            String title = StockOptions.kPrefixMessage + "盘中策略提醒(" + tm + ")";
                                             String content = String.format("%s(%s) ,现价%.2f %s, 涨跌幅%s%%.",
                                                     stockName, stockCode, tmpPrice, keywords, zf);
                                             String message = title + ": " + content;

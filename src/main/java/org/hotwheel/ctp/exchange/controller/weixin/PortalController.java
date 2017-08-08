@@ -167,6 +167,7 @@ public class PortalController implements WeChatContext {
                     message += "\n5)订阅个股信息: " + kToMe + "dy 股票代码";
                     message += "\n6)退订个股信息: " + kToMe + "td 股票代码";
                 } else if (command.equalsIgnoreCase("查询") || command.equalsIgnoreCase("cx")) {
+                    boolean bFound = false;
                     String fullCode = StockApi.fixCode(params);
                     if (params.equalsIgnoreCase("id")) {
                         // 查询用户ID
@@ -176,6 +177,7 @@ public class PortalController implements WeChatContext {
                         } else {
                             message = nickName + "查询ID失败: " + resp.getMessage();
                         }
+                        bFound = true;
                     } else if (params.equalsIgnoreCase("dy")) {
                         if (Api.isEmpty(phone)) {
                             message = nickName + "未注册";
@@ -186,7 +188,13 @@ public class PortalController implements WeChatContext {
                             }
                         }
                         message = nickName + " 订阅信息: " + message;
-                    } else if (Api.isInteger(params) && fullCode != null) {
+                        bFound = true;
+                    }
+                    if (!bFound && !Api.isEmpty(params)) {
+                        // 如果都没找到, 但是还是有参数? 按照中文证券名称来查询
+                        fullCode = userService.getFullCode(params);
+                    }
+                    if (!bFound && fullCode != null) {
                         StockMonitor info = userService.queryPolicy(fullCode);
                         if (info == null) {
                             message = nickName + "，暂无该股策略";
@@ -201,11 +209,13 @@ public class PortalController implements WeChatContext {
                                     info.getResistance(), info.getStop());
 
                             String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
-                            String title = prefix + "-CTP策略提示";
+                            String title = prefix + "-CTP策略提示(" + Api.toString(info.getCreateTime(), StockOptions.TimeFormat) + ")";
                             content += StockOptions.kSuffixMessage;
                             message = title + ": " + content;
                         }
-                    } else {
+                        bFound = true;
+                    }
+                    if (!bFound){
                         message  =   "1) 查询注册id: "  + kToMe + "cx id";
                         message += "\n2) 查询订阅信息: " + kToMe + "cx dy";
                         message += "\n3) 查询个股策略: " + kToMe + "cx 股票代码";
