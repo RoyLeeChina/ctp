@@ -190,7 +190,7 @@ public class PortalController implements WeChatContext {
                         message = nickName + " 订阅信息: " + message;
                         bFound = true;
                     }
-                    if (!bFound && !Api.isEmpty(params)) {
+                    if (!bFound && !Api.isEmpty(params) && !Api.isInteger(params)) {
                         // 如果都没找到, 但是还是有参数? 按照中文证券名称来查询
                         fullCode = userService.getFullCode(params);
                     }
