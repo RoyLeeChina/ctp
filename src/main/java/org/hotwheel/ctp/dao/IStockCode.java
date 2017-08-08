@@ -2,6 +2,7 @@ package org.hotwheel.ctp.dao;
 
 import org.apache.ibatis.annotations.Param;
 import org.hotwheel.ctp.model.StockCode;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,15 @@ public interface IStockCode {
      * @return
      */
     public StockCode select(@Param("code") String code, @Param("full_code")String fullCode);
+
+    /**
+     * 根据证券名称查询一只股票是否存在
+     *
+     * @param name
+     * @return
+     * @throws DataAccessException
+     */
+    public StockCode selectByName(@Param("name")String name) throws DataAccessException;
 
     /**
      * 创建一个新用户

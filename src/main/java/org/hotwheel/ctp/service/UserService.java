@@ -80,6 +80,21 @@ public class UserService {
     }
 
     /**
+     * 根据证券名称查询证券代码
+     * @param stockName
+     * @return
+     */
+    public String getFullCode(String stockName) {
+        String sRet = null;
+        StockCode info = stockCode.selectByName(stockName);
+        if (info != null) {
+            sRet = info.getFull_code();
+        }
+
+        return sRet;
+    }
+
+    /**
      * 查询自己的用户id-手机号码
      * @param weixin
      * @return

@@ -98,6 +98,7 @@ public class CreatePolicyTask extends CTPContext {
                     if (sc != null) {
                         stockName = sc.getName();
                     }
+                    String tm = Api.toString(info.getCreateTime(), StockOptions.TimeFormat);
                     logger.info("{}({}): {}~{}/{}~{}, 阻力位{}, 止损位{}。",
                             stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
                             info.getResistance(), info.getStop());
@@ -107,7 +108,7 @@ public class CreatePolicyTask extends CTPContext {
                                 info.getResistance(), info.getStop());
                         logger.info(content);
                         String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
-                        String title = prefix + "-CTP策略订阅早盘提示-" + stockName;
+                        String title = prefix + "-CTP策略订阅早盘提示(" + tm + ")-" + stockName;
                         content += StockOptions.kSuffixMessage;
                         weChat.sendGroupMessage("", title + ": " + content);
                     } else {
@@ -116,12 +117,12 @@ public class CreatePolicyTask extends CTPContext {
                             logger.info("{} 暂无用户订阅");
                         } else {
                             Map<String, StringBuffer> mapGroupMessage = new HashMap<>();
-                            String content = String.format("%s(%s): %s~%s/%s~%s, 阻力位%s, 止损位%s。",
+                            String content = String.format("%s(%s): 第2支撑位%s~第1支撑位%s/第1压力位%s~第2压力位%s, 阻力位%s, 止损位%s。",
                                     stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
                                     info.getResistance(), info.getStop());
 
                             String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
-                            String title = prefix + "-CTP策略早盘提示";
+                            String title = prefix + "-CTP策略早盘提示(" + tm + ")";
                             content += StockOptions.kSuffixMessage;
                             String message = title + ": " + content;
                             for (StockSubscribe userSubscribe : tmpSubscribe) {
