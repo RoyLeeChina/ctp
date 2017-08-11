@@ -60,7 +60,7 @@ public class WeChat {
     private Map<String, String> mapGroupFull = new HashMap<>();
     private final static String kGroupId = "股友会";
     //private final static String kGroupId = "CTP内测";
-    private final static String kGroupList = "CTP内测|股友会|长江长江，我是黄河";
+    private final static String kGroupList = "CTP直播|股友会|长江长江，我是黄河";
     //private final static String kGroupList = "CTP内测";
     public final static long kHeartSleep = 5 * 1000;
 
