@@ -36,7 +36,7 @@ public class RealTimeUtils {
             Pattern stockPatter = Pattern.compile(stockPatterString);
 
             String url = createURL(codes);
-            String response = StockApi.sendHTTPGET(url, "GBK");
+            String response = StockApi.httpGet(url, "GBK");
             String[] responses = response.split(";");
             for (int i = 0; i < responses.length; i++) {
                 String reresponseString = responses[i];
