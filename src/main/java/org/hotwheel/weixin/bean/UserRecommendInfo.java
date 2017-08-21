@@ -5,14 +5,18 @@ package org.hotwheel.weixin.bean;
  * Created by wangfeng on 2017/4/11.
  */
 public class UserRecommendInfo {
+    private int Uin;
     private String UserName;
     private String NickName;
+    private String HeadImgUrl;
     private String Province;
     private String City;
     private String Signature;
     private String Ticket;
     private int Sex; // 1-男, 2-女
     private int OpCode;
+    private String Alias; // 微信号
+    private long QQNum;
 
     public String getUserName() {
         return UserName;
@@ -76,5 +80,37 @@ public class UserRecommendInfo {
 
     public void setOpCode(int opCode) {
         OpCode = opCode;
+    }
+
+    public int getUin() {
+        return Uin;
+    }
+
+    public void setUin(int uin) {
+        Uin = uin;
+    }
+
+    public String getHeadImgUrl() {
+        return HeadImgUrl;
+    }
+
+    public void setHeadImgUrl(String headImgUrl) {
+        HeadImgUrl = headImgUrl;
+    }
+
+    public String getAlias() {
+        return Alias;
+    }
+
+    public void setAlias(String alias) {
+        Alias = alias;
+    }
+
+    public long getQQNum() {
+        return QQNum;
+    }
+
+    public void setQQNum(long QQNum) {
+        this.QQNum = QQNum;
     }
 }
