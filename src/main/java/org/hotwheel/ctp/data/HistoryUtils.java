@@ -1,10 +1,11 @@
 package org.hotwheel.ctp.data;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.hotwheel.ctp.StockOptions;
 import org.hotwheel.ctp.model.StockHistory;
 import org.hotwheel.ctp.util.StockApi;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,7 +33,7 @@ public class HistoryUtils {
      */
     public static String getKLineData(String code, String scale, String datalen) {
         String url = createURL(code, scale, datalen);
-        return StockApi.sendHTTPGET(url, "UTF-8");
+        return StockApi.httpGet(url, "UTF-8");
     }
 
     /**
@@ -49,8 +50,8 @@ public class HistoryUtils {
         List<StockHistory> result = new ArrayList<>();
         try {
             String jsonText = getKLineData(code, scale, datalen);
-            JSONArray jsonarray = new JSONArray(jsonText);
-            int lengh = jsonarray.length();
+            JSONArray jsonarray = JSON.parseArray(jsonText);
+            int lengh = jsonarray.size();
             for (int i = 0; i < lengh; i++) {
                 JSONObject jsonobject = jsonarray.getJSONObject(i);
                 String dayString = jsonobject.getString("day");
@@ -60,12 +61,12 @@ public class HistoryUtils {
                 double low = Double.parseDouble(jsonobject.getString("low"));
                 double close = Double.parseDouble(jsonobject.getString("close"));
                 double volume = Double.parseDouble(jsonobject.getString("volume"));
-                double MA5 = jsonobject.optDouble("ma_price5");
-                double MA5Volume = jsonobject.optDouble("ma_volume5");
-                double MA10 = jsonobject.optDouble("ma_price10");
-                double MA10Volume = jsonobject.optDouble("ma_volume10");
-                double MA30 = jsonobject.optDouble("ma_price30");
-                double MA30Volume = jsonobject.optDouble("ma_volume30");
+                double MA5 = jsonobject.getDoubleValue("ma_price5");
+                double MA5Volume = jsonobject.getDoubleValue("ma_volume5");
+                double MA10 = jsonobject.getDoubleValue("ma_price10");
+                double MA10Volume = jsonobject.getDoubleValue("ma_volume10");
+                double MA30 = jsonobject.getDoubleValue("ma_price30");
+                double MA30Volume = jsonobject.getDoubleValue("ma_volume30");
                 StockHistory pojo;
                 if (!Double.isNaN(MA30) && !Double.isNaN(MA30Volume)) {
                     pojo = new StockHistory(day, open, high, low, close, volume, MA5, MA5Volume, MA10, MA10Volume, MA30, MA30Volume);
