@@ -295,6 +295,7 @@ public class WeChat {
                 if (list != null) {
                     for (int i = 0, len = list.size(); i < len; i++) {
                         JSONObject item = (JSONObject) list.get(i);
+                        // 201-当前时间戳
                         sb.append("|" + item.getIntValue("Key") + "_" + item.getIntValue("Val"));
                     }
                     if (sb.length() > 3) {
