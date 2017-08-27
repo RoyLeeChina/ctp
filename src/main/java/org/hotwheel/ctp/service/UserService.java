@@ -70,6 +70,11 @@ public class UserService {
         return sRet;
     }
 
+    /**
+     * 通过手机号码获取微信昵称
+     * @param weixin
+     * @return
+     */
     public String getPhone(final String weixin) {
         String sRet = null;
         UserInfo info = stockUser.selectByWeixin(weixin);
