@@ -5,6 +5,8 @@
         <!-- 配置日志文件输出目录 -->
         <Property name="logs.home">/data/runtime/logs</Property>
         <Property name="logs.project">ctp</Property>
+        <Property name="module.mybatis">mybatis</Property>
+        <Property name="module.spring">spring</Property>
     </Properties>
 
     <Appenders>
@@ -82,11 +84,46 @@
                 <TimeBasedTriggeringPolicy interval="1" modulate="true" />
             </Policies>
         </RollingRandomAccessFile>
+
+        <!-- mybatis日志 -->
+        <RollingRandomAccessFile name="${module.mybatis}"
+                                 immediateFlush="false" fileName="${logs.home}/${logs.project}/${module.mybatis}.log"
+                                 filePattern="${logs.home}/${logs.project}/${module.mybatis}.log.%d{yyyy-MM-dd}.gz">
+            <PatternLayout>
+                <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] (%F.%M:%L) %m %n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+        </RollingRandomAccessFile>
+
+        <!-- springmvc日志 -->
+        <RollingRandomAccessFile name="${module.spring}"
+                                 immediateFlush="false" fileName="${logs.home}/${logs.project}/${module.spring}.log"
+                                 filePattern="${logs.home}/${logs.project}/${module.spring}.log.%d{yyyy-MM-dd}.gz">
+            <PatternLayout>
+                <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] (%F.%M:%L) %m %n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+        </RollingRandomAccessFile>
+
     </Appenders>
 
     <Loggers>
         <AsyncLogger name="org.hotwheel.ctp.exchange.controller.weixin" level="debug" additivity="false" includeLocation="true">
             <appender-ref ref="weixin-info" />
+        </AsyncLogger>
+        <AsyncLogger name="org.mybatis.spring" level="debug" additivity="false" includeLocation="true">
+            <appender-ref ref="${module.mybatis}" />
+        </AsyncLogger>
+        <AsyncLogger name="org.apache.ibatis" level="debug" additivity="false" includeLocation="true">
+            <appender-ref ref="${module.mybatis}" />
+        </AsyncLogger>
+
+        <AsyncLogger name="org.springframework" level="debug" additivity="false" includeLocation="true">
+            <appender-ref ref="${module.spring}" />
         </AsyncLogger>
         <!-- 配置日志的根节点 -->
         <asyncRoot level="info" includeLocation="true">
