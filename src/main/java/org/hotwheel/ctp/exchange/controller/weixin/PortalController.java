@@ -3,8 +3,10 @@ package org.hotwheel.ctp.exchange.controller.weixin;
 import org.hotwheel.assembly.Api;
 import org.hotwheel.ctp.StockOptions;
 import org.hotwheel.ctp.dao.IStockCode;
+import org.hotwheel.ctp.data.MoneyFlowUtils;
 import org.hotwheel.ctp.exchange.task.CTPContext;
 import org.hotwheel.ctp.model.StockCode;
+import org.hotwheel.ctp.model.StockMoneyFlow;
 import org.hotwheel.ctp.model.StockMonitor;
 import org.hotwheel.ctp.service.UserService;
 import org.hotwheel.ctp.util.StockApi;
@@ -204,12 +206,29 @@ public class PortalController implements WeChatContext {
                             if (sc != null) {
                                 stockName = sc.getName();
                             }
-                            String content = String.format("%s(%s): 第2支撑位%s~第1支撑位%s/第1压力位%s~第2压力位%s, 阻力位%s, 止损位%s。",
+                            StockMoneyFlow moneyFlow = MoneyFlowUtils.getOne(fullCode);
+                            String content = String.format("%s(%s): 第2支撑位%s~第1支撑位%s/第1压力位%s~第2压力位%s, 阻力位%s, 止损位%s",
                                     stockName, sc.getCode(), info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
                                     info.getResistance(), info.getStop());
 
                             String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
                             String title = prefix + "-CTP策略提示(" + Api.toString(info.getCreateTime(), StockOptions.TimeFormat) + ")";
+                            if (moneyFlow == null) {
+                                content += "。";
+                            } else {
+                                double r0 = moneyFlow.r0_in - moneyFlow.r0_out;
+                                double r1 = moneyFlow.r1_in - moneyFlow.r1_out;
+                                double r2 = moneyFlow.r2_in - moneyFlow.r2_out;
+                                double r3 = moneyFlow.r3_in - moneyFlow.r3_out;
+
+                                double vzb = (moneyFlow.r0_out + moneyFlow.r1_out);
+                                double vall = (moneyFlow.r0 + moneyFlow.r1 + moneyFlow.r2 + moneyFlow.r3);
+                                String zb = "N/A";
+                                if (vall > 0) {
+                                    zb = String.format("%.2f%%", vzb / vall);
+                                }
+                                content += String.format(", 超大单净流入%.2f万元, 大单净流入%.2f万元, 中单净流入%.2f万元, 散单净流入%.2f万元, 主力资金流出占比%s。", r0, r1, r2, r3, zb);
+                            }
                             content += StockOptions.kSuffixMessage;
                             message = title + ": " + content;
                         }
