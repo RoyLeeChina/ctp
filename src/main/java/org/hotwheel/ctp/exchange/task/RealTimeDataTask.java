@@ -152,11 +152,16 @@ public class RealTimeDataTask extends CTPContext {
                                                 double r2 = moneyFlow.r2_in - moneyFlow.r2_out;
                                                 double r3 = moneyFlow.r3_in - moneyFlow.r3_out;
 
+                                                r0 /= 10000;
+                                                r1 /= 10000;
+                                                r2 /= 10000;
+                                                r3 /= 10000;
+
                                                 double vzb = (moneyFlow.r0_out + moneyFlow.r1_out);
                                                 double vall = (moneyFlow.r0 + moneyFlow.r1 + moneyFlow.r2 + moneyFlow.r3);
                                                 String zb = "N/A";
                                                 if (vall > 0) {
-                                                    zb = String.format("%.2f%%", vzb / vall);
+                                                    zb = String.format("%.2f%%", 100 * (vzb / vall));
                                                 }
                                                 content += String.format(", 超大单净流入%.2f万元, 大单净流入%.2f万元, 中单净流入%.2f万元, 散单净流入%.2f万元, 主力资金流出占比%s.", r0, r1, r2, r3, zb);
                                             }
