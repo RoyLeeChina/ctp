@@ -7,6 +7,7 @@ import org.hotwheel.ctp.dao.IStockMonitor;
 import org.hotwheel.ctp.dao.IStockRealTime;
 import org.hotwheel.ctp.dao.IStockSubscribe;
 import org.hotwheel.ctp.dao.IStockUser;
+import org.hotwheel.ctp.data.MoneyFlowUtils;
 import org.hotwheel.ctp.model.*;
 import org.hotwheel.ctp.util.DateUtils;
 import org.hotwheel.ctp.util.EmailApi;
@@ -138,10 +139,27 @@ public class RealTimeDataTask extends CTPContext {
                                         if (tmpSubscribe == null || tmpSubscribe.size() < 1) {
                                             logger.info("{} 暂无用户订阅");
                                         } else {
+                                            StockMoneyFlow moneyFlow = MoneyFlowUtils.getOne(stockCode);
                                             Map<String, StringBuffer> mapGroupMessage = new HashMap<>();
-                                            String title = StockOptions.kPrefixMessage + "盘中策略提醒(" + tm + ")";
-                                            String content = String.format("%s(%s) ,现价%.2f %s, 涨跌幅%s%%.",
+                                            String title = StockOptions.kPrefixMessage + "(" + tm + ")盘中策略提醒";
+                                            String content = String.format("%s(%s) ,现价%.2f %s, 涨跌幅%s%%",
                                                     stockName, stockCode, tmpPrice, keywords, zf);
+                                            if (moneyFlow == null) {
+                                                content += ".";
+                                            } else {
+                                                double r0 = moneyFlow.r0_in - moneyFlow.r0_out;
+                                                double r1 = moneyFlow.r1_in - moneyFlow.r1_out;
+                                                double r2 = moneyFlow.r2_in - moneyFlow.r2_out;
+                                                double r3 = moneyFlow.r3_in - moneyFlow.r3_out;
+
+                                                double vzb = (moneyFlow.r0_out + moneyFlow.r1_out);
+                                                double vall = (moneyFlow.r0 + moneyFlow.r1 + moneyFlow.r2 + moneyFlow.r3);
+                                                String zb = "N/A";
+                                                if (vall > 0) {
+                                                    zb = String.format("%.2f%%", vzb / vall);
+                                                }
+                                                content += String.format(", 超大单净流入%.2f万元, 大单净流入%.2f万元, 中单净流入%.2f万元, 散单净流入%.2f万元, 主力资金流出占比%s.", r0, r1, r2, r3, zb);
+                                            }
                                             String message = title + ": " + content;
                                             logger.info(content);
                                             for (StockSubscribe userSubscribe : tmpSubscribe) {
