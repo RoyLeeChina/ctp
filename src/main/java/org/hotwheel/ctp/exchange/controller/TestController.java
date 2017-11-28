@@ -86,7 +86,7 @@ public class TestController {
         return info;
     }
 
-    @RequestMapping("sendmail2")
+    @RequestMapping("/sendmail2")
     @ResponseBody
     public String sendMail() {
         String toUser = "89009@qq.com";

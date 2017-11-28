@@ -60,7 +60,7 @@ public class WeChat {
     private Map<String, String> mapGroupFull = new HashMap<>();
     private final static String kGroupId = "股友会";
     //private final static String kGroupId = "CTP内测";
-    private final static String kGroupList = "CTP直播|股友会|长江长江，我是黄河";
+    private final static String kGroupList = "CTP直播|股友会|长江长江，我是黄河|滚雪球";
     //private final static String kGroupList = "CTP内测";
     public final static long kHeartSleep = 5 * 1000;
 
@@ -747,8 +747,18 @@ public class WeChat {
      * @return
      */
     public void sendGroupMessage(String nickName, String message) {
-        String groupId = mapNickToUser.get(kGroupId);
-        sendGroupMessage(groupId, null, message);
+        if (Api.isEmpty(nickName)) {
+            // 所有的群, 全部发送
+            String[] gs = kGroupList.split("\\|");
+            for (String groupName : gs) {
+                String groupId = mapNickToUser.get(groupName);
+                sendGroupMessage(groupId, null, message);
+            }
+        } else {
+            // 定向发送
+            String groupId = mapNickToUser.get(nickName);
+            sendGroupMessage(groupId, null, message);
+        }
     }
 
     public String getNickNameByGroupMember(final String groupId, final String toUserId) {
