@@ -126,7 +126,7 @@ public class CreatePolicyTask extends CTPContext {
                                 content += "该股今日选择方向。";
                             } else {
                                 String gl = String.format("%.2f", 100 * p0);
-                                content += "该股上涨概率" + gl + "%";
+                                content += "该股上涨概率" + gl + "%。";
                             }
                             String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
                             String title = prefix + "-CTP策略早盘提示(" + tm + ")";
