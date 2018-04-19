@@ -69,6 +69,7 @@ public class PolicyApi {
             } else {
                 result.setFlag(StockOptions.kNormalState);
                 double CLOSE = sh.getClose();
+                result.setClose(CLOSE);
                 //ZLW0:=IF((CLOSE > 200),(CLOSE * 1.01),(CLOSE * 1.07));
                 double zlw0 = CLOSE > 200 ? CLOSE * 1.01 : CLOSE * 1.07;
                 //ZLW1:=IF((CLOSE < 10),(CLOSE * 1.05),ZLW0);
@@ -88,6 +89,7 @@ public class PolicyApi {
                 double pt = sh1.getHigh() - sh1.getLow();
                 //ZX:(HIGH + LOW + CLOSE)/3;
                 double zx = (sh.getHigh() + sh.getLow() + sh.getClose()) / 3;
+                result.setCenter(zx);
                 //YL1:2*ZX-LOW;
                 double yl1 = 2 * zx - sh.getLow();
                 //YL2:ZX + PT;
@@ -110,6 +112,17 @@ public class PolicyApi {
                 }
                 result.setPressure1(StockApi.toPrice(yl1));
                 result.setPressure2(StockApi.toPrice(yl2));
+
+                // 如果收盘价 比较接近支撑位, 则上涨概率大
+                double p1 = yl1 - CLOSE;
+                double p2 = CLOSE - zc1;
+                double p0 = 1.00D;
+                if (p2 >= 0.02) {
+                    p0 = 1 - p2 / (p1 + p2);
+                } else if (p1 < 0.02){
+                    p0 = 0.50D;
+                }
+                result.setProbability(p0);
             }
         }
         return result;

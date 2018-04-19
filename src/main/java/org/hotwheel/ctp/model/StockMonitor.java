@@ -69,6 +69,10 @@ public class StockMonitor {
 
     private long id;
 
+    private double close;
+    private double center;
+    private double probability;
+
     public String getFlag() {
         return flag;
     }
@@ -179,5 +183,29 @@ public class StockMonitor {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public double getClose() {
+        return close;
+    }
+
+    public void setClose(double close) {
+        this.close = close;
+    }
+
+    public double getCenter() {
+        return center;
+    }
+
+    public void setCenter(double center) {
+        this.center = center;
+    }
+
+    public double getProbability() {
+        return probability;
+    }
+
+    public void setProbability(double probability) {
+        this.probability = probability;
     }
 }
