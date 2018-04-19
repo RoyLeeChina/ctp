@@ -212,10 +212,10 @@ public class PortalController implements WeChatContext {
                                     info.getResistance(), info.getStop());
                             double p0 = info.getProbability();
                             if (p0 > 0.049D && p0 < 0.051D) {
-                                content += "该股今日选择方向。";
+                                content += "，该股今日选择方向";
                             } else {
                                 String gl = String.format("%.2f", 100 * p0);
-                                content += "该股上涨概率" + gl + "%。";
+                                content += "该股上涨概率" + gl + "%";
                             }
                             String prefix = Api.toString(new Date(), "yyyy年MM月dd日");
                             String title = prefix + "-CTP策略提示(" + Api.toString(info.getCreateTime(), StockOptions.TimeFormat) + ")";

@@ -114,8 +114,8 @@ public class PolicyApi {
                 result.setPressure2(StockApi.toPrice(yl2));
 
                 // 如果收盘价 比较接近支撑位, 则上涨概率大
-                double p1 = yl1 - CLOSE;
-                double p2 = CLOSE - zc1;
+                double p1 = (yl1 - CLOSE) * 100;
+                double p2 = (CLOSE - zc1) * 100;
                 double p0 = 1.00D;
                 if (p2 >= 0.02) {
                     p0 = 1 - p2 / (p1 + p2);
