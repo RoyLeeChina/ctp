@@ -122,7 +122,9 @@ public class CreatePolicyTask extends CTPContext {
                                     stockName, code, info.getSupport2(), info.getSupport1(), info.getPressure1(), info.getPressure2(),
                                     info.getResistance(), info.getStop());
                             double p0 = info.getProbability();
-                            if (p0 > 0.049D && p0 < 0.051D) {
+                            if (p0 < 0.001D) {
+                                //
+                            } else if (p0 > 0.049D && p0 < 0.051D) {
                                 content += "该股今日选择方向。";
                             } else {
                                 String gl = String.format("%.2f", 100 * p0);
