@@ -26,9 +26,11 @@ public class CreatePolicyTask extends CTPContext {
     private Logger logger = LoggerFactory.getLogger(CreatePolicyTask.class);
 
     private final static String kIndexShangHai = "sh000001";
+    // 中证小盘500指数
+    private final static String kIndexZZ500    = "sh000905";
     private final static String kIndexShenZhen = "sz399001";
     private final static String kIndexChuangYe = "sz399006";
-    private final static String kAllIndex = kIndexShangHai + ',' + kIndexShenZhen + ',' + kIndexChuangYe;
+    private final static String kAllIndex = kIndexShangHai + ',' + kIndexShenZhen + ',' + kIndexChuangYe + ',' + kIndexZZ500;
 
     @Autowired
     private IStockUser stockUser;
@@ -64,6 +66,7 @@ public class CreatePolicyTask extends CTPContext {
             Set<String> allCode = new HashSet<>();
             // 上证指数
             allCode.add("sh000001");
+            allCode.add(kIndexZZ500);
             // 深证成指
             allCode.add("sz399001");
             // 创业板指数
