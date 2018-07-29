@@ -28,8 +28,10 @@ import java.util.regex.Pattern;
  */
 public class WeChat {
     private static Logger logger = LoggerFactory.getLogger(WeChat.class);
-
+    // 微信客户端
     private final static String kAppId = "wx782c26e4c19acffb";
+    // qq音乐
+    //private final static String kAppId = "wx48db31d50e334801";
     private final static String kLoginUrl = "https://login.weixin.qq.com/cgi-bin/mmwebwx-bin/login";
     private final static String kDeviceId;
     private static String uuid = null;

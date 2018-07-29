@@ -41,7 +41,7 @@ import java.util.TreeMap;
 @RequestMapping("/third")
 public class PortalController implements WeChatContext {
     private static Logger logger = LoggerFactory.getLogger(PortalController.class);
-
+    private static boolean bInited = false;
     private final static String kToken = "stockExchange";
     private final static String kEncodingAESKey = "Pl2la9FY1Ka91Py1Kf5lMGFt0BGSuff87AUMO0vZAyt";
     private WeChat weChat = null;
@@ -59,6 +59,7 @@ public class PortalController implements WeChatContext {
 
     @PreDestroy
     public void close() {
+        bInited = false;
         CTPContext.setServerCloseing(true);
         logger.info("关闭...");
     }
@@ -85,6 +86,9 @@ public class PortalController implements WeChatContext {
     @RequestMapping("/start.wx")
     @ResponseBody
     public void scheduleDownload(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+        if (bInited) {
+            return;
+        }
         response.setCharacterEncoding("UTF-8");
         try {
             request.setCharacterEncoding("UTF-8");
@@ -101,6 +105,7 @@ public class PortalController implements WeChatContext {
             output.flush();
             output.close();
             weChat.start(this);
+            bInited = true;
         } catch (Exception e) {
             logger.error("下载图片出错", e);
         } finally {
