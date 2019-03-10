@@ -7,8 +7,9 @@ import org.springframework.stereotype.Repository;
 
 /**
  * 实时行情接口
- *
+ * <p>
  * Created by wangfeng on 2017/3/13.
+ *
  * @version 1.0.0
  */
 @Repository("stockRealTime")
@@ -16,6 +17,7 @@ public interface IStockRealTime {
 
     /**
      * 查询实时行情
+     *
      * @param code
      * @return
      */
@@ -23,6 +25,7 @@ public interface IStockRealTime {
 
     /**
      * 插入实时行情
+     *
      * @param srt
      * @return
      */
@@ -30,6 +33,7 @@ public interface IStockRealTime {
 
     /**
      * 更新实时行情
+     *
      * @param srt
      * @return
      */

@@ -6,16 +6,25 @@ import java.util.TreeMap;
 /**
  * 股票数据常量
  * Created by wangfeng on 2017/3/12.
+ *
  * @version 1.0.0
  */
 public final class StockOptions {
-    /** number of microseconds per second */
+    /**
+     * number of microseconds per second
+     */
     public final static long USEC_PER_SEC = 1000000L;
-    /** number of milliseconds per second */
+    /**
+     * number of milliseconds per second
+     */
     public final static long MSEC_PER_SEC = 1000L;
-    /** 一天的秒数 */
+    /**
+     * 一天的秒数
+     */
     public final static long SecondOfDay = 24L * 60L * 60L;
-    /** 一天的毫秒数 */
+    /**
+     * 一天的毫秒数
+     */
     public final static long MillisecondsOfDay = SecondOfDay * MSEC_PER_SEC;
 
     /**

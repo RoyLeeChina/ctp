@@ -36,6 +36,7 @@ public class MonitorController {
 
     /**
      * 插入一个监控数据
+     *
      * @param code
      * @param range 格式"第一支撑,第一压力,第二支撑,第二压力,止损位,阻力位"
      * @return

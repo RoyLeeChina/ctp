@@ -2,10 +2,23 @@ package org.hotwheel.smartqq;
 
 import org.hotwheel.smartqq.callback.MessageCallback;
 import org.hotwheel.smartqq.client.SmartQQClient;
-import org.hotwheel.smartqq.model.*;
+import org.hotwheel.smartqq.model.Discuss;
+import org.hotwheel.smartqq.model.DiscussInfo;
+import org.hotwheel.smartqq.model.DiscussMessage;
+import org.hotwheel.smartqq.model.DiscussUser;
+import org.hotwheel.smartqq.model.Friend;
+import org.hotwheel.smartqq.model.Group;
+import org.hotwheel.smartqq.model.GroupInfo;
+import org.hotwheel.smartqq.model.GroupMessage;
+import org.hotwheel.smartqq.model.GroupUser;
+import org.hotwheel.smartqq.model.Message;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 消息接收器 - Receiver

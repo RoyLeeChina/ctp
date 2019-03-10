@@ -61,7 +61,7 @@ public class TestController {
     public StockMonitor genPolicy(String code) {
         StockMonitor info;
         if (Api.isEmpty(code)) {
-            info =  new StockMonitor();
+            info = new StockMonitor();
         } else {
             code = StockApi.fixCode(code);
             List<StockHistory> shList = stockHistory.selectOne(code);

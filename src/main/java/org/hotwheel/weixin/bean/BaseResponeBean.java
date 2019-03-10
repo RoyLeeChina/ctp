@@ -2,8 +2,9 @@ package org.hotwheel.weixin.bean;
 
 /**
  * 微信响应
- *
+ * <p>
  * Created by wangfeng on 2017/3/26.
+ *
  * @version 1.0.2
  */
 public class BaseResponeBean {

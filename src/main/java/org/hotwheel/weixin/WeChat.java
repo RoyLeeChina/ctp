@@ -6,7 +6,12 @@ import com.alibaba.fastjson.JSONObject;
 import org.hotwheel.assembly.Api;
 import org.hotwheel.ctp.exchange.task.CTPContext;
 import org.hotwheel.ctp.util.HttpUtils;
-import org.hotwheel.weixin.bean.*;
+import org.hotwheel.weixin.bean.BaseRequest;
+import org.hotwheel.weixin.bean.BaseResponseEntity;
+import org.hotwheel.weixin.bean.ContactInfo;
+import org.hotwheel.weixin.bean.MessageEntity;
+import org.hotwheel.weixin.bean.SyncKeyEntity;
+import org.hotwheel.weixin.bean.SyncResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,15 +20,20 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * 微信网页版实现
- *
+ * <p>
  * Created by wangfeng on 2017/4/2.
+ *
  * @version 2.0.1
  */
 public class WeChat {
@@ -89,15 +99,16 @@ public class WeChat {
 
     /**
      * 匹配字符串
+     *
      * @param str
      * @param exp
      * @param defaultValue
      * @return
      */
-    public static String match(String str, String exp, final String defaultValue){
+    public static String match(String str, String exp, final String defaultValue) {
         Pattern pattern = Pattern.compile(exp);
         Matcher m = pattern.matcher(str);
-        if(m.find()){
+        if (m.find()) {
             return m.group(1);
         }
         return defaultValue;
@@ -109,6 +120,7 @@ public class WeChat {
 
     /**
      * 启动
+     *
      * @param context
      */
     public void start(WeChatContext context) {
@@ -141,6 +153,7 @@ public class WeChat {
 
     /**
      * 生成消息id
+     *
      * @return
      */
     public static long genMsgId() {
@@ -184,6 +197,7 @@ public class WeChat {
 
     /**
      * 下载登录二维码
+     *
      * @return
      */
     public byte[] downloadQrCode() {
@@ -219,6 +233,7 @@ public class WeChat {
 
     /**
      * 扫码登录
+     *
      * @return
      */
     public boolean waitForLogin() {
@@ -283,6 +298,7 @@ public class WeChat {
 
     /**
      * 重新加载SyncKey
+     *
      * @param objSyncKey
      */
     private void reloadSyncKey(final JSONObject objSyncKey) {
@@ -396,6 +412,7 @@ public class WeChat {
 
     /**
      * 群成员缓存昵称的key
+     *
      * @param groupId
      * @param memberId
      * @return
@@ -406,6 +423,7 @@ public class WeChat {
 
     /**
      * 获取好友昵称
+     *
      * @param userId
      * @return
      */
@@ -415,6 +433,7 @@ public class WeChat {
 
     /**
      * 获得用户昵称
+     *
      * @param groupId
      * @param userId
      * @return
@@ -437,6 +456,7 @@ public class WeChat {
 
     /**
      * 添加好友到缓存
+     *
      * @param userName
      * @param nickName
      */
@@ -467,16 +487,16 @@ public class WeChat {
         if (!Api.isEmpty(result)) {
             Map<String, Object> resp = JSON.parseObject(result, HashMap.class);
             if (resp != null) {
-                List<Map<String, Object>> userList = (List<Map<String, Object>>)resp.get("MemberList");
+                List<Map<String, Object>> userList = (List<Map<String, Object>>) resp.get("MemberList");
                 if (userList != null) {
                     for (Map<String, Object> tu : userList) {
-                        String nm = (String)tu.get("NickName");
-                        String um = (String)tu.get("UserName");
-                        String rm = (String)tu.get("RemarkName");
+                        String nm = (String) tu.get("NickName");
+                        String um = (String) tu.get("UserName");
+                        String rm = (String) tu.get("RemarkName");
                         if (!Api.isEmpty(rm)) {
                             nm = rm;
                         }
-                        long verifyFlag = (int)tu.get("VerifyFlag");
+                        long verifyFlag = (int) tu.get("VerifyFlag");
                         if (verifyFlag != 0) {
                             // # 公众号/服务号
                             logger.info("公众或服务号: {}, {}", nm, um);
@@ -486,7 +506,7 @@ public class WeChat {
                         } else {
                             if (um.startsWith("@@")) {
                                 logger.info("group: " + nm);
-                                if (kGroupList.indexOf(nm)>=0) {
+                                if (kGroupList.indexOf(nm) >= 0) {
                                     mapNickToUser.put(nm, um);
                                     mapUserToNick.put(um, nm);
                                     getGroupMemberList(um, nm);
@@ -533,7 +553,7 @@ public class WeChat {
         if (!Api.isEmpty(groupResult)) {
             Map<String, Object> resp = JSON.parseObject(groupResult, HashMap.class);
             if (resp != null) {
-                List<Map<String, Object>> contactList = (List<Map<String, Object>>)resp.get("ContactList");
+                List<Map<String, Object>> contactList = (List<Map<String, Object>>) resp.get("ContactList");
                 if (contactList != null && contactList.size() == 1) {
                     Map<String, Object> contact = contactList.get(0);
                     List<Map<String, Object>> userList = (List<Map<String, Object>>) contact.get("MemberList");
@@ -541,7 +561,7 @@ public class WeChat {
                         for (Map<String, Object> tu : userList) {
                             String nickName = (String) tu.get("NickName");
                             String userName = (String) tu.get("UserName");
-                            String remarkName = (String)tu.get("RemarkName");
+                            String remarkName = (String) tu.get("RemarkName");
                             if (!Api.isEmpty(remarkName)) {
                                 nickName = remarkName;
                             }
@@ -560,6 +580,7 @@ public class WeChat {
 
     /**
      * 验证好友请求
+     *
      * @param username
      * @param ticket
      */
@@ -629,9 +650,9 @@ public class WeChat {
      */
     public void choiceSyncLine() {
         boolean enabled = false;
-        for(String syncUrl : SYNC_HOST){
+        for (String syncUrl : SYNC_HOST) {
             SyncResponse syncResponse = this.syncCheck(syncUrl);
-            if(syncResponse.retcode == 0){
+            if (syncResponse.retcode == 0) {
                 String url = "https://" + syncUrl + "/cgi-bin/mmwebwx-bin";
                 urlWebPush = url;
                 logger.info("选择线路：[{}]", syncUrl);
@@ -639,7 +660,7 @@ public class WeChat {
                 break;
             }
         }
-        if(!enabled){
+        if (!enabled) {
             //throw new WechatException("同步线路不通畅");
         }
     }
@@ -667,9 +688,9 @@ public class WeChat {
     public SyncResponse syncCheck(final String uri) {
         SyncResponse response = new SyncResponse();
         String url;
-        if(null == uri){
+        if (null == uri) {
             url = urlWebPush + "/synccheck";
-        } else{
+        } else {
             url = "https://" + uri + "/cgi-bin/mmwebwx-bin/synccheck";
         }
 
@@ -744,6 +765,7 @@ public class WeChat {
 
     /**
      * 发送 群消息
+     *
      * @param nickName
      * @param message
      * @return
@@ -771,9 +793,10 @@ public class WeChat {
 
     /**
      * 发送 群消息
-     * @param groupId 群用户名
+     *
+     * @param groupId  群用户名
      * @param toUserId 目标用户名, toUserId为null时群全员
-     * @param context 文本消息
+     * @param context  文本消息
      * @return
      */
     public void sendGroupMessage(final String groupId, final String toUserId, final String context) {
@@ -796,8 +819,9 @@ public class WeChat {
 
     /**
      * 发送 消息
+     *
      * @param toUserId 用户名
-     * @param message 消息文本
+     * @param message  消息文本
      */
     public void sendMessageByUserId(final String toUserId, final String message) {
         long msgId = genMsgId();
@@ -828,6 +852,7 @@ public class WeChat {
 
     /**
      * 解析微信完整的昵称
+     *
      * @param fullName
      * @return 微信联系人对象
      */
@@ -869,8 +894,9 @@ public class WeChat {
 
     /**
      * 发送 消息
+     *
      * @param fullName 用户昵称
-     * @param message 消息文本
+     * @param message  消息文本
      */
     public void sendMessage(final String fullName, final String message) {
         String[] args = fullName.split("@");
@@ -898,7 +924,7 @@ public class WeChat {
         logger.info("fullName={}, group={},user={}, message={}", fullName, groupId, toUserId, message);
         if (!Api.isEmpty(toUserId) && !Api.isEmpty(groupId)) {
             sendGroupMessage(groupId, toUserId, message);
-        } else if (!Api.isEmpty(toUserId)){
+        } else if (!Api.isEmpty(toUserId)) {
             sendMessageByUserId(toUserId, message);
         } else {
             logger.info("接收信息的用户[{}]既不是好友，也不在三个圈定的群中, 忽略", fullName);

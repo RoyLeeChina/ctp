@@ -4,8 +4,9 @@ import org.hotwheel.json.JsonAdapter;
 
 /**
  * 策略执行情况
- *
+ * <p>
  * Created by wangfeng on 2017/3/16.
+ *
  * @version 1.0.1
  */
 public class Policy {

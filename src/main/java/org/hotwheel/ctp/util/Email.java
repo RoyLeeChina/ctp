@@ -5,8 +5,18 @@ import org.slf4j.LoggerFactory;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
-import javax.mail.*;
-import javax.mail.internet.*;
+import javax.mail.Authenticator;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimeUtility;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,29 +25,44 @@ import java.util.Properties;
 /**
  * 邮件
  * Created by wangfeng on 2017/3/16.
+ *
  * @version 1.0.1
  */
 public class Email {
     private static Logger logger = LoggerFactory.getLogger(Email.class);
     // 发送邮件登录服务器是否使用邮箱地址
     private static boolean loginByEmail = true;
-    /** 邮件对象 */
+    /**
+     * 邮件对象
+     */
     private MimeMessage mimeMsg;
-    /** 发送邮件的Session会话 */
+    /**
+     * 发送邮件的Session会话
+     */
     private Session session;
-    /** 邮件发送时的一些配置信息的一个属性对象 */
+    /**
+     * 邮件发送时的一些配置信息的一个属性对象
+     */
     private Properties props;
     // 发送人
     private String mailFrom;
     // smtp 服务器
     private String smtpHost;
-    /** 发件人的用户名 */
+    /**
+     * 发件人的用户名
+     */
     private String smtpUser;
-    /** 发件人密码 */
+    /**
+     * 发件人密码
+     */
     private String smtpPassword;
-    /** 附件添加的组件 */
+    /**
+     * 附件添加的组件
+     */
     private Multipart mp;
-    /** 存放附件文件 */
+    /**
+     * 存放附件文件
+     */
     private List<FileDataSource> files = new LinkedList<FileDataSource>();
 
     public Email(String smtp) {
@@ -144,8 +169,7 @@ public class Email {
     /**
      * 增加发送附件
      *
-     * @param filename
-     *            邮件附件的地址，只能是本机地址而不能是网络地址，否则抛出异常
+     * @param filename 邮件附件的地址，只能是本机地址而不能是网络地址，否则抛出异常
      * @return
      */
     public boolean addFileAffix(String filename) {
@@ -166,7 +190,7 @@ public class Email {
     public boolean delFileAffix() {
         try {
             FileDataSource fileds = null;
-            for (Iterator<FileDataSource> it = files.iterator(); it.hasNext();) {
+            for (Iterator<FileDataSource> it = files.iterator(); it.hasNext(); ) {
                 fileds = it.next();
                 if (fileds != null && fileds.getFile() != null) {
                     fileds.getFile().delete();
@@ -181,8 +205,7 @@ public class Email {
     /**
      * 设置发件人地址
      *
-     * @param from
-     *            发件人地址
+     * @param from 发件人地址
      * @return
      */
     public boolean setFrom(String from) {

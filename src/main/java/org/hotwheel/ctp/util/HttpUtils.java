@@ -13,6 +13,7 @@ import java.util.Map;
 /**
  * HTTP 工具类
  * Created by wangfeng on 2017/4/3.
+ *
  * @version 2.0.1
  */
 public class HttpUtils {
@@ -58,6 +59,7 @@ public class HttpUtils {
 
     /**
      * 请求
+     *
      * @param url
      * @param data
      * @return
@@ -70,6 +72,7 @@ public class HttpUtils {
 
     /**
      * 请求
+     *
      * @param url
      * @param data
      * @return

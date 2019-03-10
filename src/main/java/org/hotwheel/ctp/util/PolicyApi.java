@@ -14,12 +14,14 @@ import java.util.List;
 /**
  * 策略工具类
  * Created by wangfeng on 2017/3/15.
+ *
  * @version 1.0.0
  */
 public class PolicyApi {
 
     /**
      * 策略
+     *
      * @param str
      * @return
      */
@@ -40,6 +42,7 @@ public class PolicyApi {
 
     /**
      * 短线策略
+     *
      * @param shList
      * @return
      */
@@ -119,7 +122,7 @@ public class PolicyApi {
                 double p0 = 1.00D;
                 if (p2 >= 0.02) {
                     p0 = 1 - p2 / (p1 + p2);
-                } else if (p1 < 0.02){
+                } else if (p1 < 0.02) {
                     p0 = 0.50D;
                 }
                 result.setProbability(p0);

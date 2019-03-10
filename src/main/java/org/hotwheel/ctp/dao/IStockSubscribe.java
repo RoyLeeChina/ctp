@@ -9,8 +9,9 @@ import java.util.List;
 
 /**
  * 股票订阅
- *
+ * <p>
  * Created by wangfeng on 2017/3/14.
+ *
  * @version 1.0.0
  */
 @Service("stockSubscribe")
@@ -18,12 +19,14 @@ public interface IStockSubscribe {
 
     /**
      * 捡出全部有效的订阅
+     *
      * @return
      */
     public List<StockSubscribe> queryAll();
 
     /**
      * 查询订阅
+     *
      * @param code
      * @return
      */
@@ -31,6 +34,7 @@ public interface IStockSubscribe {
 
     /**
      * 插入订阅
+     *
      * @param info
      * @return
      */
@@ -38,6 +42,7 @@ public interface IStockSubscribe {
 
     /**
      * 更新订阅
+     *
      * @param info
      * @return
      */
@@ -45,6 +50,7 @@ public interface IStockSubscribe {
 
     /**
      * 查询一只股票的所有订阅用户
+     *
      * @param code
      * @return
      * @throws DataAccessException
@@ -53,6 +59,7 @@ public interface IStockSubscribe {
 
     /**
      * 捡出全部有效的股票代码
+     *
      * @return
      * @throws DataAccessException
      */
@@ -60,6 +67,7 @@ public interface IStockSubscribe {
 
     /**
      * 查询一个用户订阅的全部股票代码
+     *
      * @param phone
      * @return
      * @throws DataAccessException

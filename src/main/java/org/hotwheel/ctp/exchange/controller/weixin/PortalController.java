@@ -35,6 +35,7 @@ import java.util.TreeMap;
 /**
  * 微信
  * Created by wangfeng on 2017/3/25.
+ *
  * @version 1.0.2
  */
 @Controller
@@ -74,7 +75,7 @@ public class PortalController implements WeChatContext {
         params.put("nonce", nonce);
 
         StringBuilder preSign = new StringBuilder();
-        for (Map.Entry<String, Object> entry: params.entrySet()) {
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
             preSign.append(Api.toString(entry.getValue()));
             //preSign.append('|');
         }
@@ -130,7 +131,7 @@ public class PortalController implements WeChatContext {
 
     @Override
     public void handleMessage(String groupId, String fromUser, String toUser, String text) {
-        String kToMe = "@"  + weChat.kNickName;
+        String kToMe = "@" + weChat.kNickName;
         boolean isFriend = true;
         String groupName = weChat.getNickName(groupId);
         String nickName = weChat.getNickName(fromUser);
@@ -153,12 +154,12 @@ public class PortalController implements WeChatContext {
         if (text.toUpperCase().startsWith(kToMe)) {
             text = text.substring(kToMe.length()).trim();
             text = StringUtils.trimWhitespace(text);
-            text = text.replaceAll("<br/>"," ");
-            String msg = text.replaceAll("( )+"," ");
+            text = text.replaceAll("<br/>", " ");
+            String msg = text.replaceAll("( )+", " ");
             String[] args = msg.split(" ");
             if (args.length >= 1) {
                 String command = StringUtils.trimWhitespace(args[0]);
-                String params = args.length>=2 ? args[1] : "";
+                String params = args.length >= 2 ? args[1] : "";
                 params = StringUtils.trimWhitespace(params);
                 String message = null;
                 if (Api.isEmpty(groupId)) {
@@ -252,13 +253,13 @@ public class PortalController implements WeChatContext {
                         }
                         bFound = true;
                     }
-                    if (!bFound){
-                        message  =   "1) 查询注册id: "  + kToMe + "cx id";
+                    if (!bFound) {
+                        message = "1) 查询注册id: " + kToMe + "cx id";
                         message += "\n2) 查询订阅信息: " + kToMe + "cx dy";
                         message += "\n3) 查询个股策略: " + kToMe + "cx 股票代码";
                         message = ": " + message;
                     }
-                }  else if (command.equalsIgnoreCase("注册") || command.equalsIgnoreCase("zc")) {
+                } else if (command.equalsIgnoreCase("注册") || command.equalsIgnoreCase("zc")) {
                     String nm = nickName;
                     if (!isFriend) {
                         nm = weChat.getNickName(groupId, fromUser);
@@ -280,7 +281,7 @@ public class PortalController implements WeChatContext {
                     }
                 } else if (Api.isEmpty(phone)) {
                     message = nickName + " 未注册";
-                } else if (command.equalsIgnoreCase("订阅") || command.equalsIgnoreCase("dy")){
+                } else if (command.equalsIgnoreCase("订阅") || command.equalsIgnoreCase("dy")) {
                     ActionStatus resp = userService.subscribe(phone, params);
                     message = nickName + "，订阅" + params;
                     if (resp.getStatus() == 0) {
@@ -292,7 +293,7 @@ public class PortalController implements WeChatContext {
                     } else {
                         message += "失败: " + resp.getMessage();
                     }
-                } else if (command.equalsIgnoreCase("退订") || command.equalsIgnoreCase("td")){
+                } else if (command.equalsIgnoreCase("退订") || command.equalsIgnoreCase("td")) {
                     ActionStatus resp = userService.unsubscribe(phone, params);
                     message = nickName + "，退订" + params;
                     if (resp.getStatus() == 0) {

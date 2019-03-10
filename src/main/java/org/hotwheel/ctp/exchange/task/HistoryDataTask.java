@@ -19,6 +19,7 @@ import java.util.List;
 /**
  * 历史数据
  * Created by wangfeng on 2017/3/10.
+ *
  * @version 1.0.1
  */
 @Service("historyDataTask")

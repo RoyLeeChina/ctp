@@ -3,6 +3,7 @@ package org.hotwheel.weixin.bean;
 /**
  * 微信请求
  * Created by wangfeng on 2017/4/2.
+ *
  * @version 2.0.0
  */
 public class BaseRequest {

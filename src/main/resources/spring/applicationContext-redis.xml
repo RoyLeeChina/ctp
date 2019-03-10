@@ -44,12 +44,12 @@
           p:password="${redis.password}"
           p:database="${redis.database}"
           p:timeout="${redis.timeout}"
-          p:use-pool="true" />
+          p:use-pool="true"/>
 
     <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
-        <property name="maxTotal" value="${redis.maxActive}" />
-        <property name="maxIdle" value="${redis.maxIdle}" />
-        <property name="maxWaitMillis" value="${redis.maxWait}" />
+        <property name="maxTotal" value="${redis.maxActive}"/>
+        <property name="maxIdle" value="${redis.maxIdle}"/>
+        <property name="maxWaitMillis" value="${redis.maxWait}"/>
     </bean>
 
     <!-- redis template definition -->
@@ -57,16 +57,16 @@
           class="org.springframework.data.redis.core.RedisTemplate"
           p:connection-factory-ref="jedisConnectionFactory">
         <property name="keySerializer">
-            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
         </property>
         <property name="valueSerializer">
-            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
         </property>
         <property name="hashKeySerializer">
-            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
         </property>
         <property name="hashValueSerializer">
-            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
         </property>
     </bean>
 </beans>

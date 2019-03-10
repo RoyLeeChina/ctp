@@ -17,8 +17,9 @@ import java.util.List;
 
 /**
  * 消息推送任务
- *
+ * <p>
  * Created by wangfeng on 2017/3/22.
+ *
  * @version 1.0.2
  */
 @Service("pushMessageTask")

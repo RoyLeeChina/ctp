@@ -3,6 +3,7 @@ package org.hotwheel.weixin.bean;
 /**
  * 消息体
  * Created by wangfeng on 2017/3/28.
+ *
  * @version 1.0.2
  */
 public class MessageEntity {

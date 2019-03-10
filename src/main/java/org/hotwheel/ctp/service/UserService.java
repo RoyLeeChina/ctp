@@ -2,8 +2,16 @@ package org.hotwheel.ctp.service;
 
 import org.hotwheel.assembly.Api;
 import org.hotwheel.ctp.StockOptions;
-import org.hotwheel.ctp.dao.*;
-import org.hotwheel.ctp.model.*;
+import org.hotwheel.ctp.dao.IStockCode;
+import org.hotwheel.ctp.dao.IStockHistory;
+import org.hotwheel.ctp.dao.IStockMonitor;
+import org.hotwheel.ctp.dao.IStockSubscribe;
+import org.hotwheel.ctp.dao.IStockUser;
+import org.hotwheel.ctp.model.StockCode;
+import org.hotwheel.ctp.model.StockHistory;
+import org.hotwheel.ctp.model.StockMonitor;
+import org.hotwheel.ctp.model.StockSubscribe;
+import org.hotwheel.ctp.model.UserInfo;
 import org.hotwheel.ctp.util.PolicyApi;
 import org.hotwheel.ctp.util.StockApi;
 import org.hotwheel.io.ActionStatus;
@@ -17,8 +25,9 @@ import java.util.Map;
 
 /**
  * 业务处理接口
- *
+ * <p>
  * Created by wangfeng on 2017/3/28.
+ *
  * @version 1.0.3
  */
 @Service("userService")
@@ -72,6 +81,7 @@ public class UserService {
 
     /**
      * 通过手机号码获取微信昵称
+     *
      * @param weixin
      * @return
      */
@@ -86,6 +96,7 @@ public class UserService {
 
     /**
      * 根据证券名称查询证券代码
+     *
      * @param stockName
      * @return
      */
@@ -101,6 +112,7 @@ public class UserService {
 
     /**
      * 查询自己的用户id-手机号码
+     *
      * @param weixin
      * @return
      */
@@ -119,6 +131,7 @@ public class UserService {
 
     /**
      * 用户注册
+     *
      * @param phone
      * @param name
      * @param weixin
@@ -267,6 +280,7 @@ public class UserService {
 
     /**
      * 查询订阅情况
+     *
      * @param phone
      * @return
      */
@@ -275,7 +289,7 @@ public class UserService {
         List<String> list = stockSubscribe.checkoutByPhone(phone);
         if (list != null && list.size() > 0) {
             StringBuffer sb = new StringBuffer();
-            for (String code: list) {
+            for (String code : list) {
                 StockCode sc = stockCode.select(code, code);
                 if (sc != null) {
                     sb.append(",");
@@ -291,6 +305,7 @@ public class UserService {
 
     /**
      * 查询策略
+     *
      * @param code
      * @return
      */

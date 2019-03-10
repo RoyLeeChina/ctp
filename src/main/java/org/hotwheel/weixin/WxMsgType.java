@@ -3,6 +3,7 @@ package org.hotwheel.weixin;
 /**
  * 消息类型
  * Created by wangfeng on 2017/4/3.
+ *
  * @version 2.0.1
  */
 public enum WxMsgType {

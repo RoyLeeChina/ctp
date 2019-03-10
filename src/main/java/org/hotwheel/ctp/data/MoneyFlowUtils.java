@@ -9,10 +9,11 @@ import org.hotwheel.ctp.util.StockApi;
 
 /**
  * 资金流向
- *
+ * <p>
  * Created by wangfeng on 2017/9/11.
- * @see <url>http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssi_ssfx_flzjtj?daima=600001</url>
+ *
  * @version 2.1.0
+ * @see <url>http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssi_ssfx_flzjtj?daima=600001</url>
  */
 public class MoneyFlowUtils {
     private final static String urlMoneyFlow = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/MoneyFlow.ssi_ssfx_flzjtj";

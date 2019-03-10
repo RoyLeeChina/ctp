@@ -11,6 +11,7 @@ import java.util.List;
 /**
  * 历史数据
  * Created by wangfeng on 2017/3/17.
+ *
  * @version 1.0.1
  */
 @Service("stockHistory")
@@ -18,6 +19,7 @@ public interface IStockHistory {
 
     /**
      * 捡出某只股票的全部历史数据
+     *
      * @param code
      * @return
      * @throws DataAccessException
@@ -35,14 +37,16 @@ public interface IStockHistory {
 
     /**
      * 查询某只股票某天的历史行情
+     *
      * @param code
      * @param day
      * @return
      */
-    public StockHistory select(@Param("code") String code, @Param("day")String day) throws DataAccessException;
+    public StockHistory select(@Param("code") String code, @Param("day") String day) throws DataAccessException;
 
     /**
      * 插入历史行情
+     *
      * @param srt
      * @return
      */
@@ -50,6 +54,7 @@ public interface IStockHistory {
 
     /**
      * 更新实时行情
+     *
      * @param srt
      * @return
      */
@@ -57,6 +62,7 @@ public interface IStockHistory {
 
     /**
      * 获得历史数据的最后一天
+     *
      * @param code
      * @return
      * @throws DataAccessException
@@ -65,6 +71,7 @@ public interface IStockHistory {
 
     /**
      * 删除某只股票的全部历史记录
+     *
      * @param code
      * @return
      * @throws DataAccessException
@@ -73,8 +80,9 @@ public interface IStockHistory {
 
     /**
      * 插入一组历史记录
+     *
      * @param historyList
      * @return
      */
-    int insertBatch(List<StockHistory > historyList);
+    int insertBatch(List<StockHistory> historyList);
 }

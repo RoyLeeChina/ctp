@@ -9,16 +9,16 @@
 
     <context:annotation-config/>
 
-    <bean id="exceptionHandler" class="org.hotwheel.spring.handler.DefaultExceptionHandler" />
+    <bean id="exceptionHandler" class="org.hotwheel.spring.handler.DefaultExceptionHandler"/>
 
     <context:component-scan base-package="org.hotwheel.ctp">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-        <property name="defaultEncoding" value="utf-8" />
-        <property name="maxUploadSize" value="10485760000" />
-        <property name="maxInMemorySize" value="40960" />
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="maxUploadSize" value="10485760000"/>
+        <property name="maxInMemorySize" value="40960"/>
     </bean>
 
     <bean id="propertyConfigurer" class="org.hotwheel.spring.common.EncryptablePropertyholder">

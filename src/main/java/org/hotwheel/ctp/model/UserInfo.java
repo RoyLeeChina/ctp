@@ -5,6 +5,7 @@ import java.util.Date;
 /**
  * 用户
  * Created by wangfeng on 2017/3/13.
+ *
  * @version 1.0.0
  */
 public class UserInfo {

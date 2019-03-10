@@ -4,8 +4,9 @@ import java.util.Date;
 
 /**
  * 股票订阅
- *
+ * <p>
  * Created by wangfeng on 2017/3/14.
+ *
  * @version 1.0.0.
  */
 public class StockSubscribe {

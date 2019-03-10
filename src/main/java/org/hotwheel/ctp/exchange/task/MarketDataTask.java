@@ -13,8 +13,9 @@ import java.io.IOException;
 
 /**
  * 市场数据任务
- *
+ * <p>
  * Created by wangfeng on 2017/3/19.
+ *
  * @version 1.0.1
  */
 @Service("marketDataTask")
