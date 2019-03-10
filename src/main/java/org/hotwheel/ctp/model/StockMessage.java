@@ -5,6 +5,7 @@ import java.util.Date;
 /**
  * 用户策略消息
  * Created by wangfeng on 2017/3/22.
+ *
  * @version 1.0.2
  */
 public class StockMessage {

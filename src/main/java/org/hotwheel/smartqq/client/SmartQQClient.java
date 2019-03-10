@@ -11,7 +11,20 @@ import net.dongliu.requests.exception.RequestException;
 import net.dongliu.requests.struct.Cookie;
 import org.hotwheel.smartqq.callback.MessageCallback;
 import org.hotwheel.smartqq.constant.ApiURL;
-import org.hotwheel.smartqq.model.*;
+import org.hotwheel.smartqq.model.Category;
+import org.hotwheel.smartqq.model.Discuss;
+import org.hotwheel.smartqq.model.DiscussInfo;
+import org.hotwheel.smartqq.model.DiscussMessage;
+import org.hotwheel.smartqq.model.DiscussUser;
+import org.hotwheel.smartqq.model.Friend;
+import org.hotwheel.smartqq.model.FriendStatus;
+import org.hotwheel.smartqq.model.Group;
+import org.hotwheel.smartqq.model.GroupInfo;
+import org.hotwheel.smartqq.model.GroupMessage;
+import org.hotwheel.smartqq.model.GroupUser;
+import org.hotwheel.smartqq.model.Message;
+import org.hotwheel.smartqq.model.Recent;
+import org.hotwheel.smartqq.model.UserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,8 +33,12 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Api客户端.

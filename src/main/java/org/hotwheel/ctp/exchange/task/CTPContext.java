@@ -5,8 +5,9 @@ import org.hotwheel.weixin.WeChat;
 
 /**
  * 进一步封装消息
- *
+ * <p>
  * Created by wangfeng on 2017/3/28.
+ *
  * @version 1.0.3
  */
 public abstract class CTPContext extends SchedulerContext {

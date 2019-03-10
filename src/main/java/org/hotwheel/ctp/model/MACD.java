@@ -3,6 +3,7 @@ package org.hotwheel.ctp.model;
 /**
  * MACD, 指数平滑异动移动平均线
  * Created by wangfeng on 2017/3/19.
+ *
  * @version 1.0.1
  * @see <url>http://baike.baidu.com/item/MACD指标?fromtitle=MACD&fromid=3334786&type=syn&sefr=cr</url>
  * DIF=EMA(close，12）-EMA（close，26）

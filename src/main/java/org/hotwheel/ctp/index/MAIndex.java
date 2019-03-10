@@ -2,11 +2,12 @@ package org.hotwheel.ctp.index;
 
 /**
  * 移动平均/均线-MA
- *
+ * <p>
  * Created by wangfeng on 2017/3/18.
+ *
  * @version 1.0.1
  */
-public class MAIndex extends AbstractIndex{
+public class MAIndex extends AbstractIndex {
     private double ma5;
     private double ma10;
     private double ma20;

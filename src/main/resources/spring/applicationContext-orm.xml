@@ -7,40 +7,40 @@
          http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
 
     <bean id="stockDataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
-        <property name="driverClassName" value="${jdbc.driver}" />
-        <property name="url" value="${stock.jdbc.url}" />
-        <property name="username" value="${stock.jdbc.username}" />
-        <property name="password" value="${stock.jdbc.password}" />
-        <property name="initialSize" value="${pool.initialPoolSize}" />
-        <property name="maxActive" value="${pool.maxPoolSize}" />
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${stock.jdbc.url}"/>
+        <property name="username" value="${stock.jdbc.username}"/>
+        <property name="password" value="${stock.jdbc.password}"/>
+        <property name="initialSize" value="${pool.initialPoolSize}"/>
+        <property name="maxActive" value="${pool.maxPoolSize}"/>
         <property name="maxIdle" value="${pool.maxIdle}"/>
-        <property name="minIdle" value="${pool.minIdle}" />
-        <property name="timeBetweenEvictionRunsMillis" value="${pool.timeBetweenEvictionRunsMillis}" />
-        <property name="minEvictableIdleTimeMillis" value="${pool.minEvictableIdleTimeMillis}" />
-        <property name="removeAbandoned" value="${pool.removeAbandoned}" />
-        <property name="removeAbandonedTimeout" value="${pool.removeAbandonedTimeout}" />
-        <property name="maxWait" value="${pool.maxWait}" />
-        <property name="validationQuery" value="SELECT 1" />
-        <property name="testOnBorrow" value="${pool.testOnBorrow}" />
-        <property name="testWhileIdle" value="${pool.testWhileIdle}" />
+        <property name="minIdle" value="${pool.minIdle}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${pool.timeBetweenEvictionRunsMillis}"/>
+        <property name="minEvictableIdleTimeMillis" value="${pool.minEvictableIdleTimeMillis}"/>
+        <property name="removeAbandoned" value="${pool.removeAbandoned}"/>
+        <property name="removeAbandonedTimeout" value="${pool.removeAbandonedTimeout}"/>
+        <property name="maxWait" value="${pool.maxWait}"/>
+        <property name="validationQuery" value="SELECT 1"/>
+        <property name="testOnBorrow" value="${pool.testOnBorrow}"/>
+        <property name="testWhileIdle" value="${pool.testWhileIdle}"/>
         <property name="jdbcInterceptors" value="${pool.jdbcInterceptors}"/>
     </bean>
 
     <!--mybatis start-->
     <bean id="stockSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="stockDataSource" />
-        <property name="configLocation" value="classpath:/mybatis/config.xml" />
-        <property name="typeAliasesPackage" value="org.hotwheel.ctp.model" />
-        <property name="mapperLocations" value="classpath*:mybatis/stock/*.xml" />
+        <property name="dataSource" ref="stockDataSource"/>
+        <property name="configLocation" value="classpath:/mybatis/config.xml"/>
+        <property name="typeAliasesPackage" value="org.hotwheel.ctp.model"/>
+        <property name="mapperLocations" value="classpath*:mybatis/stock/*.xml"/>
     </bean>
 
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="org.hotwheel.ctp.dao" />
-        <property name="sqlSessionFactoryBeanName" value="stockSessionFactory" />
+        <property name="basePackage" value="org.hotwheel.ctp.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="stockSessionFactory"/>
     </bean>
 
     <!--mybatis end-->
 
-    <aop:aspectj-autoproxy />
+    <aop:aspectj-autoproxy/>
 
 </beans>

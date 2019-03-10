@@ -2,8 +2,9 @@ package org.hotwheel.ctp.model;
 
 /**
  * EMA指标数据
- *
+ * <p>
  * Created by wangfeng on 2017/3/18.
+ *
  * @version 1.0.1
  */
 public class EMA {

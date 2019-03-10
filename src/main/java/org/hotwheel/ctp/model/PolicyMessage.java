@@ -2,8 +2,9 @@ package org.hotwheel.ctp.model;
 
 /**
  * 策略消息
- *
+ * <p>
  * Created by wangfeng on 2017/3/22.
+ *
  * @version 1.0.2
  */
 public class PolicyMessage {

@@ -101,25 +101,25 @@ public class StockRealTime {
      * @param volume      成交量
      * @param volumePrice 成交总金额
      * @param buy1Num     买一申请数
-     * @param buy1Price  买一报价
+     * @param buy1Price   买一报价
      * @param buy2Num     买二申请数
-     * @param buy2Price  买二报价
+     * @param buy2Price   买二报价
      * @param buy3Num     买三申请数
-     * @param buy3Price  买三报价
+     * @param buy3Price   买三报价
      * @param buy4Num     买四申请数
-     * @param buy4Price  买四报价
+     * @param buy4Price   买四报价
      * @param buy5Num     买五申请数
-     * @param buy5Price  买五报价
+     * @param buy5Price   买五报价
      * @param sell1Num    卖一申请数
-     * @param sell1Price 卖一报价
+     * @param sell1Price  卖一报价
      * @param sell2Num    卖二申请数
-     * @param sell2Price 卖二报价
+     * @param sell2Price  卖二报价
      * @param sell3Num    卖三申请数
-     * @param sell3Price 卖三报价
+     * @param sell3Price  卖三报价
      * @param sell4Num    卖四申请数
-     * @param sell4Price 卖四报价
+     * @param sell4Price  卖四报价
      * @param sell5Num    卖五申请数
-     * @param sell5Price 卖五报价
+     * @param sell5Price  卖五报价
      * @param date        日期
      * @param time        时间
      */

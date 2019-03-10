@@ -3,44 +3,44 @@
 
 <mapper namespace="org.hotwheel.ctp.dao.IStockRealTime">
     <resultMap id="BaseResultMap" type="org.hotwheel.ctp.model.StockRealTime">
-        <result column="type"         property="type"         jdbcType="TINYINT" />
-        <result column="date"         property="date"         jdbcType="DATE"/>
-        <result column="time"         property="time"         jdbcType="TIME"/>
-        <result column="code"         property="fullCode"     jdbcType="VARCHAR" />
-        <result column="open"         property="open"         jdbcType="VARCHAR" />
-        <result column="close"        property="close"        jdbcType="VARCHAR" />
-        <result column="now"          property="now"          jdbcType="VARCHAR" />
-        <result column="high"         property="high"         jdbcType="VARCHAR"/>
-        <result column="low"          property="low"          jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="TINYINT"/>
+        <result column="date" property="date" jdbcType="DATE"/>
+        <result column="time" property="time" jdbcType="TIME"/>
+        <result column="code" property="fullCode" jdbcType="VARCHAR"/>
+        <result column="open" property="open" jdbcType="VARCHAR"/>
+        <result column="close" property="close" jdbcType="VARCHAR"/>
+        <result column="now" property="now" jdbcType="VARCHAR"/>
+        <result column="high" property="high" jdbcType="VARCHAR"/>
+        <result column="low" property="low" jdbcType="VARCHAR"/>
 
-        <result column="buy_price"    property="buyPrice"     jdbcType="VARCHAR"/>
-        <result column="sell_price"   property="sellPrice"    jdbcType="VARCHAR"/>
-        <result column="volume"       property="volume"       jdbcType="VARCHAR"/>
-        <result column="volume_price" property="volumePrice"  jdbcType="VARCHAR"/>
+        <result column="buy_price" property="buyPrice" jdbcType="VARCHAR"/>
+        <result column="sell_price" property="sellPrice" jdbcType="VARCHAR"/>
+        <result column="volume" property="volume" jdbcType="VARCHAR"/>
+        <result column="volume_price" property="volumePrice" jdbcType="VARCHAR"/>
 
-        <result column="buy_1_num"    property="buy1Num"      jdbcType="VARCHAR"/>
-        <result column="buy_1_price"  property="buy1Price"   jdbcType="VARCHAR"/>
-        <result column="buy_2_num"    property="buy2Num"      jdbcType="VARCHAR"/>
-        <result column="buy_2_price"  property="buy2Price"   jdbcType="VARCHAR"/>
-        <result column="buy_3_num"    property="buy3Num"      jdbcType="VARCHAR"/>
-        <result column="buy_3_price"  property="buy3Price"   jdbcType="VARCHAR"/>
-        <result column="buy_4_num"    property="buy4Num"      jdbcType="VARCHAR"/>
-        <result column="buy_4_price"  property="buy4Price"   jdbcType="VARCHAR"/>
-        <result column="buy_5_num"    property="buy5Num"      jdbcType="VARCHAR"/>
-        <result column="buy_5_price"  property="buy5Price"   jdbcType="VARCHAR"/>
+        <result column="buy_1_num" property="buy1Num" jdbcType="VARCHAR"/>
+        <result column="buy_1_price" property="buy1Price" jdbcType="VARCHAR"/>
+        <result column="buy_2_num" property="buy2Num" jdbcType="VARCHAR"/>
+        <result column="buy_2_price" property="buy2Price" jdbcType="VARCHAR"/>
+        <result column="buy_3_num" property="buy3Num" jdbcType="VARCHAR"/>
+        <result column="buy_3_price" property="buy3Price" jdbcType="VARCHAR"/>
+        <result column="buy_4_num" property="buy4Num" jdbcType="VARCHAR"/>
+        <result column="buy_4_price" property="buy4Price" jdbcType="VARCHAR"/>
+        <result column="buy_5_num" property="buy5Num" jdbcType="VARCHAR"/>
+        <result column="buy_5_price" property="buy5Price" jdbcType="VARCHAR"/>
 
-        <result column="sell_1_num"    property="sell1Num"      jdbcType="VARCHAR"/>
-        <result column="sell_1_price"  property="sell1Price"   jdbcType="VARCHAR"/>
-        <result column="sell_2_num"    property="sell2Num"      jdbcType="VARCHAR"/>
-        <result column="sell_2_price"  property="sell2Price"   jdbcType="VARCHAR"/>
-        <result column="sell_3_num"    property="sell3Num"      jdbcType="VARCHAR"/>
-        <result column="sell_3_price"  property="sell3Price"   jdbcType="VARCHAR"/>
-        <result column="sell_4_num"    property="sell4Num"      jdbcType="VARCHAR"/>
-        <result column="sell_4_price"  property="sell4Price"   jdbcType="VARCHAR"/>
-        <result column="sell_5_num"    property="sell5Num"      jdbcType="VARCHAR"/>
-        <result column="sell_5_price"  property="sell5Price"   jdbcType="VARCHAR"/>
+        <result column="sell_1_num" property="sell1Num" jdbcType="VARCHAR"/>
+        <result column="sell_1_price" property="sell1Price" jdbcType="VARCHAR"/>
+        <result column="sell_2_num" property="sell2Num" jdbcType="VARCHAR"/>
+        <result column="sell_2_price" property="sell2Price" jdbcType="VARCHAR"/>
+        <result column="sell_3_num" property="sell3Num" jdbcType="VARCHAR"/>
+        <result column="sell_3_price" property="sell3Price" jdbcType="VARCHAR"/>
+        <result column="sell_4_num" property="sell4Num" jdbcType="VARCHAR"/>
+        <result column="sell_4_price" property="sell4Price" jdbcType="VARCHAR"/>
+        <result column="sell_5_num" property="sell5Num" jdbcType="VARCHAR"/>
+        <result column="sell_5_price" property="sell5Price" jdbcType="VARCHAR"/>
 
-        <result column="rise_fall"         property="riseAndFall"        jdbcType="VARCHAR"/>
+        <result column="rise_fall" property="riseAndFall" jdbcType="VARCHAR"/>
         <result column="rise_fall_percent" property="riseAndFallPercent" jdbcType="VARCHAR"/>
     </resultMap>
 

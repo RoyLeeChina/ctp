@@ -3,20 +3,20 @@
 
 <mapper namespace="org.hotwheel.ctp.dao.IStockHistory">
     <resultMap id="BaseResultMap" type="org.hotwheel.ctp.model.StockHistory">
-        <result column="date"         property="date"         jdbcType="DATE"/>
-        <result column="code"         property="code"         jdbcType="VARCHAR" />
-        <result column="open"         property="open"         jdbcType="VARCHAR" />
-        <result column="close"        property="close"        jdbcType="VARCHAR" />
-        <result column="high"         property="high"         jdbcType="VARCHAR"/>
-        <result column="low"          property="low"          jdbcType="VARCHAR"/>
-        <result column="volume"       property="volume"       jdbcType="VARCHAR"/>
+        <result column="date" property="date" jdbcType="DATE"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="open" property="open" jdbcType="VARCHAR"/>
+        <result column="close" property="close" jdbcType="VARCHAR"/>
+        <result column="high" property="high" jdbcType="VARCHAR"/>
+        <result column="low" property="low" jdbcType="VARCHAR"/>
+        <result column="volume" property="volume" jdbcType="VARCHAR"/>
 
-        <result column="MA5"          property="MA5"          jdbcType="VARCHAR"/>
-        <result column="MA5_volume"   property="MA5Volume"    jdbcType="VARCHAR"/>
-        <result column="MA10"         property="MA10"         jdbcType="VARCHAR"/>
-        <result column="MA10_volume"  property="MA10Volume"   jdbcType="VARCHAR"/>
-        <result column="MA30"         property="MA30"         jdbcType="VARCHAR"/>
-        <result column="MA30_volume"  property="MA30Volume"   jdbcType="VARCHAR"/>
+        <result column="MA5" property="MA5" jdbcType="VARCHAR"/>
+        <result column="MA5_volume" property="MA5Volume" jdbcType="VARCHAR"/>
+        <result column="MA10" property="MA10" jdbcType="VARCHAR"/>
+        <result column="MA10_volume" property="MA10Volume" jdbcType="VARCHAR"/>
+        <result column="MA30" property="MA30" jdbcType="VARCHAR"/>
+        <result column="MA30_volume" property="MA30Volume" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!-- 查询一只股票的历史数据 -->
@@ -38,15 +38,15 @@
 
     <insert id="insertBatch" parameterType="java.util.List">
         INSERT INTO stock_history
-          (`day`,`code`,`open`,`high`,`low`,`close`,`volume`,`MA5`,`MA5_volume`,`MA10`,`MA10_volume`,`MA30`,`MA30_volume`)
+        (`day`,`code`,`open`,`high`,`low`,`close`,`volume`,`MA5`,`MA5_volume`,`MA10`,`MA10_volume`,`MA30`,`MA30_volume`)
         VALUES
-          <foreach collection ="list" item="historyList" index="index" separator =",">
+        <foreach collection="list" item="historyList" index="index" separator=",">
             (
-              #{historyList.day},#{historyList.code},
-              #{historyList.open},#{historyList.high},#{historyList.low},#{historyList.close},#{historyList.volume},
-              #{historyList.MA5},#{historyList.MA5Volume},#{historyList.MA10},#{historyList.MA10Volume},#{historyList.MA30},#{historyList.MA30Volume}
+            #{historyList.day},#{historyList.code},
+            #{historyList.open},#{historyList.high},#{historyList.low},#{historyList.close},#{historyList.volume},
+            #{historyList.MA5},#{historyList.MA5Volume},#{historyList.MA10},#{historyList.MA10Volume},#{historyList.MA30},#{historyList.MA30Volume}
             )
-          </foreach>
+        </foreach>
     </insert>
 
     <update id="update" parameterType="org.hotwheel.ctp.model.StockHistory">

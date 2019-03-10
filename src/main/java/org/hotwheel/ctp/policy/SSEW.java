@@ -13,8 +13,9 @@ import java.util.List;
 
 /**
  * 顺势而为, 指标SSEW
- *
+ * <p>
  * Created by wangfeng on 2017/3/23.
+ *
  * @version 1.0.2
  */
 public class SSEW implements PolicyContext {

@@ -2,8 +2,9 @@ package org.hotwheel.weixin.bean;
 
 /**
  * 联系人信息
- *
+ * <p>
  * Created by wangfeng on 2017/4/10.
+ *
  * @version 2.0.1
  */
 public class ContactInfo {

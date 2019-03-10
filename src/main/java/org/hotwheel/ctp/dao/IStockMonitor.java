@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * 策略监控接口
  * Created by wangfeng on 2017/3/15.
+ *
  * @version 1.0.0
  */
 @Service("stockMonitor")
@@ -16,6 +17,7 @@ public interface IStockMonitor {
 
     /**
      * 捡出全部监控策略
+     *
      * @return
      */
     public List<StockMonitor> queryAll();
@@ -29,5 +31,6 @@ public interface IStockMonitor {
     public StockMonitor query(@Param("code") String code);
 
     public int insert(StockMonitor info);
+
     public int update(StockMonitor info);
 }

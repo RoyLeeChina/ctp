@@ -2,6 +2,7 @@ package org.hotwheel.weixin.bean;
 
 /**
  * Created by wangfeng on 2017/3/27.
+ *
  * @version 1.0.2
  */
 public class BaseResponseEntity {

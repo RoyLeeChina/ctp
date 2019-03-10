@@ -2,8 +2,9 @@ package org.hotwheel.ctp.util;
 
 /**
  * 邮件发送
- *
+ * <p>
  * Created by wangfeng on 2017/3/24.
+ *
  * @verseion 1.0.2
  */
 

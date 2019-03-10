@@ -8,6 +8,7 @@
         UPDATE stock_messages SET `flag`='97' WHERE `flag`='00' AND
         <![CDATA[
          `createTime`<curdate()
+
         ]]>
     </update>
     <!-- 查询某个类型的全部消息记录 -->

@@ -2,8 +2,17 @@ package org.hotwheel.ctp.exchange.task;
 
 import org.hotwheel.assembly.Api;
 import org.hotwheel.ctp.StockOptions;
-import org.hotwheel.ctp.dao.*;
-import org.hotwheel.ctp.model.*;
+import org.hotwheel.ctp.dao.IStockCode;
+import org.hotwheel.ctp.dao.IStockHistory;
+import org.hotwheel.ctp.dao.IStockMessage;
+import org.hotwheel.ctp.dao.IStockMonitor;
+import org.hotwheel.ctp.dao.IStockSubscribe;
+import org.hotwheel.ctp.dao.IStockUser;
+import org.hotwheel.ctp.model.StockCode;
+import org.hotwheel.ctp.model.StockHistory;
+import org.hotwheel.ctp.model.StockMonitor;
+import org.hotwheel.ctp.model.StockSubscribe;
+import org.hotwheel.ctp.model.UserInfo;
 import org.hotwheel.ctp.util.DateUtils;
 import org.hotwheel.ctp.util.EmailApi;
 import org.hotwheel.ctp.util.PolicyApi;
@@ -13,12 +22,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 生成当天策略任务
- *
+ * <p>
  * Created by wangfeng on 2017/3/21.
+ *
  * @version 1.0.1
  */
 @Service("createPolicyTask")
@@ -27,7 +42,7 @@ public class CreatePolicyTask extends CTPContext {
 
     private final static String kIndexShangHai = "sh000001";
     // 中证小盘500指数
-    private final static String kIndexZZ500    = "sh000905";
+    private final static String kIndexZZ500 = "sh000905";
     private final static String kIndexShenZhen = "sz399001";
     private final static String kIndexChuangYe = "sz399006";
     private final static String kAllIndex = kIndexShangHai + ',' + kIndexShenZhen + ',' + kIndexChuangYe + ',' + kIndexZZ500;
@@ -159,7 +174,7 @@ public class CreatePolicyTask extends CTPContext {
                                             ContactInfo contactInfo = weChat.parseContact(fullName);
                                             if (contactInfo == null) {
                                                 logger.info("weixin={}, 好友和群信息无法识别, 不能推送", fullName);
-                                            } else if (Api.isEmpty(contactInfo.getGroupId())){
+                                            } else if (Api.isEmpty(contactInfo.getGroupId())) {
                                                 // 如果不是群消息
                                                 weChat.sendMessageByUserId(contactInfo.getToUserName(), message);
                                             } else {
