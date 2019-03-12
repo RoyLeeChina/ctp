@@ -6,59 +6,17 @@
   	<pluginGroup>org.mortbay.jetty</pluginGroup>
   </pluginGroups>
   <proxies>
-    <proxy>
-      <id>Tencent Office Proxy</id>
-      <active>true</active>
-      <protocol>http</protocol>
-      <host>127.0.0.1</host>
-      <port>12639</port>
-      <username></username>
-      <password></password>
-      <nonProxyHosts>localhost,127.0.0.1</nonProxyHosts>
-  </proxy>
-  <!--<proxy>
-      <id>Tencent Office Proxy</id>
-      <active>true</active>
-      <protocol>http</protocol>
-      <host>proxy.tencent.com</host>
-      <port>8080</port>
-      <username></username>
-      <password></password>
-      <nonProxyHosts>localhost,127.0.0.1</nonProxyHosts>
-  </proxy>-->
   </proxies>
   <mirrors>
-	<mirror>
-      <id>oa</id>
-      <mirrorOf>*</mirrorOf>
-      <name>oa wod repositories</name>
-      <url>http://maven.oa.com/nexus/content/groups/wod/</url>
-    </mirror>
-	<!--<mirror>
-      <id>internal</id>
-      <mirrorOf>*</mirrorOf>
-      <name>internal repository</name>
-      <url>http://maven.oa.com/nexus/content/groups/public/</url>
-  </mirror>-->
-  <!--<mirror>
+  <mirror>
       <id>repo2</id>
       <mirrorOf>central</mirrorOf>
       <name>Human Readable Name for this Mirror.</name>
       <url>http://repo2.maven.org/maven2/</url>
-  </mirror>-->
+  </mirror>
   </mirrors>
   
   <servers>
-  	<server>
-  		<id>internal.releases</id>
-  		<username>rdm</username>
-  		<password>rdm</password>
-  	</server>
-  	<server>
-  		<id>internal.snapshots</id>
-  		<username>rdm</username>
-  		<password>rdm</password>
-  	</server>
     <server>
       <id>ossrh</id>
       <username>wangfengxy</username>
