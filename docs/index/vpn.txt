@@ -1,0 +1,5 @@
+woso vpn
+ip:104.250.147.14
+uid: vpnzzj
+pwd: 4.?#vpnzzj7*
+notice: 选择“允许使用这些协议”-Microsoft CHAP Version 2
