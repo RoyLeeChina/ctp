@@ -29,7 +29,7 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
-            <bean class="org.hotwheel.spring.common.TraceInterceptor">
+            <bean class="org.hotwheel.spring.interceptor.TraceInterceptor">
             </bean>
         </mvc:interceptor>
     </mvc:interceptors>
