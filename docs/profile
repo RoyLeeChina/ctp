@@ -1,0 +1,10 @@
+alias ctp.db='mysql -A -Dstock -h47.92.37.245 -P18036 -uruntime -p"qe3dThd4nm4rbfG28T"'
+alias dev.db='mysql -A -Dermas_third_qa -h100.73.17.16 -P3306 -u"roottest" -p"Aqwert12345"'
+#alias test.db='mysql -A -Dermasdb -h100.73.21.57 -P3306 -u"rd_rw" -p"vM7Ye2E7NRehw=="'
+alias test.db='mysql -A -Ddsmp -hermas-db.test.jiedaibao.com -P3306 -u"rd_rw" -p"vM7Ye2E7NRehw=="'
+alias debt.db='mysql -A -Drrxdebt -h100.73.51.4 -P3306 -u"rd_rw" -p"vM7Ye2E7NRehw=="'
+alias reward.db='mysql -A -Dcollection -h100.73.21.66 -P3306 -u"rd_rw" -p"vM7Ye2E7NRehw=="'
+alias test.redis='redis-cli -h 100.73.21.39 -p 9100 -n 0'
+alias dev.redis='redis-cli -h 100.73.17.5 -p 17170 -n 0'
+
+alias tx.mig='ssh -p36000 buyiwang@mig.mnet2.com'
