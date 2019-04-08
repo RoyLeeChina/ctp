@@ -6,6 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import org.hotwheel.ctp.StockOptions;
 import org.hotwheel.ctp.model.StockHistory;
 import org.hotwheel.ctp.util.StockApi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +21,7 @@ import java.util.List;
  * @version 1.0.0
  */
 public class HistoryUtils {
+    private final static Logger logger = LoggerFactory.getLogger(HistoryUtils.class);
 
     /**
      * 获取股票历史数据<br>
@@ -80,7 +83,7 @@ public class HistoryUtils {
                 result.add(pojo);
             }
         } catch (Exception e) {
-            //
+            logger.error("解析日线历史数据异常", e);
         }
         return result;
     }
