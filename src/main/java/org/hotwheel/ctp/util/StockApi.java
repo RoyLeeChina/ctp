@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -194,6 +195,8 @@ public final class StockApi {
         return result;
     }
 
+    private final static String kUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36";
+
     /**
      * 发送get请求，返回内容字符串
      *
@@ -204,7 +207,10 @@ public final class StockApi {
     public static String httpGet(String url, String charsetName) {
         String result = "";
         HttpClient hc = new HttpClient(url, charsetName);
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("User-agent", kUserAgent);
         HttpResult hRet = hc.post(null, null);
+        logger.debug("request={}, params=[{}], http-status=[{}], body=[{}], message=[{}], acrossTime={}", url, "", hRet.getStatus(), hRet.getBody(), hRet.getError(), hRet.getAcrossTime());
         if (hRet != null && hRet.getStatus() == 200) {
             result = hRet.getBody();
         }
