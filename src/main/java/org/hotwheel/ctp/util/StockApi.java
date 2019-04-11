@@ -209,7 +209,7 @@ public final class StockApi {
         HttpClient hc = new HttpClient(url, charsetName);
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("User-agent", kUserAgent);
-        HttpResult hRet = hc.post(null, null);
+        HttpResult hRet = hc.post(headers, null);
         logger.debug("request={}, params=[{}], http-status=[{}], body=[{}], message=[{}], acrossTime={}", url, "", hRet.getStatus(), hRet.getBody(), hRet.getError(), hRet.getAcrossTime());
         if (hRet != null && hRet.getStatus() == 200) {
             result = hRet.getBody();
