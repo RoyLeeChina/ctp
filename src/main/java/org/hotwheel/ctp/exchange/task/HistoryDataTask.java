@@ -89,6 +89,7 @@ public class HistoryDataTask extends SchedulerContext {
                         }
                     }
                 }
+                Api.sleep(1000);
             }
             break;
         }
