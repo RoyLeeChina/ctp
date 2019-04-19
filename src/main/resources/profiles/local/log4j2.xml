@@ -5,6 +5,7 @@
         <!-- 配置日志文件输出目录 -->
         <Property name="logs.home">/data/runtime/logs</Property>
         <Property name="logs.project">ctp</Property>
+        <Property name="logs.charset">UTF-8</Property>
     </Properties>
 
     <Appenders>
@@ -32,7 +33,7 @@
                 hostName : 本地机器名
                 hostAddress : 本地ip地址
             -->
-            <PatternLayout>
+            <PatternLayout charset="${logs.charset}">
                 <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] (%F.%M:%L) %m %n</pattern>
             </PatternLayout>
             <Policies>
@@ -47,7 +48,7 @@
             <Filters>
                 <ThresholdFilter level="WARN" onMatch="ACCEPT"/>
             </Filters>
-            <PatternLayout>
+            <PatternLayout charset="${logs.charset}">
                 <pattern>[%p][%d{yyyy-MM-dd HH:mm:ss.SSS}] %l %msg%xEx %n</pattern>
             </PatternLayout>
             <Policies>
@@ -63,7 +64,7 @@
                 <ThresholdFilter level="info" onMatch="DENY" onMismatch="NEUTRAL"/>
                 <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
-            <PatternLayout>
+            <PatternLayout charset="${logs.charset}">
                 <pattern>[%p][%d{yyyy-MM-dd HH:mm:ss.SSS}] %l %msg%xEx%n</pattern>
             </PatternLayout>
             <Policies>
@@ -75,7 +76,7 @@
                                  immediateFlush="false" fileName="${logs.home}/${logs.project}/weixin-info.log"
                                  filePattern="${logs.home}/${logs.project}/weixin-info.log.%d{yyyy-MM-dd}.gz">
 
-            <PatternLayout>
+            <PatternLayout charset="${logs.charset}">
                 <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] (%F.%M:%L) %m %n</pattern>
             </PatternLayout>
             <Policies>
