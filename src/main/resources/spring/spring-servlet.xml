@@ -30,6 +30,7 @@
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <bean class="org.hotwheel.spring.interceptor.TraceInterceptor">
+                <property name="httpTraceIdName" value="app-traceid"/>
             </bean>
         </mvc:interceptor>
     </mvc:interceptors>
